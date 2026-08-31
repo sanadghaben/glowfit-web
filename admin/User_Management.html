@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowFit Admin - User Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:flex;min-height:100vh}
+.sidebar{width:260px;background:#1a1a2e;color:#fff;padding:30px 20px;display:flex;flex-direction:column;gap:30px;position:fixed;height:100vh;z-index:100;transition:all 0.3s}
+.logo{font-size:24px;font-weight:900;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:20px}
+.nav-menu{display:flex;flex-direction:column;gap:10px}
+.nav-item{padding:12px 15px;border-radius:12px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.3s;display:flex;align-items:center;gap:12px}
+.nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.05);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,#9333ea,#ec4899);box-shadow:0 4px 15px rgba(147,51,234,0.3)}
+.main-content{flex:1;margin-right:260px;padding:0;transition:all 0.3s}
+.top-header{height:80px;background:#fff;padding:0 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:90}
+.header-actions{display:flex;align-items:center;gap:25px}
+.admin-profile{display:flex;align-items:center;gap:12px;cursor:pointer}
+.admin-avatar{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#9333ea,#ec4899);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+.page-body{padding:40px}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.page-header h1{font-size:24px;font-weight:800}
+.controls-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:20px}
+.search-wrapper{flex:1;position:relative}
+.search-wrapper input{width:100%;padding:14px 45px 14px 20px;border-radius:15px;border:1px solid #e2e8f0;background:#fff;font-family:'Tajawal';outline:none;transition:all 0.3s;font-size:14px}
+.search-wrapper input:focus{border-color:#9333ea;box-shadow:0 0 0 4px rgba(147,51,234,0.1)}
+.search-icon{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:rgba(0,0,0,0.3)}
+.filter-group{display:flex;gap:10px}
+.filter-btn{padding:10px 18px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Tajawal';transition:all 0.2s}
+.filter-btn:hover{border-color:#9333ea}
+.table-card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.02);overflow:hidden}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{text-align:right;padding:18px 24px;font-size:12px;color:rgba(0,0,0,0.4);background:#fcfdfe;border-bottom:1px solid #f1f5f9;text-transform:uppercase}
+.data-table td{padding:20px 24px;font-size:14px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.data-table tr:hover{background:#fcfdfe}
+.user-cell{display:flex;align-items:center;gap:12px}
+.user-avatar-circle{width:40px;height:40px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,0.05);overflow:hidden;flex-shrink:0}
+.user-meta .name{font-weight:700;display:block}
+.user-meta .email{font-size:12px;color:rgba(0,0,0,0.4)}
+.skin-badge{padding:5px 12px;border-radius:10px;font-size:11px;font-weight:800}
+.skin-combo{background:rgba(147,51,234,0.1);color:#9333ea}
+.skin-oily{background:rgba(236,72,153,0.1);color:#ec4899}
+.skin-dry{background:rgba(59,130,246,0.1);color:#3b82f6}
+.status-pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:6px}
+.status-active{background:#ecfdf5;color:#10b981}
+.status-active::before{content:'';width:6px;height:6px;background:#10b981;border-radius:50%}
+.actions-cell{display:flex;gap:10px}
+.action-btn{width:34px;height:34px;border-radius:10px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all 0.2s}
+.action-btn:hover{background:#1a1a2e;color:#fff;border-color:#1a1a2e}
+.action-btn.delete:hover{background:#ef4444;border-color:#ef4444}
+.pagination{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;background:#fff}
+.page-info{font-size:13px;color:rgba(0,0,0,0.4);font-weight:600}
+.page-nav{display:flex;gap:8px}
+.page-link{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:13px;font-weight:800;color:rgba(0,0,0,0.4);cursor:pointer;transition:all 0.2s;border:1px solid transparent}
+.page-link:hover:not(.active){background:#f8fafc;border-color:#e2e8f0}
+.page-link.active{background:#1a1a2e;color:#fff}
+.add-btn{background:linear-gradient(135deg,#9333ea,#ec4899);color:#fff;border:none;padding:12px 24px;border-radius:12px;font-family:'Tajawal';font-weight:700;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:10px}
+.add-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(147,51,234,0.3)}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(5px)}
+.modal-content{background:#fff;width:500px;border-radius:24px;padding:30px;box-shadow:0 20px 50px rgba(0,0,0,0.1);animation:slideUp 0.3s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-title{font-size:18px;font-weight:800}
+.close-modal{cursor:pointer;font-size:24px;color:rgba(0,0,0,0.3)}
+.modal-form .form-group{margin-bottom:15px}
+.modal-form label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+.modal-form input,.modal-form select{width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-family:'Tajawal';outline:none;font-size:14px}
+@media(max-width:1024px){.sidebar{right:-260px}.main-content{margin-right:0}.top-header{padding:0 20px}}
+.mobile-toggle{display:none;font-size:24px;cursor:pointer}
+@media(max-width:1024px){.mobile-toggle{display:block}}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">GlowFit Admin</div>
+    <nav class="nav-menu">
+        <a href="Main_Overview.html" class="nav-item">📊 لوحة الملخص</a>
+        <a href="#" class="nav-item active">👥 إدارة المستخدمين</a>
+        <a href="Product_Management.html" class="nav-item">🧴 المنتجات والمخزون</a>
+        <a href="AI_Insights.html" class="nav-item">📈 تقارير التحليل</a>
+        <a href="Support.html" class="nav-item">💬 المحادثات والدعم</a>
+        <a href="Contact_Messages.html" class="nav-item">✉️ رسائل التواصل</a>
+        <a href="Settings.html" class="nav-item">⚙️ الإعدادات</a>
+    </nav>
+    <div style="margin-top:auto;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)">
+        <a href="#" class="nav-item" style="color:#ef4444" onclick="event.preventDefault(); window.GlowFitAPI && window.GlowFitAPI.signOut();">🚪 تسجيل الخروج</a>
+    </div>
+</div>
+
+<div class="main-content">
+    <header class="top-header">
+        <div style="display:flex;align-items:center;gap:15px">
+            <div class="mobile-toggle" onclick="toggleSidebar()">☰</div>
+            <div style="font-weight:800;font-size:14px;color:rgba(0,0,0,0.4)">لوحة التحكم / إدارة المستخدمين</div>
+        </div>
+        <div class="header-actions">
+            <div class="admin-profile">
+                <div class="admin-info" style="text-align:left">
+                    <span id="header-admin-name" style="font-size:14px;font-weight:700;display:block">أحمد المدير</span>
+                    <span style="font-size:11px;color:#10b981;font-weight:600">متصل الآن</span>
+                </div>
+                <div class="admin-avatar">AD</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-body">
+        <div class="page-header">
+            <h1>إدارة المستخدمين</h1>
+            <div style="display:flex; gap:10px;">
+                <button class="filter-btn" onclick="exportToCSV()" style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:16px;">📥</span> تصدير للـ Excel
+                </button>
+                <button class="add-btn" onclick="openModal()"><span>+</span> إضافة مستخدم جديد</button>
+            </div>
+        </div>
+
+        <div class="controls-bar">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" placeholder="البحث عن اسم أو بريد إلكتروني..." oninput="handleSearch(this.value)">
+            </div>
+            <div class="filter-group">
+                <select class="filter-btn" id="skin-filter" onchange="loadUsers(1)">
+                    <option value="">كل أنواع البشرة</option>
+                    <option value="oily">دهنية</option>
+                    <option value="dry">جافة</option>
+                    <option value="combination">مختلطة</option>
+                    <option value="normal">عادية</option>
+                    <option value="sensitive">حساسة</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>المستخدم</th>
+                        <th>نوع البشرة</th>
+                        <th>تاريخ التسجيل</th>
+                        <th>آخر فحص</th>
+                        <th>الحالة</th>
+                        <th>الاشتراك</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <tr><td colspan="7" style="text-align:center;padding:40px;color:rgba(0,0,0,0.3)">جاري تحميل المستخدمين...</td></tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="page-info" id="page-info">جاري التحميل...</div>
+                <div class="page-nav" id="page-nav"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal-overlay" id="addUserModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">إضافة مستخدم جديد</h3>
+            <span class="close-modal" onclick="closeModal()">×</span>
+        </div>
+        <form class="modal-form" id="addUserForm">
+            <div class="form-group">
+                <label>الاسم بالكامل</label>
+                <input type="text" id="modal-name" placeholder="مثلاً: سارة محمد" required>
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="modal-email" placeholder="example@mail.com" required>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور المؤقتة</label>
+                <input type="password" id="modal-password" placeholder="••••••••" required>
+            </div>
+            <div class="form-group">
+                <label>نوع البشرة</label>
+                <select id="modal-skin">
+                    <option value="oily">دهنية</option>
+                    <option value="dry">جافة</option>
+                    <option value="combination">مختلطة</option>
+                    <option value="normal">عادية</option>
+                    <option value="sensitive">حساسة</option>
+                </select>
+            </div>
+            <button type="submit" class="add-btn" style="width:100%;justify-content:center;margin-top:10px" id="submit-btn">حفظ المستخدم</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal-overlay" id="editUserModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">تعديل المستخدم</h3>
+            <span class="close-modal" onclick="closeEditModal()">×</span>
+        </div>
+        <form class="modal-form" id="editUserForm">
+            <input type="hidden" id="edit-user-id">
+            <div class="form-group">
+                <label>الاسم بالكامل</label>
+                <input type="text" id="edit-name" placeholder="الاسم">
+            </div>
+            <div class="form-group">
+                <label>نوع البشرة</label>
+                <select id="edit-skin">
+                    <option value="">غير محدد</option>
+                    <option value="oily">دهنية</option>
+                    <option value="dry">جافة</option>
+                    <option value="combination">مختلطة</option>
+                    <option value="normal">عادية</option>
+                    <option value="sensitive">حساسة</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور الجديدة</label>
+                <input type="password" id="edit-password" placeholder="اترك الحقل فارغاً إذا لم ترغب بالتغيير">
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px; padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc;">
+                <label style="color:#1a1a2e; font-size: 14px; margin-bottom: 12px;">إدارة الاشتراك</label>
+                <div style="display:flex; gap:10px;">
+                    <button type="button" class="filter-btn" style="flex:1; background:#10b981; color:white; border:none;" onclick="renewSubscription()">تجديد الاشتراك</button>
+                    <button type="button" class="filter-btn" style="flex:1; background:#f59e0b; color:white; border:none;" onclick="freezeSubscription()">تجميد الاشتراك</button>
+                </div>
+            </div>
+
+            <button type="submit" class="add-btn" style="width:100%;justify-content:center;margin-top:10px" id="edit-submit-btn">حفظ التعديلات</button>
+        </form>
+    </div>
+</div>
+
+<!-- Send Notification Modal -->
+<div class="modal-overlay" id="notificationModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">إرسال إشعار للمستخدم</h3>
+            <span class="close-modal" onclick="closeNotificationModal()">×</span>
+        </div>
+        <form class="modal-form" id="notificationForm">
+            <input type="hidden" id="notif-user-id">
+            <div class="form-group">
+                <label>إلى:</label>
+                <input type="text" id="notif-user-name" readonly style="background:#f1f5f9; color:rgba(0,0,0,0.5);">
+            </div>
+            <div class="form-group">
+                <label>عنوان الإشعار</label>
+                <input type="text" id="notif-title" placeholder="مثال: خصم خاص لك!" required>
+            </div>
+            <div class="form-group">
+                <label>نص الإشعار</label>
+                <textarea id="notif-message" placeholder="اكتب رسالتك هنا..." rows="4" style="width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-family:'Tajawal';outline:none;font-size:14px;resize:vertical;" required></textarea>
+            </div>
+            <button type="submit" class="add-btn" style="width:100%;justify-content:center;margin-top:10px" id="notif-submit-btn">إرسال الإشعار الآن</button>
+        </form>
+    </div>
+</div>
+
+<script src="./js/api.js"></script>
+<script>
+    let currentPage = 1;
+    let totalUsers = 0;
+    const LIMIT = 10;
+    let searchTimeout = null;
+
+    // جلب المستخدمين
+    async function loadUsers(page = 1) {
+        currentPage = page;
+        const search = document.getElementById('search-input').value;
+        const skinFilter = document.getElementById('skin-filter').value;
+        const tableBody = document.getElementById('users-table-body');
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(0,0,0,0.3)">جاري التحميل...</td></tr>';
+
+        try {
+            const users = await window.GlowFitAPI.getUsers(page, LIMIT, search, skinFilter);
+            totalUsers = users.length < LIMIT ? (page - 1) * LIMIT + users.length : page * LIMIT + 1;
+
+            if (!users || users.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px">لا يوجد مستخدمين.</td></tr>';
+                document.getElementById('page-info').textContent = 'لا يوجد نتائج';
+                document.getElementById('page-nav').innerHTML = '';
+                return;
+            }
+
+            tableBody.innerHTML = users.map(user => `
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar-circle">
+                                ${user.avatar_url
+                                    ? `<img src="${user.avatar_url}" style="width:100%;height:100%;object-fit:cover;">`
+                                    : '👤'}
+                            </div>
+                            <div class="user-meta">
+                                <a href="User_Details.html" class="name" style="color:#1a1a2e;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#9333ea'" onmouseout="this.style.color='#1a1a2e'">${user.full_name || 'بدون اسم'}</a>
+                                <span class="email">${user.email || ''}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="skin-badge skin-combo">${user.skin_type || 'غير محدد'}</span></td>
+                    <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('ar-SA') : '-'}</td>
+                    <td>-</td>
+                    <td><span class="status-pill status-active">نشط</span></td>
+                    <td>
+                        <span class="status-pill ${user.is_subscribed ? 'status-active' : ''}" style="${user.is_subscribed ? '' : 'background:#fee2e2;color:#ef4444;'}">
+                            ${user.is_subscribed ? 'مشترك' : 'غير مشترك'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <div class="action-btn" title="تعديل" onclick="openEditModal('${user.id}','${user.full_name||''}','${user.skin_type||''}')">✏️</div>
+                            <div class="action-btn" title="إرسال إشعار" onclick="openNotificationModal('${user.id}','${user.full_name||''}')">🔔</div>
+                            <div class="action-btn delete" title="حذف" onclick="deleteUser('${user.id}','${user.full_name||'هذا المستخدم'}')">🗑️</div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Pagination
+            document.getElementById('page-info').textContent = `عرض ${(page-1)*LIMIT+1} إلى ${(page-1)*LIMIT+users.length} مستخدم`;
+            renderPagination(page, users.length);
+
+        } catch (error) {
+            tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:red">حدث خطأ في التحميل</td></tr>';
+            console.error(error);
+        }
+    }
+
+    // Pagination
+    function renderPagination(page, count) {
+        const nav = document.getElementById('page-nav');
+        let html = '';
+        if (page > 1) html += `<div class="page-link" onclick="loadUsers(${page-1})">‹</div>`;
+        if (page > 1) html += `<div class="page-link" onclick="loadUsers(${page-1})">${page-1}</div>`;
+        html += `<div class="page-link active">${page}</div>`;
+        if (count === LIMIT) html += `<div class="page-link" onclick="loadUsers(${page+1})">${page+1}</div>`;
+        if (count === LIMIT) html += `<div class="page-link" onclick="loadUsers(${page+1})">›</div>`;
+        nav.innerHTML = html;
+    }
+
+    // بحث مع تأخير
+    function handleSearch(val) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => loadUsers(1), 400);
+    }
+
+    // إضافة مستخدم
+    document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submit-btn');
+        btn.innerText = 'جاري الحفظ...';
+        btn.disabled = true;
+        try {
+            await window.GlowFitAPI.adminCreateUser(
+                document.getElementById('modal-email').value,
+                document.getElementById('modal-password').value,
+                { full_name: document.getElementById('modal-name').value, skin_type: document.getElementById('modal-skin').value }
+            );
+            alert('تم إنشاء المستخدم بنجاح!');
+            closeModal();
+            loadUsers(1);
+        } catch (err) {
+            alert('خطأ: ' + err.message);
+        } finally {
+            btn.innerText = 'حفظ المستخدم';
+            btn.disabled = false;
+        }
+    });
+
+    // تعديل مستخدم
+    function openEditModal(id, name, skin) {
+        document.getElementById('edit-user-id').value = id;
+        document.getElementById('edit-name').value = name;
+        document.getElementById('edit-skin').value = skin;
+        document.getElementById('editUserModal').style.display = 'flex';
+    }
+
+    document.getElementById('editUserForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('edit-submit-btn');
+        btn.innerText = 'جاري الحفظ...';
+        btn.disabled = true;
+        try {
+            const id = document.getElementById('edit-user-id').value;
+            await window.GlowFitAPI.updateUser(id, {
+                full_name: document.getElementById('edit-name').value,
+                skin_type: document.getElementById('edit-skin').value
+            });
+            alert('تم التعديل بنجاح!');
+            closeEditModal();
+            loadUsers(currentPage);
+        } catch (err) {
+            alert('خطأ: ' + err.message);
+        } finally {
+            btn.innerText = 'حفظ التعديلات';
+            btn.disabled = false;
+        }
+    });
+
+    async function deleteUser(id, name) {
+        if (!confirm(`هل أنت متأكد من حذف ${name}؟`)) return;
+        try {
+            await window.GlowFitAPI.updateUser(id, { is_deleted: true });
+            alert('تم الحذف بنجاح');
+            loadUsers(currentPage);
+        } catch (err) {
+            alert('خطأ: ' + err.message);
+        }
+    }
+
+    // إدارة الاشتراكات (Functions Dummy)
+    function renewSubscription() {
+        const id = document.getElementById('edit-user-id').value;
+        if(confirm('هل تريد تأكيد تجديد اشتراك هذا المستخدم؟')) {
+            alert('تم تجديد الاشتراك بنجاح (محاكاة)');
+        }
+    }
+
+    function freezeSubscription() {
+        const id = document.getElementById('edit-user-id').value;
+        if(confirm('هل أنت متأكد من تجميد اشتراك هذا المستخدم؟')) {
+            alert('تم تجميد الاشتراك بنجاح (محاكاة)');
+        }
+    }
+
+    function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('active'); }
+    function openModal() { document.getElementById('addUserModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('addUserModal').style.display = 'none'; document.getElementById('addUserForm').reset(); }
+    function closeEditModal() { document.getElementById('editUserModal').style.display = 'none'; }
+    function openNotificationModal(id, name) {
+        document.getElementById('notif-user-id').value = id;
+        document.getElementById('notif-user-name').value = name || 'بدون اسم';
+        document.getElementById('notificationModal').style.display = 'flex';
+    }
+    function closeNotificationModal() { document.getElementById('notificationModal').style.display = 'none'; document.getElementById('notificationForm').reset(); }
+
+    document.getElementById('notificationForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('تم إرسال الإشعار بنجاح! (محاكاة)');
+        closeNotificationModal();
+    });
+
+    // تصدير البيانات إلى CSV
+    function exportToCSV() {
+        alert('جاري تصدير بيانات المستخدمين إلى ملف Excel/CSV... (محاكاة)');
+    }
+
+    window.onclick = function(e) {
+        if (e.target == document.getElementById('addUserModal')) closeModal();
+        if (e.target == document.getElementById('editUserModal')) closeEditModal();
+        if (e.target == document.getElementById('notificationModal')) closeNotificationModal();
+    }
+
+    loadUsers(1);
+</script>
+</body>
+</html>

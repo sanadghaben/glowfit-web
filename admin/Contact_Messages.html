@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowFit Admin - رسائل التواصل</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:260px;background:#1a1a2e;color:#fff;padding:30px 20px;display:flex;flex-direction:column;gap:30px;position:fixed;height:100vh;transition:all 0.3s;z-index:100}
+.sidebar.active{right:0 !important}
+.logo{font-size:24px;font-weight:900;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:20px}
+.nav-menu{display:flex;flex-direction:column;gap:10px}
+.nav-item{padding:12px 15px;border-radius:12px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.3s;display:flex;align-items:center;gap:12px}
+.nav-item:hover, .nav-item.active{background:rgba(255,255,255,0.05);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,#9333ea,#ec4899);box-shadow:0 4px 15px rgba(147,51,234,0.3)}
+
+/* Main Content */
+.main-content{flex:1;margin-right:260px;padding:40px;background:#f8fafc}
+.page-header{margin-bottom:30px;display:flex;justify-content:space-between;align-items:center}
+.page-header h1{font-size:24px;font-weight:800}
+.page-header p{font-size:13px;color:rgba(0,0,0,0.4);margin-top:5px}
+
+.mobile-toggle{display:none;font-size:24px;cursor:pointer}
+@media (max-width: 1024px) {
+    .sidebar{right:-260px}
+    .main-content{margin-right:0}
+    .mobile-toggle{display:block}
+}
+
+/* Messages List */
+.msg-panel{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.02);overflow:hidden}
+.msg-row{display:grid;grid-template-columns:auto 220px 130px 1fr 140px 90px;gap:20px;align-items:center;padding:20px 25px;border-bottom:1px solid #f1f5f9;transition:all 0.2s}
+.msg-row:last-child{border-bottom:none}
+.msg-row:hover{background:#fafbfc}
+.msg-row.unread{background:#fdf4ff}
+.msg-avatar{width:42px;height:42px;border-radius:12px;background:#f3e8ff;color:#9333ea;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0}
+.msg-contact .name{font-weight:800;font-size:14px}
+.msg-contact .email{font-size:12px;color:rgba(0,0,0,0.4)}
+.msg-preview{font-size:13px;color:rgba(0,0,0,0.6);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg-date{font-size:12px;color:rgba(0,0,0,0.4);white-space:nowrap}
+.msg-status{font-size:11px;font-weight:800;padding:5px 10px;border-radius:10px;text-align:center;white-space:nowrap}
+.status-new{background:#f3e8ff;color:#9333ea}
+.status-read{background:#f1f5f9;color:rgba(0,0,0,0.4)}
+
+.empty-state{padding:60px 20px;text-align:center;color:rgba(0,0,0,0.3)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:24px;padding:30px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto}
+.modal-box h3{font-size:18px;font-weight:800;margin-bottom:5px}
+.modal-box .meta{font-size:12px;color:rgba(0,0,0,0.4);margin-bottom:20px}
+.modal-box .body-text{font-size:14px;line-height:1.9;background:#f8fafc;padding:20px;border-radius:16px;white-space:pre-wrap}
+.modal-close{margin-top:20px;background:#1a1a2e;color:#fff;border:none;padding:12px 25px;border-radius:12px;font-family:'Tajawal';font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo">GlowFit Admin</div>
+    <nav class="nav-menu">
+        <a href="Main_Overview.html" class="nav-item">📊 لوحة الملخص</a>
+        <a href="User_Management.html" class="nav-item">👥 إدارة المستخدمين</a>
+        <a href="Product_Management.html" class="nav-item">🧴 المنتجات والمخزون</a>
+        <a href="AI_Insights.html" class="nav-item">📈 تقارير التحليل</a>
+        <a href="Support.html" class="nav-item">💬 المحادثات والدعم</a>
+        <a href="#" class="nav-item active">✉️ رسائل التواصل</a>
+        <a href="Settings.html" class="nav-item">⚙️ الإعدادات</a>
+    </nav>
+    <div style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1)">
+        <a href="#" class="nav-item" style="color:#ef4444" onclick="event.preventDefault(); window.GlowFitAPI && window.GlowFitAPI.signOut();">🚪 تسجيل الخروج</a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="mobile-toggle" onclick="toggleSidebar()" style="margin-bottom:10px;">☰</div>
+            <h1>رسائل التواصل ✉️</h1>
+            <p>الرسائل المرسلة من نموذج "اتصل بنا" بصفحة الهبوط</p>
+        </div>
+    </div>
+
+    <div class="msg-panel" id="messages-panel">
+        <div class="empty-state">جاري التحميل...</div>
+    </div>
+</div>
+
+<!-- Message Detail Modal -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+        <h3 id="modal-name"></h3>
+        <div class="meta" id="modal-meta"></div>
+        <div class="body-text" id="modal-body"></div>
+        <button class="modal-close" onclick="closeModal()">إغلاق</button>
+    </div>
+</div>
+
+</body>
+<script src="./js/api.js"></script>
+<script>
+    function toggleSidebar() {
+        document.querySelector('.sidebar').classList.toggle('active');
+    }
+
+    function timeAgo(dateStr) {
+        const diffMs = Date.now() - new Date(dateStr).getTime();
+        const mins = Math.floor(diffMs / 60000);
+        if (mins < 60) return `منذ ${mins} دقيقة`;
+        const hrs = Math.floor(mins / 60);
+        if (hrs < 24) return `منذ ${hrs} ساعة`;
+        return `منذ ${Math.floor(hrs / 24)} يوم`;
+    }
+
+    function initials(name) {
+        if (!name) return '؟';
+        return name.trim().charAt(0);
+    }
+
+    let messagesCache = [];
+
+    function openModal(id) {
+        const msg = messagesCache.find(m => String(m.id) === String(id));
+        if (!msg) return;
+        document.getElementById('modal-name').innerText = msg.name || 'بدون اسم';
+        document.getElementById('modal-meta').innerText = `${msg.email}${msg.whatsapp ? ' · واتساب: ' + msg.whatsapp : ''} · ${timeAgo(msg.created_at)}`;
+        document.getElementById('modal-body').innerText = msg.message;
+        document.getElementById('modal-overlay').classList.add('show');
+
+        if (!msg.is_read) {
+            window.GlowFitAPI.markContactMessageRead(msg.id).catch(() => {});
+            msg.is_read = true;
+            renderMessages(messagesCache);
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').classList.remove('show');
+    }
+
+    function renderMessages(rows) {
+        const panel = document.getElementById('messages-panel');
+        if (!rows || rows.length === 0) {
+            panel.innerHTML = '<div class="empty-state">ما وصلت أي رسائل تواصل لحد الآن 📭</div>';
+            return;
+        }
+        panel.innerHTML = rows.map(m => `
+            <div class="msg-row ${m.is_read ? '' : 'unread'}" onclick="openModal('${m.id}')" style="cursor:pointer">
+                <div class="msg-avatar">${initials(m.name)}</div>
+                <div class="msg-contact">
+                    <div class="name">${m.name || 'بدون اسم'}</div>
+                    <div class="email">${m.email}</div>
+                </div>
+                <div>
+                    ${m.whatsapp
+                        ? `<a href="https://wa.me/${m.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" onclick="event.stopPropagation()" style="color:#16a34a; font-weight:700; text-decoration:none; font-size:13px;">💬 ${m.whatsapp}</a>`
+                        : '<span style="color:rgba(0,0,0,0.3); font-size:12px;">—</span>'}
+                </div>
+                <div class="msg-preview">${(m.message || '').slice(0, 80)}</div>
+                <div class="msg-date">${timeAgo(m.created_at)}</div>
+                <div class="msg-status ${m.is_read ? 'status-read' : 'status-new'}">${m.is_read ? 'مقروءة' : 'جديدة'}</div>
+            </div>
+        `).join('');
+    }
+
+    async function loadMessages() {
+        try {
+            const rows = await window.GlowFitAPI.getContactMessages();
+            messagesCache = rows || [];
+            renderMessages(messagesCache);
+        } catch (error) {
+            console.error('Error loading contact messages:', error);
+            document.getElementById('messages-panel').innerHTML =
+                '<div class="empty-state" style="color:#ef4444">تعذّر تحميل الرسائل</div>';
+        }
+    }
+
+    loadMessages();
+</script>
+</html>

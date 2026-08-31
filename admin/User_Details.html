@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowFit Admin - User Details</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:flex;min-height:100vh}
+.sidebar{width:260px;background:#1a1a2e;color:#fff;padding:30px 20px;display:flex;flex-direction:column;gap:30px;position:fixed;height:100vh;z-index:100}
+.logo{font-size:24px;font-weight:900;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:20px}
+.nav-menu{display:flex;flex-direction:column;gap:10px}
+.nav-item{padding:12px 15px;border-radius:12px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.3s;display:flex;align-items:center;gap:12px}
+.nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.05);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,#9333ea,#ec4899);box-shadow:0 4px 15px rgba(147,51,234,0.3)}
+.main-content{flex:1;margin-right:260px;padding:0;transition:all 0.3s}
+.top-header{height:80px;background:#fff;padding:0 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:90}
+.page-body{padding:40px}
+
+/* User Details specific */
+.back-link{font-size:14px; color:#9333ea; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px; margin-bottom:20px;}
+.user-header-card{background:linear-gradient(135deg, #1a1a2e, #2d2b4f); color:white; border-radius:24px; padding:40px; display:flex; align-items:center; justify-content:space-between; margin-bottom:30px; box-shadow:0 15px 40px rgba(0,0,0,0.1)}
+.u-info-main{display:flex; align-items:center; gap:25px;}
+.u-avatar{width:90px; height:90px; border-radius:50%; background:#fff; color:#1a1a2e; display:flex; align-items:center; justify-content:center; font-size:36px; font-weight:900; box-shadow:0 0 0 5px rgba(255,255,255,0.2)}
+.u-name{font-size:28px; font-weight:900; margin-bottom:5px;}
+.u-email{font-size:14px; color:rgba(255,255,255,0.6); margin-bottom:12px;}
+.status-pill{padding:6px 14px; border-radius:20px; font-size:12px; font-weight:800; background:#10b981; color:white;}
+.u-stats-grid{display:flex; gap:30px;}
+.u-stat-box{text-align:center;}
+.u-stat-val{font-size:24px; font-weight:900; display:block; margin-bottom:5px;}
+.u-stat-lbl{font-size:12px; color:rgba(255,255,255,0.5); font-weight:700; text-transform:uppercase;}
+
+.content-tabs{display:flex; gap:10px; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;}
+.tab-btn{padding:10px 20px; background:none; border:none; font-family:'Tajawal'; font-size:15px; font-weight:700; color:rgba(0,0,0,0.4); cursor:pointer; transition:all 0.2s;}
+.tab-btn.active{color:#9333ea; border-bottom:3px solid #9333ea; margin-bottom:-12px;}
+
+.tab-content{background:#fff; border-radius:24px; padding:30px; box-shadow:0 10px 30px rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.02); display:none;}
+.tab-content.active{display:block;}
+
+.info-grid{display:grid; grid-template-columns:1fr 1fr; gap:25px;}
+.info-group label{display:block; font-size:12px; font-weight:700; color:rgba(0,0,0,0.4); margin-bottom:8px;}
+.info-group div{font-size:15px; font-weight:700; padding:12px 15px; background:#f8fafc; border-radius:12px; border:1px solid #f1f5f9;}
+
+/* Activity Timeline */
+.timeline{position:relative; padding-right:20px;}
+.timeline::before{content:''; position:absolute; right:0; top:0; bottom:0; width:2px; background:#f1f5f9;}
+.t-item{position:relative; margin-bottom:25px;}
+.t-item::before{content:''; position:absolute; right:-24px; top:4px; width:10px; height:10px; border-radius:50%; background:#9333ea; border:3px solid #fff; box-shadow:0 0 0 2px #f3e8ff;}
+.t-date{font-size:11px; color:rgba(0,0,0,0.4); font-weight:700; display:block; margin-bottom:5px;}
+.t-title{font-size:14px; font-weight:800; margin-bottom:3px;}
+.t-desc{font-size:13px; color:rgba(0,0,0,0.6);}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">GlowFit Admin</div>
+    <nav class="nav-menu">
+        <a href="Main_Overview.html" class="nav-item">📊 لوحة الملخص</a>
+        <a href="User_Management.html" class="nav-item active">👥 إدارة المستخدمين</a>
+        <a href="Staff_Management.html" class="nav-item">🛡️ إدارة الصلاحيات</a>
+        <a href="Activity_Logs.html" class="nav-item">📋 سجل النشاطات</a>
+        <a href="Product_Management.html" class="nav-item">🧴 المنتجات والمخزون</a>
+        <a href="AI_Insights.html" class="nav-item">📈 تقارير التحليل</a>
+        <a href="Support.html" class="nav-item">💬 المحادثات والدعم</a>
+        <a href="Contact_Messages.html" class="nav-item">✉️ رسائل التواصل</a>
+        <a href="Settings.html" class="nav-item">⚙️ الإعدادات</a>
+    </nav>
+    <div style="margin-top:auto;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)">
+        <a href="#" class="nav-item" style="color:#ef4444" onclick="event.preventDefault(); window.GlowFitAPI && window.GlowFitAPI.signOut();">🚪 تسجيل الخروج</a>
+    </div>
+</div>
+
+<div class="main-content">
+    <header class="top-header">
+        <div style="font-weight:800;font-size:14px;color:rgba(0,0,0,0.4)">لوحة التحكم / تفاصيل المستخدم</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <div style="text-align:left"><span id="header-admin-name" style="font-size:14px;font-weight:700;display:block">أحمد المدير</span></div>
+            <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#9333ea,#ec4899);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">AD</div>
+        </div>
+    </header>
+
+    <div class="page-body">
+        <a href="User_Management.html" class="back-link">← العودة لقائمة المستخدمين</a>
+
+        <div class="user-header-card">
+            <div class="u-info-main">
+                <div class="u-avatar">ن</div>
+                <div>
+                    <h1 class="u-name">نورة الأحمد</h1>
+                    <div class="u-email">noura@example.com</div>
+                    <span class="status-pill">حساب نشط</span>
+                    <span class="status-pill" style="background:#f3e8ff; color:#9333ea; margin-right:5px;">بشرة مختلطة</span>
+                </div>
+            </div>
+            <div class="u-stats-grid">
+                <div class="u-stat-box">
+                    <span class="u-stat-val">12</span>
+                    <span class="u-stat-lbl">إجمالي الفحوصات</span>
+                </div>
+                <div class="u-stat-box">
+                    <span class="u-stat-val">3</span>
+                    <span class="u-stat-lbl">طلبات المتجر</span>
+                </div>
+                <div class="u-stat-box">
+                    <span class="u-stat-val" style="color:#10b981;">Premium</span>
+                    <span class="u-stat-lbl">الاشتراك</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-tabs">
+            <button class="tab-btn active" onclick="switchUserTab('info', this)">البيانات الشخصية</button>
+            <button class="tab-btn" onclick="switchUserTab('activity', this)">سجل النشاطات</button>
+        </div>
+
+        <!-- Info Tab -->
+        <div class="tab-content active" id="tab-info">
+            <h3 style="font-size:18px; font-weight:800; margin-bottom:20px;">تفاصيل الحساب</h3>
+            <div class="info-grid">
+                <div class="info-group">
+                    <label>الاسم بالكامل</label>
+                    <div>نورة الأحمد</div>
+                </div>
+                <div class="info-group">
+                    <label>البريد الإلكتروني</label>
+                    <div>noura@example.com</div>
+                </div>
+                <div class="info-group">
+                    <label>رقم الهاتف</label>
+                    <div>+966 50 123 4567</div>
+                </div>
+                <div class="info-group">
+                    <label>تاريخ التسجيل</label>
+                    <div>15 أبريل 2026</div>
+                </div>
+                <div class="info-group">
+                    <label>نوع البشرة</label>
+                    <div>مختلطة (استناداً للذكاء الاصطناعي)</div>
+                </div>
+                <div class="info-group">
+                    <label>حالة الاشتراك</label>
+                    <div style="color:#10b981;">مشترك - ينتهي في 15 أكتوبر 2026</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Tab -->
+        <div class="tab-content" id="tab-activity">
+            <h3 style="font-size:18px; font-weight:800; margin-bottom:20px;">نشاطات المستخدم (آخر 30 يوم)</h3>
+            <div class="timeline">
+                <div class="t-item">
+                    <span class="t-date">اليوم، 10:00 صباحاً</span>
+                    <div class="t-title">تسجيل الدخول</div>
+                    <div class="t-desc">قام المستخدم بتسجيل الدخول من جهاز iPhone 15 Pro.</div>
+                </div>
+                <div class="t-item">
+                    <span class="t-date">أمس، 08:30 مساءً</span>
+                    <div class="t-title">إجراء فحص للبشرة 📸</div>
+                    <div class="t-desc">تم إجراء فحص وحصلت البشرة على تقييم 87/100.</div>
+                </div>
+                <div class="t-item">
+                    <span class="t-date">28 أبريل 2026</span>
+                    <div class="t-title">عملية شراء من المتجر 🛒</div>
+                    <div class="t-desc">شراء (سيروم فيتامين C + غسول مائي). رقم الطلب #GF-8021.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="./js/api.js"></script>
+<script>
+function switchUserTab(tabId, element) {
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+    
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+}
+</script>
+</body>
+</html>

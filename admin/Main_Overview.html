@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowFit Admin - DashBoard</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:260px;background:#1a1a2e;color:#fff;padding:30px 20px;display:flex;flex-direction:column;gap:30px;position:fixed;height:100vh;transition:all 0.3s;z-index:100}
+.sidebar.active{right:0 !important}
+.logo{font-size:24px;font-weight:900;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:20px}
+.nav-menu{display:flex;flex-direction:column;gap:10px}
+.nav-item{padding:12px 15px;border-radius:12px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.3s;display:flex;align-items:center;gap:12px}
+.nav-item:hover, .nav-item.active{background:rgba(255,255,255,0.05);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,#9333ea,#ec4899);box-shadow:0 4px 15px rgba(147,51,234,0.3)}
+
+/* Main Content */
+.main-content{flex:1;margin-right:260px;padding:0;background:#f8fafc;transition:all 0.3s}
+
+/* Top Header */
+.top-header{height:80px;background:#fff;padding:0 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:90}
+.header-search{position:relative;width:350px}
+.header-search input{width:100%;padding:12px 45px 12px 20px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;font-family:'Tajawal';outline:none;transition:all 0.3s}
+.header-search input:focus{border-color:#9333ea;background:#fff;box-shadow:0 0 0 4px rgba(147,51,234,0.05)}
+.search-icon{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:rgba(0,0,0,0.3)}
+
+.header-actions{display:flex;align-items:center;gap:25px}
+.notif-btn{position:relative;cursor:pointer;font-size:20px;color:rgba(0,0,0,0.5);transition:all 0.2s}
+.notif-btn:hover{color:#1a1a2e}
+.notif-badge{position:absolute;top:-2px;left:-2px;width:10px;height:10px;background:#ef4444;border-radius:50%;border:2px solid #fff}
+
+.admin-profile{display:flex;align-items:center;gap:12px;cursor:pointer;padding:5px;border-radius:12px;transition:all 0.2s}
+.admin-profile:hover{background:#f8fafc}
+.admin-avatar{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#9333ea,#ec4899);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
+.admin-name{font-size:14px;font-weight:700}
+.admin-status{font-size:11px;color:#10b981;font-weight:600;display:block}
+
+/* Page Body */
+.page-body{padding:40px}
+.page-welcome{margin-bottom:30px}
+.page-welcome h1{font-size:26px;font-weight:900;margin-bottom:6px}
+.page-welcome p{font-size:14px;color:rgba(0,0,0,0.4);font-weight:500}
+
+/* Stats Cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:25px;margin-bottom:30px}
+.stat-card{background:#fff;padding:24px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.02);display:flex;flex-direction:column;gap:15px;border:1px solid rgba(0,0,0,0.01);transition:all 0.3s}
+.stat-card:hover{transform:translateY(-5px);box-shadow:0 15px 40px rgba(0,0,0,0.05)}
+.stat-header{display:flex;justify-content:space-between;align-items:center}
+.stat-icon{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.stat-change{font-size:12px;padding:5px 10px;border-radius:10px;font-weight:800}
+.change-up{background:#ecfdf5;color:#10b981}
+.change-down{background:#fef2f2;color:#ef4444}
+.stat-body .value{font-size:32px;font-weight:900;display:block;margin-bottom:4px}
+.stat-body .label{font-size:13px;color:rgba(0,0,0,0.4);font-weight:600}
+
+/* Panels */
+.content-grid{display:grid;grid-template-columns:1.8fr 1.2fr;gap:25px}
+.panel{background:#fff;border-radius:28px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.01)}
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.panel-title{font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px}
+
+/* Table Style */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{text-align:right;padding:15px;font-size:12px;color:rgba(0,0,0,0.3);font-weight:800;border-bottom:1px solid #f1f5f9;text-transform:uppercase}
+.data-table td{padding:20px 15px;font-size:14px;border-bottom:1px solid #f1f5f9}
+.user-info{display:flex;align-items:center;gap:12px}
+.user-avatar-small{width:36px;height:36px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:16px}
+.status-pill{padding:5px 12px;border-radius:10px;font-size:11px;font-weight:800}
+.status-active{background:#ecfdf5;color:#10b981}
+
+/* AI Progress bars */
+.ai-list{display:flex;flex-direction:column;gap:20px}
+.ai-item-label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:8px}
+.progress-bg{height:10px;background:#f1f5f9;border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;border-radius:10px;transition:width 1.5s cubic-bezier(0.4, 0, 0.2, 1)}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .sidebar{right:-260px}
+    .main-content{margin-right:0}
+    .top-header{padding:0 20px}
+    .header-search{width:200px}
+    .stats-grid{grid-template-columns:repeat(2, 1fr)}
+}
+@media (max-width: 768px) {
+    .content-grid{grid-template-columns:1fr}
+    .stats-grid{grid-template-columns:1fr}
+}
+
+.mobile-toggle{display:none;font-size:24px;cursor:pointer}
+@media (max-width: 1024px) {
+    .mobile-toggle{display:block}
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo">GlowFit Admin</div>
+    <nav class="nav-menu">
+        <a href="Main_Overview.html" class="nav-item active">📊 لوحة الملخص</a>
+        <a href="User_Management.html" class="nav-item">👥 إدارة المستخدمين</a>
+        <a href="Product_Management.html" class="nav-item">🧴 المنتجات والمخزون</a>
+        <a href="AI_Insights.html" class="nav-item">📈 تقارير التحليل</a>
+        <a href="Support.html" class="nav-item">💬 المحادثات والدعم</a>
+        <a href="Contact_Messages.html" class="nav-item">✉️ رسائل التواصل</a>
+        <a href="Settings.html" class="nav-item">⚙️ الإعدادات</a>
+    </nav>
+    <div style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1)">
+        <a href="#" class="nav-item" style="color:#ef4444" onclick="event.preventDefault(); window.GlowFitAPI && window.GlowFitAPI.signOut();">🚪 تسجيل الخروج</a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <header class="top-header">
+        <div style="display:flex; align-items:center; gap:15px">
+            <div class="mobile-toggle" onclick="toggleSidebar()">☰</div>
+            <div class="header-search">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="البحث عن مستخدمين، منتجات، أو تقارير...">
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="notif-btn">🔔<span class="notif-badge"></span></div>
+            <div class="admin-profile">
+                <div class="admin-info" style="text-align:left">
+                    <span class="admin-name" id="header-admin-name">أحمد المدير</span>
+                    <span class="admin-status">متصل الآن</span>
+                </div>
+                <div class="admin-avatar">AD</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-body">
+        <div class="page-welcome">
+            <h1>أهلاً بك مجدداً، أحمد 👋</h1>
+            <p>إليك ملخص سريع لأداء GlowFit اليوم، 1 مايو 2026</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background:#f3e8ff; color:#9333ea">👥</div>
+                    <div class="stat-change change-up">+12.5%</div>
+                </div>
+                <div class="stat-body">
+                    <span class="value" id="total-users-count">...</span>
+                    <span class="label">إجمالي المستخدمين</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background:#dcfce7; color:#16a34a">📸</div>
+                    <div class="stat-change change-up">+8.2%</div>
+                </div>
+                <div class="stat-body">
+                    <span class="value" id="total-products-count">...</span>
+                    <span class="label">إجمالي المنتجات</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background:#fef9c3; color:#ca8a04">🛒</div>
+                    <div class="stat-change change-down">-3.1%</div>
+                </div>
+                <div class="stat-body">
+                    <span class="value">850</span>
+                    <span class="label">طلبات المتجر (شهر)</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background:#fee2e2; color:#dc2626">💰</div>
+                    <div class="stat-change change-up">+24%</div>
+                </div>
+                <div class="stat-body">
+                    <span class="value">42.5k</span>
+                    <span class="label">الأرباح (ر.س)</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background:#e0f2fe; color:#0284c7">📝</div>
+                    <div class="stat-change change-up" id="waitlist-change">جديد</div>
+                </div>
+                <div class="stat-body">
+                    <span class="value" id="waitlist-count">...</span>
+                    <span class="label">مسجلين بقائمة الانتظار</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background:#fdf4ff; color:#c026d3">👁️</div>
+                    <div class="stat-change change-up">30 يوم</div>
+                </div>
+                <div class="stat-body">
+                    <span class="value" id="page-views-count">...</span>
+                    <span class="label">زيارات صفحة الهبوط</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <!-- Recent Users -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">آخر المستخدمين المسجلين</h3>
+                    <a href="User_Management.html" style="font-size:13px; color:#9333ea; font-weight:800; text-decoration:none">عرض الكل ↩️</a>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>المستخدم</th>
+                            <th>نوع البشرة</th>
+                            <th>التاريخ</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar-small">👩</div>
+                                    <span style="font-weight:700">سارة محمد</span>
+                                </div>
+                            </td>
+                            <td><span style="color:#9333ea; font-weight:700">مختلطة</span></td>
+                            <td style="color:rgba(0,0,0,0.4)">منذ ساعة</td>
+                            <td><span class="status-pill status-active">نشط</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar-small">👱‍♀️</div>
+                                    <span style="font-weight:700">ليلى الأحمد</span>
+                                </div>
+                            </td>
+                            <td><span style="color:#3b82f6; font-weight:700">جافة</span></td>
+                            <td style="color:rgba(0,0,0,0.4)">منذ 3 ساعات</td>
+                            <td><span class="status-pill status-active">نشط</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar-small">👩🏻</div>
+                                    <span style="font-weight:700">نورة السبيعي</span>
+                                </div>
+                            </td>
+                            <td><span style="color:#ec4899; font-weight:700">دهنية</span></td>
+                            <td style="color:rgba(0,0,0,0.4)">منذ 5 ساعات</td>
+                            <td><span class="status-pill status-active">نشط</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- AI Insights -->
+            <div class="panel" style="background: linear-gradient(135deg, #ffffff, #fcfaff)">
+                <div class="panel-header">
+                    <h3 class="panel-title">توزيع أنواع البشرة 🧠</h3>
+                    <div style="width:10px; height:10px; background:#10b981; border-radius:50%; box-shadow:0 0 10px rgba(16,185,129,0.5)"></div>
+                </div>
+                <div class="ai-list">
+                    <div class="ai-item">
+                        <div class="ai-item-label"><span>مختلطة</span><span>45%</span></div>
+                        <div class="progress-bg"><div class="progress-fill" style="width:45%; background:linear-gradient(90deg, #9333ea, #ec4899)"></div></div>
+                    </div>
+                    <div class="ai-item">
+                        <div class="ai-item-label"><span>دهنية</span><span>30%</span></div>
+                        <div class="progress-bg"><div class="progress-fill" style="width:30%; background:#ec4899"></div></div>
+                    </div>
+                    <div class="ai-item">
+                        <div class="ai-item-label"><span>جافة</span><span>25%</span></div>
+                        <div class="progress-bg"><div class="progress-fill" style="width:25%; background:#3b82f6"></div></div>
+                    </div>
+                </div>
+                <div style="margin-top:35px; padding:20px; background:rgba(147,51,234,0.03); border-radius:18px; border:1px dashed rgba(147,51,234,0.2)">
+                    <p style="font-size:12px; color:rgba(0,0,0,0.6); line-height:1.7">
+                        <strong style="color:#9333ea">ملاحظة ذكية:</strong> لوحظ زيادة في طلبات منتجات "البشرة الدهنية" بنسبة 7% خلال الفترة المسائية. ننصح بتفعيل إشعارات مخصصة لهؤلاء المستخدمين.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waitlist Panel -->
+        <div class="content-grid" style="margin-top: 25px;">
+            <div class="panel" style="grid-column: 1 / -1;">
+                <div class="panel-header">
+                    <h3 class="panel-title">آخر المسجلين بقائمة الانتظار 📝</h3>
+                    <span style="font-size:12px; color:rgba(0,0,0,0.4); font-weight:700">من صفحة الهبوط</span>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>البريد الإلكتروني</th>
+                            <th>نوع البشرة</th>
+                            <th>المصدر</th>
+                            <th>التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="waitlist-table-body">
+                        <tr><td colspan="4" style="text-align:center; color:rgba(0,0,0,0.3)">جاري التحميل...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Financial Overview -->
+        <div class="content-grid" style="margin-top: 25px;">
+            <div class="panel" style="grid-column: 1 / -1;">
+                <div class="panel-header">
+                    <h3 class="panel-title">نظرة مالية والاشتراكات 💰</h3>
+                    <div style="display:flex; gap:10px;">
+                        <span style="font-size:12px; padding:5px 10px; background:#f3e8ff; color:#9333ea; border-radius:10px; font-weight:700;">الشهر الحالي</span>
+                    </div>
+                </div>
+                
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+                    <div style="padding:20px; border:1px solid #f1f5f9; border-radius:16px;">
+                        <span style="font-size:13px; color:rgba(0,0,0,0.5); font-weight:700;">الاشتراكات النشطة</span>
+                        <div style="font-size:28px; font-weight:900; color:#10b981; margin-top:5px;">8,420 <span style="font-size:12px; background:#ecfdf5; padding:2px 6px; border-radius:6px; color:#10b981;">+5%</span></div>
+                    </div>
+                    <div style="padding:20px; border:1px solid #f1f5f9; border-radius:16px;">
+                        <span style="font-size:13px; color:rgba(0,0,0,0.5); font-weight:700;">الاشتراكات المنتهية / المجمدة</span>
+                        <div style="font-size:28px; font-weight:900; color:#ef4444; margin-top:5px;">1,150 <span style="font-size:12px; background:#fef2f2; padding:2px 6px; border-radius:6px; color:#ef4444;">-2%</span></div>
+                    </div>
+                    <div style="padding:20px; border:1px solid #f1f5f9; border-radius:16px; background: linear-gradient(135deg, #9333ea, #ec4899); color:white;">
+                        <span style="font-size:13px; font-weight:700; opacity:0.8;">إجمالي الإيرادات (هذا الشهر)</span>
+                        <div style="font-size:28px; font-weight:900; margin-top:5px;">125,400 ر.س</div>
+                    </div>
+                </div>
+
+                <!-- Mock Bar Chart -->
+                <div style="margin-top:30px; height:200px; display:flex; align-items:flex-end; gap:15px; padding-top:20px; border-top:1px solid #f1f5f9;">
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
+                        <div style="width:100%; height:80px; background:#f3e8ff; border-radius:8px 8px 0 0; position:relative;"><div style="position:absolute; bottom:0; width:100%; height:100%; background:#9333ea; border-radius:8px 8px 0 0; opacity:0.8;"></div></div>
+                        <span style="font-size:11px; font-weight:700; color:rgba(0,0,0,0.4)">يناير</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
+                        <div style="width:100%; height:120px; background:#f3e8ff; border-radius:8px 8px 0 0; position:relative;"><div style="position:absolute; bottom:0; width:100%; height:100%; background:#9333ea; border-radius:8px 8px 0 0; opacity:0.8;"></div></div>
+                        <span style="font-size:11px; font-weight:700; color:rgba(0,0,0,0.4)">فبراير</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
+                        <div style="width:100%; height:90px; background:#f3e8ff; border-radius:8px 8px 0 0; position:relative;"><div style="position:absolute; bottom:0; width:100%; height:100%; background:#9333ea; border-radius:8px 8px 0 0; opacity:0.8;"></div></div>
+                        <span style="font-size:11px; font-weight:700; color:rgba(0,0,0,0.4)">مارس</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
+                        <div style="width:100%; height:160px; background:#f3e8ff; border-radius:8px 8px 0 0; position:relative;"><div style="position:absolute; bottom:0; width:100%; height:100%; background:#ec4899; border-radius:8px 8px 0 0;"></div></div>
+                        <span style="font-size:11px; font-weight:700; color:#ec4899">أبريل (الحالي)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="./js/api.js"></script>
+<script>
+    const GlowFitAPI = window.GlowFitAPI;
+
+    function timeAgo(dateStr) {
+        const diffMs = Date.now() - new Date(dateStr).getTime();
+        const mins = Math.floor(diffMs / 60000);
+        if (mins < 60) return `منذ ${mins} دقيقة`;
+        const hrs = Math.floor(mins / 60);
+        if (hrs < 24) return `منذ ${hrs} ساعة`;
+        return `منذ ${Math.floor(hrs / 24)} يوم`;
+    }
+
+    async function loadDashboardStats() {
+        try {
+            const [usersCount, productsCount, waitlistCount, pageViews] = await Promise.all([
+                GlowFitAPI.getUsersCount().catch(() => null),
+                GlowFitAPI.getProducts().catch(() => []),
+                GlowFitAPI.getWaitlistCount().catch(() => null),
+                GlowFitAPI.getPageViewsCount(30).catch(() => null),
+            ]);
+
+            document.getElementById('total-users-count').innerText =
+                usersCount?.[0]?.count?.toLocaleString('ar') ?? '—';
+            document.getElementById('total-products-count').innerText =
+                productsCount.length.toLocaleString('ar');
+            document.getElementById('waitlist-count').innerText =
+                waitlistCount?.[0]?.count?.toLocaleString('ar') ?? '—';
+            document.getElementById('page-views-count').innerText =
+                pageViews?.[0]?.count?.toLocaleString('ar') ?? '—';
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+
+    async function loadWaitlistTable() {
+        const tbody = document.getElementById('waitlist-table-body');
+        try {
+            const rows = await GlowFitAPI.getWaitlist(1, 8);
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:rgba(0,0,0,0.3)">لا يوجد تسجيلات بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = rows.map(r => `
+                <tr>
+                    <td style="font-weight:700">${r.email}</td>
+                    <td><span style="color:#9333ea; font-weight:700">${r.skin_type || '—'}</span></td>
+                    <td style="color:rgba(0,0,0,0.4)">${r.source || 'landing_page'}</td>
+                    <td style="color:rgba(0,0,0,0.4)">${timeAgo(r.created_at)}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading waitlist:', error);
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#ef4444">تعذّر تحميل البيانات</td></tr>';
+        }
+    }
+
+    window.toggleSidebar = () => document.querySelector('.sidebar').classList.toggle('active');
+
+    loadDashboardStats();
+    loadWaitlistTable();
+</script>
+</html>

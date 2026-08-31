@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowFit AI — Smart Skin Analysis | Free AI Skincare App</title>
+    <meta name="description" content="Get instant AI-powered skin analysis and personalized skincare insights — completely free. Download GlowFit AI now.">
+    <meta name="keywords" content="AI skin analyzer, skincare app, beauty AI, skin analysis, GlowFit, free skincare app, acne tracker, skin diary, skin score">
+    <meta property="og:title" content="GlowFit AI — Smart Skin Analysis">
+    <meta property="og:description" content="Get instant AI-powered skin analysis, Skin Score, and personalized skincare diary — completely free.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://apps.apple.com/us/app/glowfit-ai/id6756659293">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink: #FF6B9D;
+            --purple: #C44FE2;
+            --blue: #6C63FF;
+            --dark: #0A0A1A;
+            --darker: #060612;
+            --light: #F8F9FF;
+            --glass: rgba(255,255,255,0.05);
+            --glass-border: rgba(255,255,255,0.1);
+            --gold: #FFD700;
+            --green: #4CAF50;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 40px; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Arabic font */
+        html[lang="ar"] body,
+        html[lang="ar"] * {
+            font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+        }
+
+        .hero-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(196,79,226,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(108,99,255,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(255,107,157,0.1) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Language Toggle */
+        .lang-toggle {
+            display: inline-flex;
+            align-items: center;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 4px;
+            gap: 2px;
+            cursor: pointer;
+        }
+
+        .lang-btn {
+            padding: 6px 14px;
+            border-radius: 50px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: #fff;
+        }
+
+        .lang-btn:hover:not(.active) {
+            color: #fff;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(10,10,26,0.8);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s;
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 130px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .logo-icon {
+            width: 110px; height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            filter: drop-shadow(0 0 8px rgba(255,107,157,0.5)) drop-shadow(0 0 20px rgba(196,79,226,0.3));
+            transition: filter 0.3s;
+        }
+
+        .logo:hover .logo-icon {
+            filter: drop-shadow(0 0 12px rgba(255,107,157,0.7)) drop-shadow(0 0 30px rgba(196,79,226,0.5));
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--pink); }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(255,107,157,0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 160px;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(255,107,157,0.1);
+            border: 1px solid rgba(255,107,157,0.2);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--pink);
+            font-weight: 600;
+            margin-bottom: 24px;
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,157,0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(255,107,157,0); }
+        }
+
+        .hero-text h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero-text h1 .gradient {
+            background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.8;
+            margin-bottom: 36px;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 48px;
+        }
+
+        .stat { text-align: left; }
+        html[lang="ar"] .stat { text-align: right; }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+
+        /* Phone Mockup */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .phone-mockup {
+            width: 280px;
+            height: 580px;
+            background: linear-gradient(145deg, #1a1a2e, #16162a);
+            border-radius: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 40px 100px rgba(196,79,226,0.2),
+                0 0 0 1px rgba(255,255,255,0.05);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .phone-notch {
+            width: 120px;
+            height: 28px;
+            background: #0A0A1A;
+            border-radius: 0 0 16px 16px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .phone-screen {
+            padding: 40px 20px 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .phone-face {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd1dc, #ffb6c1);
+            margin-top: 20px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(255,107,157,0.3);
+        }
+
+        .scan-ring {
+            position: absolute;
+            top: -10px; left: -10px;
+            right: -10px; bottom: -10px;
+            border: 2px solid var(--pink);
+            border-radius: 50%;
+            animation: scanPulse 2s ease-in-out infinite;
+        }
+
+        .scan-ring:nth-child(2) {
+            top: -20px; left: -20px;
+            right: -20px; bottom: -20px;
+            animation-delay: 0.5s;
+            border-color: var(--purple);
+        }
+
+        @keyframes scanPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .phone-bars {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .phone-bar {
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phone-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            animation: barGrow 2s ease-in-out infinite;
+        }
+
+        .phone-bar:nth-child(1) .phone-bar-fill {
+            width: 85%;
+            background: linear-gradient(90deg, var(--pink), var(--purple));
+        }
+        .phone-bar:nth-child(2) .phone-bar-fill {
+            width: 70%;
+            background: linear-gradient(90deg, var(--blue), var(--purple));
+            animation-delay: 0.3s;
+        }
+        .phone-bar:nth-child(3) .phone-bar-fill {
+            width: 92%;
+            background: linear-gradient(90deg, #4CAF50, #66BB6A);
+            animation-delay: 0.6s;
+        }
+        .phone-bar:nth-child(4) .phone-bar-fill {
+            width: 78%;
+            background: linear-gradient(90deg, var(--gold), #FFA000);
+            animation-delay: 0.9s;
+        }
+
+        @keyframes barGrow {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .phone-score {
+            margin-top: 12px;
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .phone-label {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.75rem;
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+        }
+
+        .glow-orb.pink {
+            width: 200px; height: 200px;
+            background: var(--pink);
+            top: 20%; right: -50px;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+
+        .glow-orb.purple {
+            width: 150px; height: 150px;
+            background: var(--purple);
+            bottom: 20%; left: -30px;
+            animation: orbFloat 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0,0); }
+            50% { transform: translate(20px, -20px); }
+        }
+
+        /* Trusted Bar */
+        .trusted-bar {
+            padding: 80px 0;
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+
+        .trusted-bar p {
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .trusted-logos {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            align-items: center;
+            color: rgba(255,255,255,0.2);
+            font-size: 1.1rem;
+            font-weight: 600;
+            flex-wrap: wrap;
+        }
+
+        /* Features */
+        .features {
+            padding: 120px 0;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--pink);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            color: rgba(255,255,255,0.5);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 36px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, var(--pink), var(--purple), var(--blue));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,107,157,0.3);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-card.highlight {
+            background: linear-gradient(135deg, rgba(255,107,157,0.08), rgba(196,79,226,0.08));
+            border-color: rgba(255,107,157,0.2);
+        }
+
+        .feature-card.highlight .feature-icon {
+            box-shadow: 0 0 30px rgba(255,107,157,0.2);
+        }
+
+        .feature-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .feature-icon {
+            width: 56px; height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon.pink { background: rgba(255,107,157,0.15); }
+        .feature-icon.purple { background: rgba(196,79,226,0.15); }
+        .feature-icon.blue { background: rgba(108,99,255,0.15); }
+        .feature-icon.green { background: rgba(76,175,80,0.15); }
+        .feature-icon.gold { background: rgba(255,215,0,0.15); }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: rgba(255,255,255,0.5);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Skin Score Showcase */
+        .score-showcase {
+            padding: 100px 0;
+        }
+
+        .score-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .score-visual {
+            display: flex;
+            justify-content: center;
+        }
+
+        .score-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: var(--glass);
+            border: 3px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            top: -3px; left: -3px;
+            right: -3px; bottom: -3px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: var(--pink);
+            border-right-color: var(--purple);
+            animation: scoreRotate 3s linear infinite;
+        }
+
+        @keyframes scoreRotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .score-value {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .score-label-text {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .score-breakdown {
+            margin-top: 24px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .breakdown-label {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+        }
+
+        .breakdown-value {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-value.good { color: var(--green); }
+        .breakdown-value.mid { color: var(--gold); }
+        .breakdown-value.low { color: var(--pink); }
+
+        .score-info h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .score-info p {
+            color: rgba(255,255,255,0.6);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .score-features {
+            list-style: none;
+        }
+
+        .score-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+
+        .score-features li span {
+            font-size: 1.1rem;
+        }
+
+        /* How it works */
+        .how-it-works {
+            padding: 120px 0;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            color: rgba(255,255,255,0.5);
+            line-height: 1.7;
+        }
+
+        /* Comparison Section */
+        .comparison {
+            padding: 100px 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .compare-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .compare-card.other {
+            border-color: rgba(255,255,255,0.05);
+            opacity: 0.6;
+        }
+
+        .compare-card.glowfit {
+            border-color: rgba(255,107,157,0.3);
+            background: linear-gradient(135deg, rgba(255,107,157,0.08), rgba(196,79,226,0.08));
+            position: relative;
+        }
+
+        .compare-card.glowfit::after {
+            content: '⭐ RECOMMENDED';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .compare-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .compare-list {
+            list-style: none;
+            text-align: left;
+        }
+        html[lang="ar"] .compare-list { text-align: right; }
+
+        .compare-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        .compare-list li .check { color: var(--green); font-weight: 700; }
+        .compare-list li .cross { color: #FF5252; font-weight: 700; }
+
+        /* Testimonials */
+        .social-proof {
+            padding: 120px 0;
+        }
+
+        .proof-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .proof-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .proof-stars {
+            color: #FFD700;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .proof-text {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .proof-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .proof-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .proof-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .proof-role {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 100px 0;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 60px;
+        }
+
+        .faq-item {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(255,107,157,0.3);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1rem;
+            gap: 12px;
+        }
+
+        .faq-toggle {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            margin-top: 16px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.7;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        /* CTA */
+        .cta {
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(255,107,157,0.1), rgba(196,79,226,0.1));
+            border: 1px solid rgba(255,107,157,0.2);
+            border-radius: 32px;
+            padding: 80px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,107,157,0.1) 0%, transparent 50%);
+            animation: ctaGlow 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes ctaGlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .cta-box h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .cta-box p {
+            color: rgba(255,255,255,0.6);
+            font-size: 1.2rem;
+            margin-bottom: 36px;
+            position: relative;
+        }
+
+        .cta-box .btn-download {
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .cta-subtitle {
+            position: relative;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+            margin-top: 16px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--pink);
+            text-decoration: none;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--pink); }
+
+        /* Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero-text p { margin: 0 auto 36px; }
+            .hero-buttons { justify-content: center; }
+            .hero-stats { justify-content: center; }
+            .section-title { font-size: 2rem; }
+
+            .features-grid,
+            .steps,
+            .proof-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid,
+            .score-content,
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links { display: none; }
+
+            .phone-mockup { width: 220px; height: 460px; }
+            .score-circle { width: 220px; height: 220px; }
+            .score-value { font-size: 3rem; }
+
+            .cta-box { padding: 60px 24px; }
+            .cta-box h2 { font-size: 2rem; }
+
+            .nav-right { gap: 8px; }
+            .lang-toggle { font-size: 0.7rem; }
+            .lang-btn { padding: 5px 10px; font-size: 0.7rem; }
+        }
+
+        /* ===== Language Switch — Simple Fade ===== */
+
+
+        .lang-text-out {
+            animation: fadeOut 0.2s ease forwards;
+        }
+
+        .lang-text-in {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Glow effect on active lang button */
+        .lang-btn.active {
+            box-shadow: 0 0 12px rgba(255,107,157,0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero-bg"></div>
+
+<div id="top"></div>
+
+<!-- Navigation -->
+<nav>
+    <div class="container">
+        <a href="#" class="logo">
+            <div class="logo-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="250 150 650 650"><defs><linearGradient id="lg1" x1="689" y1="566" x2="687" y2="818" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient><linearGradient id="lg2" x1="756" y1="567" x2="754" y2="819" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient><linearGradient id="lg3" x1="743" y1="567" x2="741" y2="819" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient><linearGradient id="lg4" x1="511" y1="565" x2="509" y2="817" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient><linearGradient id="lg5" x1="335" y1="564" x2="333" y2="816" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient><linearGradient id="lg6" x1="698" y1="401" x2="683" y2="530" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient><linearGradient id="lg7" x1="558" y1="254" x2="577" y2="565" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient><linearGradient id="lg8" x1="748" y1="671" x2="521" y2="237" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient><linearGradient id="lg9" x1="528" y1="234" x2="669" y2="567" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B9D"/><stop offset="1" stop-color="#C44FE2"/></linearGradient></defs><g><path fill="url(#lg1)" d="M703.59,686.75s-16.94-.05-32.82.14c6.61-21.18,18.85-52.16,20.57-54.95,1.86-3.02,22.65,1.28,32.86,1.97,10.22.7,15.79-4.59,22.06-9.46,6.27-4.88,2.21-5.75-8.71-2.03-10.92,3.72-31.35-1.16-48.08-2.32-16.72-1.16-32.98-.46-51.1,12.31-18.12,12.77-8.13,34.84-5.34,36.7,2.79,1.86,11.15,4.41,5.81-7.66-5.34-12.08,7.2-20.9,13.7-26.94,6.5-6.04,26.25-7.2,26.25-7.2,0,0,1.16,2.32-6.15,16.61-3.08,6.02-9.88,23.85-16.79,43.29-5.93.18-10.43.43-11.84.78-5.57,1.39-7.66,8.19-7.66,8.19,0,0,6.99-.05,16.41-.18-8.4,24.08-16.16,48.27-16.7,53.84-1.05,10.8,4.88,9.06,4.88,9.06h10.45c1.09-11.04,10.62-42.13,16.77-63.18,13.7-.31,27.64-.82,32.29-1.62,10.1-1.74,3.14-7.32,3.14-7.32Z"/><path fill="url(#lg2)" d="M778.87,686.92c12.43.02,24.28-.18,24.28-.18,0,0,3.17-3.48,0-6.79l-21.94.31c5.3-15.07,9.83-28.01,9.83-28.01,0,0,0-4.35-7.14-3.31-7.14,1.05-9.75,9.58-11.85,15.33-.69,1.91-3.02,8.37-5.87,16.21l-11.65.17s-4.72,2.79-3.85,4.88c.28.67,5.83,1.04,13.22,1.22-5.34,14.64-11.42,31.03-12.23,32.05-1.39,1.74-16.2,22.82-23.86,24.39-7.66,1.57-8.88,1.57-8.01-6.79.87-8.36,16.2-48.6,17.42-51.04s-.52-7.66-7.14-6.79c0,0-5.92,1.9-9.06,8.18-3.14,6.28-15.52,41.99-15.08,53.66.45,11.67,6.19,16.2,18.21,11.67,12.02-4.53,24.38-20.38,24.82-21.25.44-.87-3.05,19.34,8.97,20.73,12.02,1.39,18.99,1.05,27.52-7.14,8.54-8.19,15.85-17.42,17.07-20.38,1.22-2.96.87-8.71-3.31-3.83-4.18,4.88-14.98,23.34-26.48,23.69-11.5.35-12.02-5.92-5.4-24.39,2.72-7.58,7.19-20.25,11.53-32.57Z"/><path fill="url(#lg3)" d="M732.57,650.99c-2.63,6.2-.54,13.02,4.69,15.24,5.22,2.22,11.59-1,14.23-7.2,2.63-6.2.54-13.02-4.69-15.24-5.22-2.22-11.59,1-14.23,7.2Z"/><path fill="url(#lg4)" d="M636.35,709.4s-7.51,10.46-15.56,12.83c-4.2,1.24-12.47.12-13.53-10.04-.93-8.91,6.27-32.75-3.13-32.23-9.41.53-6.28,30.83-6.97,33.27-.69,2.44-10.11,27.88-23.34,29.61-13.24,1.75-6.27-23.52-3.13-31.45,3.13-7.91,9.06-21.17,4.53-24.64-4.53-3.48-10.11-2.44-14.98,9.41-4.88,11.84-13.93,39.72-21.95,43.2-8.01,3.48-16.37,7.32-15.33-6.97,1.05-14.28,12.89-40.77,13.94-45.64,1.04-4.87-10.28-6.29-14.03,0-3.74,6.28-5.72,17.77-7.81,22.19-2.08,4.41-1.16,7.9-6.73,9.98-5.57,2.09-13.01,5.58-16.49,3.95-3.49-1.63,6.73-11.38,5.34-30.89-1.4-19.51-25.32-17.41-31.59-10.68-6.28,6.74-10.43,9.21-15.1,12.08-9.35,5.75-16.49,24.39-17.18,25.31-.7.93-17.19,24.63-24.62,24.63s-9.29-.75-10.22-7.2c-1.22-8.47-1.92-12.37,1.85-20.67,1.73-3.81,33.22-34.14,42.27-59.22,9.06-25.08,6.51-35.76-4.65-33.91-11.15,1.86-39.01,42.97-50.16,81.06-11.15,38.09-1.4,53.19,14.16,48.77,15.56-4.42,27.4-18.35,29.73-21.6,2.32-3.25,1.4,15.56,8.59,19.51,7.2,3.95,15.56,6.04,26.71-.46,11.16-6.51,18.35-17.42,20.67-19.28,2.32-1.86,16.4-.93,22.02-6.05,5.62-5.1-9.24,23.23,6.55,26.71,15.79,3.49,30.65-7.9,33.67-15.32,3.03-7.43-.93,18.35,18.81,16.03,19.75-2.32,31.82-23,33.68-27.88,1.86-4.88,5.86,7.14,21.02,3.49,5.35-1.29,9.35-5.79,12.95-11.15,1.84-2.75,0-6.73,0-6.73ZM404.68,699.29c12.54-45.99,37.15-68.11,37.15-68.11,3.03,25.44-33.67,67.65-35.65,69.28-1.98,1.62-1.5-1.17-1.5-1.17ZM478.48,729.89c-.53,2.09-11.32,13.42-18.81,15.68-7.5,2.26-12.72-1.91-12.72-13.06s8.36-28.22,8.36-28.22c0,0,1.75-2.44,2.27,4.01s13.76,17.59,15.15,18.81c1.4,1.22,6.27.69,5.75,2.79ZM483.78,720.34c-.73,1.43-2.26,2.31-3.86,2.12-6.4-.77-10.41-8.08-12.24-17.13-2.09-10.27,3.65-22.99,10.84-21.42,7.19,1.57,9.02,6.45,9.89,17.06.64,7.81-2.78,15.73-4.62,19.37Z"/><path fill="url(#lg5)" d="M378.02,695.05s-28.8-2.32-37.63,0c-8.83,2.32-4.88,7.2-4.88,7.2,0,0,21.14-.46,26.94,0,5.81.46-.93,10.92-5.34,19.51-4.41,8.59-10.45,17.19-22.3,22.99-11.85,5.81-31.06,7.18-34.84-21.14-4.76-35.7,11.84-58.3,17.42-69.21,5.57-10.92,30.35-36.78,48.54-34.84,11.96,1.28,9.99,19.51,7.43,27.64-2.55,8.13-13.01,14.4-13.01,14.4,0,0-1.29,5.61,10.22,3.72,10.57-1.74,15.91-16.14,17.42-25.32,1.41-8.59-1.91-23.1-20.9-26.25-20.32-3.37-44.85,13.44-55.51,24.62-23.81,24.97-39.6,65.37-27.29,95.13,8.83,21.35,25.9,27.04,41.93,25.41,16.03-1.63,29.26-18.58,29.26-18.58,0,0-.7,12.08-.46,17.88.23,5.81,9.75,5.11,9.75,5.11,0,0,1.16-14.63,1.63-18.35.46-3.72,10.22-33.68,12.77-40.18,2.55-6.5-1.16-9.75-1.16-9.75Z"/></g><g opacity=".25"><path fill="url(#lg8)" d="M730.23,450.9c-.44,22.72-6.48,43.15-16.59,56.06-22.54,28.79-39.98,32.8-48.35,34.73-1.22.28-2.47.57-3.1.82-.2.19-.42.32-.62.43-.95.84-2.54,2.68-4.34,4.78-3.63,4.22-8.61,9.99-15.14,15.75v-7.29c4.61-4.43,8.28-8.68,11.1-11.95,1.65-1.92,2.99-3.47,4.12-4.6,0,0,2.82-6.96,2.82-6.96-9.76-31.4-12.96-54.18-5.2-74.69.05-.13.1-.26.15-.39.09-.24.19-.48.28-.72.03-.06.05-.12.07-.18.13-.32.26-.64.4-.96.15-.36.3-.71.46-1.06.12-.27.24-.54.36-.81.19-.42.39-.85.6-1.27,19.04-39.49,51.59-69.25,51.92-69.54l2.4-2.19,1.67,2.79c11.43,19.03,17.46,42.92,16.99,67.27Z"/><g><path fill="url(#lg7)" d="M653.19,544.22c-2.83,3.26-6.49,7.52-11.1,11.95-11.88,11.41-30.01,24.01-55.98,24.01-30.85,0-34.81-24.96-35.08-35.71-.3-11.58,3.54-19.74,9.82-29.16,3.5-5.24,12.66-14.29,15.91-16.2,15.72,2.05,32,3.06,41.13,3.06.52,0,1.04,0,1.52,0,5.13-.07,9.06-1.94,11.68-5.54,6.49-8.94,1.72-24.64,1.51-25.31-.76-2.42,1.15-4.78,3.92-7.86,2.07-2.3,4.02-4.47,3.86-7.08-.18-2.77-3.3-5.06-9.32-6.84.93-.37,1.93-.77,2.98-1.19,8.93-3.51,5.62-12.74,3.62-18.24-.5-1.38,1.58-3.54,4.42-5.53,2.17-1.53,4.8-2.95,7.07-3.86,2.27-.91,4.94-4.52,5.3-8.76.35-4.22-1.31-10.51-11.18-16.53-.4-.25-.79-.49-1.19-.75-12.76-8.3-18.35-20.71-19.82-43.69v-.11c-.2-1.81-4.82-43.84-33.54-53.51-.37-7.4-2.14-13.72-4.89-17.72-7.32-10.68-17.72-20.78-43.94-22.4l-.74-.04c-24.01-1.49-48.83-3.02-84.98,21.86-36.43,25.08-55.29,72.39-48.02,120.54,5.66,37.54,13.41,48.93,23.23,63.35,5.45,8,11.62,17.07,18.28,32.5,16.57,38.37,1.37,56.68,1.11,56.98l-9.48,10.63,12.7-6.49c1.35-.68,32.92-17.64,26.66-84.67-3.26-34.88,16.47-53,39.32-73.99,2.44-2.23,4.89-4.49,7.34-6.79,2.51-2.36,4.93-4.62,7.24-6.79,27.72-25.94,41.64-38.96,49.51-55,4.24-8.66,6.3-17.91,6.66-26.27,23.59,9.64,28.03,46.82,28.2,48.31,1.19,18.5,4.88,37.19,23.56,48.59.56.34,1.09.69,1.59,1.03,4.63,3.18,7.07,6.58,7.06,9.94,0,2.68-1.56,4.51-2.06,4.85-.48.2-2.55,1.06-5,2.44-4.99,2.82-11.55,7.82-9.44,13.68,2.62,7.27,2.93,10.09-.56,11.46-6.44,2.54-10.96,4.41-11.01,4.43l-6.55,1.84c-.59.24-.49,1.1.14,1.21l1.16.25c3.56.75,7.17,1.19,10.8,1.52,4.31.39,7.02,3.29,8.3,4.31-.4.75-1.56,2.04-2.38,2.95-2.85,3.17-6.75,7.51-5.05,13.01,1.71,5.51,2.93,15.54-.74,20.58-1.59,2.21-4.02,3.29-7.43,3.35-8.62.12-26.79-.96-43.47-3.21-17.74-2.39-33.24-7.25-40.72-11.01-20.34-10.21-25.44-21.72-26.04-26.79-.03-.22-.24-.23-.46-.21-1.83.16-3.22,2.44-3.05,5.53.04.77.13,1.56.42,2.31,2.52,6.77,9.55,15.3,26.74,23.93,7.06,3.54,20.77,8,36.75,10.67-4.87,4.29-10.66,10.68-13.07,14.3-6.68,9.99-11.06,19.31-10.72,32.26.13,5.35,1.24,15.69,7.11,24.74,6.96,10.73,18.17,16.16,33.31,16.16h0c25.28,0,43.47-11.02,55.97-22.06,6.52-5.77,11.51-11.53,15.14-15.75,1.81-2.1,3.4-3.94,4.34-4.78.2-.11.42-.24.62-.43.62-.25,1.88-.54,3.1-.82,8.37-1.93,25.81-5.94,48.35-34.73,10.11-12.9,16.15-33.34,16.59-56.06.47-24.35-5.56-48.24-16.99-67.27l-1.67-2.79-2.4,2.19c-.33.29-32.88,30.05-51.92,69.54-.2.42-.4.85-.6,1.27-.12.27-.25.54-.36.81-.15.35-.31.7-.46,1.06-.13.32-.27.64-.4.96-.02.06-.05.12-.07.18-.09.24-.19.48-.28.72-.05.13-.1.26-.15.39-7.75,20.52-4.17,42.29,5.59,73.69,0,0-5.47,10.42-7.33,12.57ZM577.28,327c-7.43,15.16-21.11,27.95-48.36,53.45-2.32,2.17-4.73,4.43-7.25,6.8-2.44,2.28-4.88,4.52-7.3,6.75-22.9,21.04-44.52,40.9-41.02,78.42,3.09,33.09-3.59,52.95-9.72,63.78-1.53,2.71-3.11,4.98-4.62,6.91,2.8-10.23,3.55-26.65-6.43-49.76-.07-.18-.15-.35-.23-.52-.59-3.52-1.81-6.92-3.11-10.51-2.87-7.99-6.46-17.93-5.16-35.19,2.7-35.95,19.54-56.96,72.12-89.88,43.38-27.15,49.47-56.1,50.07-67.4.1-1.81.04-3.19,0-4,0,0,0-.02,0-.02-.08-.28-.16-.55-.25-.8-1.4-4.21-3.76-4.22-4.38-3.36-.35.49-.52,2.27-.6,3.98-.04.52-.06,1.04-.07,1.51-.03.92-.04,1.65-.04,1.88v.07c-.18,3.66-1.03,10.01-4.36,17.86-4.92,11.62-16.41,28.98-43.19,45.75-54.33,34.01-71.77,55.98-74.61,94.01-.68,9.11-.1,16.29,1.04,22.26-2.07-3.28-4.07-6.23-5.99-9.04-9.43-13.86-16.88-24.8-22.37-61.13-6.96-46.14,11.01-91.42,45.77-115.34,26.32-18.12,45.82-21.65,64.26-21.65,5.83,0,11.56.36,17.36.71l.74.04c22.61,1.39,32.29,9.03,39.87,20.09,4.79,6.98,6.69,26.26-2.17,44.33ZM709.44,503.66c-20.33,25.96-35.96,30.6-44.13,32.53,2.62-6.39,7.03-17.84,12.99-33.38,5.83-15.19,11.86-30.9,13.35-33.93,2.49-5.08,7.78-18.35,11.01-26.56,1.87-4.77,2.05-10.03.52-14.94l-2.85,6.18s-9.92,25.72-13.48,32.98c-1.59,3.25-7.4,18.36-13.54,34.37-4.31,11.26-6.16,16.36-9.22,23.93-8.69-30.83-8.6-52.94-.46-70.21,15.69-33.27,38.91-57.76,46.7-65.35,21.79,39.17,17.29,91.17-.9,114.4Z"/><path fill="url(#lg8)" d="M598.45,358.01c-9.23-.52-23.68,7.14-25.6,10.1-1.92,2.96,0,4,0,4,13.58-10.45,26.64-7.66,28.73-7.84,2.09-.17,6.09-5.75-3.13-6.27Z"/><path fill="url(#lg9)" d="M580.41,390.68c-1.02-.11-2.05.42-2.4,1.38-.6,1.63,1.82,2.25,5.81,3.9,5.05,2.09,14.63,2.96,18.97,1.13,6.65-2.79,8.61-10.53,7.22-10.87s-2.74,3.37-8.69,4.17c-9.66,1.31-17.75.63-20.91.29Z"/></g></g></svg></div>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" data-en="Home" data-ar="الرئيسية">الرئيسية</a></li>
+            <li><a href="#features" data-en="Features" data-ar="المميزات">المميزات</a></li>
+            <li><a href="#score" data-en="Skin Score" data-ar="درجة البشرة">درجة البشرة</a></li>
+            <li><a href="#how" data-en="How it Works" data-ar="كيف يعمل">كيف يعمل</a></li>
+            <li><a href="#reviews" data-en="Reviews" data-ar="التقييمات">التقييمات</a></li>
+            <li><a href="#faq" data-en="FAQ" data-ar="أسئلة شائعة">أسئلة شائعة</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="lang-toggle">
+                <button class="lang-btn" onclick="setLang('en')">EN</button>
+                <button class="lang-btn active" onclick="setLang('ar')">عربي</button>
+            </div>
+            <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" class="btn-download" target="_blank">
+                <span data-en="🍎 Download Free" data-ar="🍎 تحميل مجاني">🍎 تحميل مجاني</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge" data-en="🔥 NEW — Skin Score &amp; Skin Diary Features" data-ar="🔥 جديد — درجة البشرة و يوميات البشرة">🔥 جديد — درجة البشرة و يوميات البشرة</div>
+                <h1>
+                    <span data-en="Know Your Skin." data-ar="اكتشف بشرتك.">اكتشف بشرتك.</span><br>
+                    <span class="gradient" data-en="Love Your Glow." data-ar="أحب إشراقتك.">أحب إشراقتك.</span>
+                </h1>
+                <p data-en="Get instant AI-powered skin analysis with a personalized Skin Score out of 100. Track your progress daily with Skin Diary, and get expert skincare tips — completely free." data-ar="احصل على تحليل فوري للبشرة بالذكاء الاصطناعي مع درجة شخصية من 100. تتبع تقدمك يومياً مع يوميات البشرة، واحصل على نصائح متخصصة — مجاناً بالكامل.">احصل على تحليل فوري للبشرة بالذكاء الاصطناعي مع درجة شخصية من 100. تتبع تقدمك يومياً مع يوميات البشرة، واحصل على نصائح متخصصة — مجاناً بالكامل.</p>
+                <div class="hero-buttons">
+                    <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" class="btn-download" target="_blank">
+                        <span data-en="🍎 Download for iPhone" data-ar="🍎 تحميل للآيفون">🍎 تحميل للآيفون</span>
+                    </a>
+                    <a href="#how" class="btn-secondary">
+                        <span data-en="▶ See How it Works" data-ar="▶ شاهد كيف يعمل">▶ شاهد كيف يعمل</span>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label" data-en="Free Forever" data-ar="مجاني للأبد">مجاني للأبد</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label" data-en="Third-Party Sharing" data-ar="مشاركة مع طرف ثالث">مشاركة مع طرف ثالث</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">AI</div>
+                        <div class="stat-label" data-en="Skin Score" data-ar="درجة البشرة">درجة البشرة</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="glow-orb pink"></div>
+                <div class="glow-orb purple"></div>
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="phone-face">
+                            <div class="scan-ring"></div>
+                            <div class="scan-ring"></div>
+                        </div>
+                        <div class="phone-bars">
+                            <div class="phone-bar"><div class="phone-bar-fill"></div></div>
+                            <div class="phone-bar"><div class="phone-bar-fill"></div></div>
+                            <div class="phone-bar"><div class="phone-bar-fill"></div></div>
+                            <div class="phone-bar"><div class="phone-bar-fill"></div></div>
+                        </div>
+                        <div class="phone-score">92</div>
+                        <div class="phone-label" data-en="Skin Health Score" data-ar="درجة صحة البشرة">درجة صحة البشرة</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trusted Bar -->
+<section class="trusted-bar">
+    <div class="container">
+        <p data-en="Your skin deserves the best" data-ar="بشرتك تستحق الأفضل">بشرتك تستحق الأفضل</p>
+        <div class="trusted-logos">
+            <span data-en="🔒 Privacy First" data-ar="🔒 الخصوصية أولاً">🔒 الخصوصية أولاً</span>
+            <span data-en="🤖 AI Powered" data-ar="🤖 مدعوم بالذكاء">🤖 مدعوم بالذكاء</span>
+            <span data-en="🌍 Arab &amp; English" data-ar="🌍 عربي وإنجليزي">🌍 عربي وإنجليزي</span>
+            <span data-en="⭐ 5-Star Reviews" data-ar="⭐ تقييم 5 نجوم">⭐ تقييم 5 نجوم</span>
+            <span data-en="📱 iPhone &amp; iPad" data-ar="📱 آيفون وآيباد">📱 آيفون وآيباد</span>
+        </div>
+    </div>
+</section>
+
+<!-- Free Skin Scan Teaser -->
+<section class="cta" id="skin-scan" style="padding-top:60px; padding-bottom:60px;">
+    <div class="container">
+        <div class="cta-box fade-up" style="max-width:600px; margin:0 auto; text-align:center;">
+            <h2 data-en="Try It Now — Free Skin Check ✨" data-ar="جرّبيه هلق — فحص بشرة مجاني ✨">جرّبيه هلق — فحص بشرة مجاني ✨</h2>
+            <p data-en="Upload a clear selfie and get an instant general impression." data-ar="ارفعي صورة سيلفي واضحة واحصلي على انطباع عام فوري.">ارفعي صورة سيلفي واضحة واحصلي على انطباع عام فوري.</p>
+
+            <div id="scan-idle-state" style="margin-top:25px;">
+                <label for="scan-file-input" style="display:inline-flex; align-items:center; gap:10px; padding:16px 30px; border-radius:16px; background:rgba(255,255,255,0.08); border:2px dashed rgba(255,255,255,0.25); cursor:pointer; color:#fff; font-weight:700; transition:all 0.3s;">
+                    📷 <span data-en="Upload a Photo" data-ar="ارفع صورة">ارفع صورة</span>
+                </label>
+                <input type="file" id="scan-file-input" accept="image/*" capture="user" style="display:none;">
+
+                <p style="margin-top:15px; font-size:12px; color:rgba(255,255,255,0.4);" data-en="This is a general impression, not a medical diagnosis." data-ar="هاي أداة إرشادية عامة، مش تشخيص طبي.">هاي أداة إرشادية عامة، مش تشخيص طبي.</p>
+
+                <label style="display:flex; align-items:center; gap:8px; justify-content:center; margin-top:15px; font-size:12px; color:rgba(255,255,255,0.6); cursor:pointer;">
+                    <input type="checkbox" id="scan-consent-checkbox">
+                    <span data-en="I agree my photo will be analyzed and not stored." data-ar="موافق إنه صورتي رح تتحلل فوراً وما تنخزن.">موافق إنه صورتي رح تتحلل فوراً وما تنخزن.</span>
+                </label>
+            </div>
+
+            <div id="scan-loading-state" style="display:none; margin-top:25px;">
+                <div style="width:40px; height:40px; border:4px solid rgba(255,255,255,0.2); border-top-color:#ec4899; border-radius:50%; margin:0 auto; animation:spin 0.8s linear infinite;"></div>
+                <p style="margin-top:15px; color:rgba(255,255,255,0.6); font-size:13px;" data-en="Analyzing..." data-ar="جاري التحليل...">جاري التحليل...</p>
+            </div>
+            <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+            <div id="scan-result-state" style="display:none; margin-top:25px; text-align:right; background:rgba(255,255,255,0.06); border-radius:18px; padding:25px;">
+                <div style="font-size:13px; color:rgba(255,255,255,0.5); font-weight:700; margin-bottom:8px;" data-en="Skin Type" data-ar="نوع البشرة">نوع البشرة</div>
+                <div id="scan-result-type" style="font-size:20px; font-weight:800; color:#ec4899; margin-bottom:18px;"></div>
+                <div id="scan-result-observation" style="font-size:14px; color:rgba(255,255,255,0.85); margin-bottom:12px; line-height:1.7;"></div>
+                <div id="scan-result-tip" style="font-size:14px; color:rgba(255,255,255,0.7); line-height:1.7;"></div>
+
+                <a href="#download" class="btn-download" style="display:block; text-align:center; margin-top:20px; text-decoration:none;">
+                    <span data-en="Get Your Full Report — Download the App" data-ar="احصل على تقريرك الكامل — حمّل التطبيق">احصل على تقريرك الكامل — حمّل التطبيق</span>
+                </a>
+                <button onclick="resetSkinScan()" style="display:block; width:100%; text-align:center; margin-top:12px; background:none; border:none; color:rgba(255,255,255,0.4); font-family:inherit; font-size:13px; cursor:pointer; text-decoration:underline;">
+                    <span data-en="Try Another Photo" data-ar="جرّب صورة تانية">جرّب صورة تانية</span>
+                </button>
+            </div>
+
+            <div id="scan-error-state" style="display:none; margin-top:20px; color:#ff6b9d; font-size:13px; font-weight:600;"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+    <div class="container">
+        <div class="section-badge fade-up" data-en="✨ Features" data-ar="✨ المميزات">✨ المميزات</div>
+        <h2 class="section-title fade-up" data-en="Everything You Need&lt;br&gt;for Better Skin" data-ar="كل ما تحتاجه&lt;br&gt;لبشرة أفضل">كل ما تحتاجه<br>لبشرة أفضل</h2>
+        <p class="section-desc fade-up" data-en="GlowFit AI combines advanced artificial intelligence with a simple, beautiful design to give you the ultimate skincare companion." data-ar="يجمع GlowFit AI بين الذكاء الاصطناعي المتقدم وتصميم بسيط وجميل ليمنحك رفيقك الأمثل للعناية بالبشرة.">يجمع GlowFit AI بين الذكاء الاصطناعي المتقدم وتصميم بسيط وجميل ليمنحك رفيقك الأمثل للعناية بالبشرة.</p>
+        <div class="features-grid">
+            <div class="feature-card highlight fade-up">
+                <div class="feature-tag" data-en="NEW" data-ar="جديد">جديد</div>
+                <div class="feature-icon pink">💯</div>
+                <h3 data-en="Skin Score" data-ar="درجة البشرة">درجة البشرة</h3>
+                <p data-en="Get a detailed score out of 100 for your skin health, broken down by hydration, clarity, texture, and more." data-ar="احصل على درجة تفصيلية من 100 لصحة بشرتك، مقسمة حسب الترطيب والنقاء والملمس والمزيد.">احصل على درجة تفصيلية من 100 لصحة بشرتك، مقسمة حسب الترطيب والنقاء والملمس والمزيد.</p>
+            </div>
+            <div class="feature-card highlight fade-up">
+                <div class="feature-tag" data-en="NEW" data-ar="جديد">جديد</div>
+                <div class="feature-icon purple">📸</div>
+                <h3 data-en="Skin Diary" data-ar="يوميات البشرة">يوميات البشرة</h3>
+                <p data-en="Take daily photos and track your skin&#39;s progress over time with visual Before &amp; After comparisons." data-ar="التقط صوراً يومية وتتبع تقدم بشرتك مع مرور الوقت مع مقارنات قبل وبعد بصرية.">التقط صوراً يومية وتتبع تقدم بشرتك مع مرور الوقت مع مقارنات قبل وبعد بصرية.</p>
+            </div>
+            <div class="feature-card fade-up">
+                <div class="feature-icon blue">🤖</div>
+                <h3 data-en="AI Skin Analysis" data-ar="تحليل البشرة بالذكاء">تحليل البشرة بالذكاء</h3>
+                <p data-en="Advanced AI scans your face and identifies skin type, texture, hydration, and potential concerns in seconds." data-ar="يقوم الذكاء الاصطناعي بمسح وجهك وتحديد نوع البشرة والملمس والترطيب والمخاوف المحتملة في ثوانٍ.">يقوم الذكاء الاصطناعي بمسح وجهك وتحديد نوع البشرة والملمس والترطيب والمخاوف المحتملة في ثوانٍ.</p>
+            </div>
+            <div class="feature-card fade-up">
+                <div class="feature-icon green">💡</div>
+                <h3 data-en="Personalized Tips" data-ar="نصائح مخصصة">نصائح مخصصة</h3>
+                <p data-en="Get skincare recommendations and daily routines tailored specifically to your unique skin profile." data-ar="احصل على توصيات العناية بالبشرة وروتين يومي مصمم خصيصاً لنوع بشرتك الفريد.">احصل على توصيات العناية بالبشرة وروتين يومي مصمم خصيصاً لنوع بشرتك الفريد.</p>
+            </div>
+            <div class="feature-card fade-up">
+                <div class="feature-icon pink">📈</div>
+                <h3 data-en="Progress Tracking" data-ar="تتبع التقدم">تتبع التقدم</h3>
+                <p data-en="Visualize your improvements over weeks and months with detailed reports and trend analysis." data-ar="شاهد تحسنك على مدى الأسابيع والأشهر مع تقارير مفصلة وتحليل الاتجاهات.">شاهد تحسنك على مدى الأسابيع والأشهر مع تقارير مفصلة وتحليل الاتجاهات.</p>
+            </div>
+            <div class="feature-card fade-up">
+                <div class="feature-icon gold">🔒</div>
+                <h3 data-en="100% Private" data-ar="خصوصية تامة">خصوصية تامة</h3>
+                <p data-en="We don&#39;t collect any data. Your photos stay on your device. Zero data collection — guaranteed." data-ar="لا نجمع أي بيانات. صورك تبقى على جهازك. صفر جمع بيانات — مضمون.">لا نجمع أي بيانات. صورك تبقى على جهازك. صفر جمع بيانات — مضمون.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skin Score Showcase -->
+<section class="score-showcase" id="score">
+    <div class="container">
+        <div class="score-content">
+            <div class="score-visual fade-up">
+                <div>
+                    <div class="score-circle">
+                        <div class="score-value">92</div>
+                        <div class="score-label-text" data-en="Skin Score" data-ar="درجة البشرة">درجة البشرة</div>
+                    </div>
+                    <div class="score-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label" data-en="💧 Hydration" data-ar="💧 الترطيب">💧 الترطيب</span>
+                            <span class="breakdown-value good">88%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label" data-en="✨ Clarity" data-ar="✨ النقاء">✨ النقاء</span>
+                            <span class="breakdown-value good">95%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label" data-en="🔍 Texture" data-ar="🔍 الملمس">🔍 الملمس</span>
+                            <span class="breakdown-value mid">76%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label" data-en="🛡️ Pore Health" data-ar="🛡️ صحة المسام">🛡️ صحة المسام</span>
+                            <span class="breakdown-value good">90%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label" data-en="🎨 Evenness" data-ar="🎨 التجانس">🎨 التجانس</span>
+                            <span class="breakdown-value good">85%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="score-info fade-up">
+                <div class="section-badge" data-en="💯 New Feature" data-ar="💯 ميزة جديدة">💯 ميزة جديدة</div>
+                <h2 data-en="Your Skin Gets a &lt;span class=&quot;gradient&quot;&gt;Real Score&lt;/span&gt;" data-ar="بشرتك تحصل على &lt;span class=&quot;gradient&quot;&gt;درجة حقيقية&lt;/span&gt;">بشرتك تحصل على <span class="gradient">درجة حقيقية</span></h2>
+                <p data-en="GlowFit&#39;s AI analyzes your skin across 5 key dimensions and generates a comprehensive score from 0-100. No more guessing — know exactly where your skin stands." data-ar="يحلل ذكاء GlowFit بشرتك عبر 5 أبعاد رئيسية ويولّد درجة شاملة من 0-100. لا مزيد من التخمين — اعرف بالضبط أين تقف بشرتك.">يحلل ذكاء GlowFit بشرتك عبر 5 أبعاد رئيسية ويولّد درجة شاملة من 0-100. لا مزيد من التخمين — اعرف بالضبط أين تقف بشرتك.</p>
+                <ul class="score-features">
+                    <li><span>💧</span> <span data-en="Hydration level measurement" data-ar="قياس مستوى الترطيب">قياس مستوى الترطيب</span></li>
+                    <li><span>✨</span> <span data-en="Clarity and brightness analysis" data-ar="تحليل النقاء والإشراق">تحليل النقاء والإشراق</span></li>
+                    <li><span>🔍</span> <span data-en="Texture smoothness detection" data-ar="كشف نعومة الملمس">كشف نعومة الملمس</span></li>
+                    <li><span>🛡️</span> <span data-en="Pore health assessment" data-ar="تقييم صحة المسام">تقييم صحة المسام</span></li>
+                    <li><span>🎨</span> <span data-en="Tone evenness evaluation" data-ar="تقييم تجانس البشرة">تقييم تجانس البشرة</span></li>
+                    <li><span>📊</span> <span data-en="Daily tracking &amp; trend charts" data-ar="تتبع يومي ورسوم بيانية">تتبع يومي ورسوم بيانية</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How it Works -->
+<section class="how-it-works" id="how">
+    <div class="container">
+        <div class="section-badge fade-up" data-en="🎯 How it Works" data-ar="🎯 كيف يعمل">🎯 كيف يعمل</div>
+        <h2 class="section-title fade-up" data-en="3 Simple Steps&lt;br&gt;to Better Skin" data-ar="3 خطوات بسيطة&lt;br&gt;لبشرة أفضل">3 خطوات بسيطة<br>لبشرة أفضل</h2>
+        <div class="steps">
+            <div class="step fade-up">
+                <div class="step-number">1</div>
+                <h3 data-en="📸 Take a Selfie" data-ar="📸 التقط صورة">📸 التقط صورة</h3>
+                <p data-en="Open GlowFit and snap a quick selfie. Our camera is optimized for accurate skin analysis with smart lighting detection." data-ar="افتح GlowFit والتقط صورة سريعة. الكاميرا محسّنة لتحليل دقيق للبشرة مع كشف الإضاءة الذكي.">افتح GlowFit والتقط صورة سريعة. الكاميرا محسّنة لتحليل دقيق للبشرة مع كشف الإضاءة الذكي.</p>
+            </div>
+            <div class="step fade-up">
+                <div class="step-number">2</div>
+                <h3 data-en="🤖 AI Analysis" data-ar="🤖 تحليل بالذكاء">🤖 تحليل بالذكاء</h3>
+                <p data-en="Our advanced AI instantly analyzes your skin across 5 dimensions — hydration, clarity, texture, pores, and evenness." data-ar="يحلل الذكاء الاصطناعي بشرتك فوراً عبر 5 أبعاد — الترطيب، النقاء، الملمس، المسام، والتجانس.">يحلل الذكاء الاصطناعي بشرتك فوراً عبر 5 أبعاد — الترطيب، النقاء، الملمس، المسام، والتجانس.</p>
+            </div>
+            <div class="step fade-up">
+                <div class="step-number">3</div>
+                <h3 data-en="📋 Get Your Plan" data-ar="📋 احصل على خطتك">📋 احصل على خطتك</h3>
+                <p data-en="Receive your Skin Score, personalized skincare routine, and start tracking your daily progress with Skin Diary." data-ar="استلم درجة بشرتك، روتين العناية المخصص، وابدأ بتتبع تقدمك اليومي مع يوميات البشرة.">استلم درجة بشرتك، روتين العناية المخصص، وابدأ بتتبع تقدمك اليومي مع يوميات البشرة.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison -->
+<section class="comparison">
+    <div class="container">
+        <div class="section-badge fade-up" data-en="⚡ Why GlowFit" data-ar="⚡ لماذا GlowFit">⚡ لماذا GlowFit</div>
+        <h2 class="section-title fade-up" data-en="GlowFit vs Others" data-ar="GlowFit مقابل غيرها">GlowFit مقابل غيرها</h2>
+        <p class="section-desc fade-up" data-en="See why thousands choose GlowFit AI for their skincare journey." data-ar="اكتشف لماذا الآلاف يختارون GlowFit AI لرحلة العناية ببشرتهم.">اكتشف لماذا الآلاف يختارون GlowFit AI لرحلة العناية ببشرتهم.</p>
+        <div class="comparison-grid fade-up">
+            <div class="compare-card other">
+                <h3 data-en="😐 Other Apps" data-ar="😐 تطبيقات أخرى">😐 تطبيقات أخرى</h3>
+                <ul class="compare-list">
+                    <li><span class="cross">✗</span> <span data-en="Collect &amp; sell your data" data-ar="يجمعون ويبيعون بياناتك">يجمعون ويبيعون بياناتك</span></li>
+                    <li><span class="cross">✗</span> <span data-en="Hidden paywalls &amp; subscriptions" data-ar="جدران دفع واشتراكات مخفية">جدران دفع واشتراكات مخفية</span></li>
+                    <li><span class="cross">✗</span> <span data-en="Basic analysis only" data-ar="تحليل أساسي فقط">تحليل أساسي فقط</span></li>
+                    <li><span class="cross">✗</span> <span data-en="No progress tracking" data-ar="بدون تتبع التقدم">بدون تتبع التقدم</span></li>
+                    <li><span class="cross">✗</span> <span data-en="Complicated interface" data-ar="واجهة معقدة">واجهة معقدة</span></li>
+                    <li><span class="cross">✗</span> <span data-en="No skin scoring system" data-ar="بدون نظام درجات للبشرة">بدون نظام درجات للبشرة</span></li>
+                </ul>
+            </div>
+            <div class="compare-card glowfit">
+                <h3>✨ GlowFit AI</h3>
+                <ul class="compare-list">
+                    <li><span class="check">✓</span> <span data-en="Zero data collection — ever" data-ar="صفر جمع بيانات — أبداً">صفر جمع بيانات — أبداً</span></li>
+                    <li><span class="check">✓</span> <span data-en="100% free, no hidden costs" data-ar="مجاني 100%، بدون تكاليف مخفية">مجاني 100%، بدون تكاليف مخفية</span></li>
+                    <li><span class="check">✓</span> <span data-en="Advanced AI multi-dimension analysis" data-ar="تحليل متعدد الأبعاد بالذكاء الاصطناعي">تحليل متعدد الأبعاد بالذكاء الاصطناعي</span></li>
+                    <li><span class="check">✓</span> <span data-en="Daily Skin Diary + Before/After" data-ar="يوميات البشرة + قبل/بعد">يوميات البشرة + قبل/بعد</span></li>
+                    <li><span class="check">✓</span> <span data-en="Beautiful, simple interface" data-ar="واجهة جميلة وبسيطة">واجهة جميلة وبسيطة</span></li>
+                    <li><span class="check">✓</span> <span data-en="Skin Score out of 100" data-ar="درجة البشرة من 100">درجة البشرة من 100</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Social Proof -->
+<section class="social-proof" id="reviews">
+    <div class="container">
+        <div class="section-badge fade-up" data-en="💬 Reviews" data-ar="💬 التقييمات">💬 التقييمات</div>
+        <h2 class="section-title fade-up" data-en="Loved by Users" data-ar="محبوب من المستخدمين">محبوب من المستخدمين</h2>
+        <p class="section-desc fade-up" data-en="See what people are saying about GlowFit AI." data-ar="شاهد ماذا يقول الناس عن GlowFit AI.">شاهد ماذا يقول الناس عن GlowFit AI.</p>
+        <div class="proof-grid">
+            <div class="proof-card fade-up">
+                <div class="proof-stars">⭐⭐⭐⭐⭐</div>
+                <p class="proof-text" data-en="&quot;The Skin Score feature is a game-changer! I can finally see exactly how my skin is improving. The Before &amp; After comparison is so motivating.&quot;" data-ar="&quot;ميزة درجة البشرة غيّرت كل شيء! أخيراً أستطيع رؤية تحسن بشرتي بالضبط. مقارنة قبل وبعد محفزة جداً.&quot;">"ميزة درجة البشرة غيّرت كل شيء! أخيراً أستطيع رؤية تحسن بشرتي بالضبط. مقارنة قبل وبعد محفزة جداً."</p>
+                <div class="proof-author">
+                    <div class="proof-avatar">👩</div>
+                    <div>
+                        <div class="proof-name">Sarah M.</div>
+                        <div class="proof-role" data-en="iPhone User" data-ar="مستخدمة آيفون">مستخدمة آيفون</div>
+                    </div>
+                </div>
+            </div>
+            <div class="proof-card fade-up">
+                <div class="proof-stars">⭐⭐⭐⭐⭐</div>
+                <p class="proof-text" data-en="&quot;Finally an app that respects my privacy! The analysis is incredibly accurate. The Skin Diary keeps me consistent with my routine.&quot;" data-ar="&quot;أخيراً تطبيق يحترم خصوصيتي! التحليل دقيق بشكل مذهل. يوميات البشرة تحافظ على التزامي بالروتين.&quot;">"أخيراً تطبيق يحترم خصوصيتي! التحليل دقيق بشكل مذهل. يوميات البشرة تحافظ على التزامي بالروتين."</p>
+                <div class="proof-author">
+                    <div class="proof-avatar">👨</div>
+                    <div>
+                        <div class="proof-name">Ahmed K.</div>
+                        <div class="proof-role" data-en="iPad User" data-ar="مستخدم آيباد">مستخدم آيباد</div>
+                    </div>
+                </div>
+            </div>
+            <div class="proof-card fade-up">
+                <div class="proof-stars">⭐⭐⭐⭐⭐</div>
+                <p class="proof-text" data-en="&quot;I love the daily tracking! Seeing my skin score go from 68 to 85 in just a month made me so happy. The tips are actually helpful too.&quot;" data-ar="&quot;أحب التتبع اليومي! رؤية درجة بشرتي ترتفع من 68 إلى 85 في شهر واحد فقط جعلتني سعيدة جداً. النصائح مفيدة فعلاً.&quot;">"أحب التتبع اليومي! رؤية درجة بشرتي ترتفع من 68 إلى 85 في شهر واحد فقط جعلتني سعيدة جداً. النصائح مفيدة فعلاً."</p>
+                <div class="proof-author">
+                    <div class="proof-avatar">👩‍🦰</div>
+                    <div>
+                        <div class="proof-name">Nora A.</div>
+                        <div class="proof-role" data-en="iPhone User" data-ar="مستخدمة آيفون">مستخدمة آيفون</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+    <div class="container">
+        <div class="section-badge fade-up" data-en="❓ FAQ" data-ar="❓ أسئلة شائعة">❓ أسئلة شائعة</div>
+        <h2 class="section-title fade-up" data-en="Common Questions" data-ar="أسئلة شائعة">أسئلة شائعة</h2>
+        <div class="faq-grid fade-up">
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div class="faq-question"><span data-en="Is GlowFit really free?" data-ar="هل GlowFit مجاني فعلاً؟">هل GlowFit مجاني فعلاً؟</span> <span class="faq-toggle">+</span></div>
+                <div class="faq-answer" data-en="Yes! GlowFit is 100% free with no hidden fees, no subscriptions, and no paywalls. All features including AI analysis, Skin Score, and Skin Diary are completely free." data-ar="نعم! GlowFit مجاني 100% بدون رسوم مخفية، بدون اشتراكات، وبدون جدران دفع. جميع المميزات بما فيها تحليل الذكاء الاصطناعي ودرجة البشرة ويوميات البشرة مجانية بالكامل.">نعم! GlowFit مجاني 100% بدون رسوم مخفية، بدون اشتراكات، وبدون جدران دفع. جميع المميزات بما فيها تحليل الذكاء الاصطناعي ودرجة البشرة ويوميات البشرة مجانية بالكامل.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div class="faq-question"><span data-en="Does GlowFit collect my data?" data-ar="هل GlowFit يجمع بياناتي؟">هل GlowFit يجمع بياناتي؟</span> <span class="faq-toggle">+</span></div>
+                <div class="faq-answer" data-en="Absolutely not. We collect ZERO data. Your photos stay on your device and are never uploaded to our servers. Privacy is our #1 priority." data-ar="بالتأكيد لا. نجمع صفر بيانات. صورك تبقى على جهازك ولا يتم رفعها أبداً لخوادمنا. الخصوصية هي أولويتنا الأولى.">بالتأكيد لا. نجمع صفر بيانات. صورك تبقى على جهازك ولا يتم رفعها أبداً لخوادمنا. الخصوصية هي أولويتنا الأولى.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div class="faq-question"><span data-en="How does the Skin Score work?" data-ar="كيف تعمل درجة البشرة؟">كيف تعمل درجة البشرة؟</span> <span class="faq-toggle">+</span></div>
+                <div class="faq-answer" data-en="Our AI analyzes your skin across 5 dimensions — hydration, clarity, texture, pore health, and tone evenness — then calculates a comprehensive score from 0-100. The higher the score, the healthier your skin." data-ar="يحلل الذكاء الاصطناعي بشرتك عبر 5 أبعاد — الترطيب، النقاء، الملمس، صحة المسام، وتجانس البشرة — ثم يحسب درجة شاملة من 0-100. كلما زادت الدرجة، كانت بشرتك أكثر صحة.">يحلل الذكاء الاصطناعي بشرتك عبر 5 أبعاد — الترطيب، النقاء، الملمس، صحة المسام، وتجانس البشرة — ثم يحسب درجة شاملة من 0-100. كلما زادت الدرجة، كانت بشرتك أكثر صحة.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div class="faq-question"><span data-en="What is Skin Diary?" data-ar="ما هي يوميات البشرة؟">ما هي يوميات البشرة؟</span> <span class="faq-toggle">+</span></div>
+                <div class="faq-answer" data-en="Skin Diary lets you take daily selfies and track your skin&#39;s progress over time. You can compare Before &amp; After photos and see how your skin score changes week by week." data-ar="يوميات البشرة تتيح لك التقاط صور ذاتية يومية وتتبع تقدم بشرتك مع الوقت. يمكنك مقارنة صور قبل وبعد ومشاهدة كيف تتغير درجة بشرتك أسبوعياً.">يوميات البشرة تتيح لك التقاط صور ذاتية يومية وتتبع تقدم بشرتك مع الوقت. يمكنك مقارنة صور قبل وبعد ومشاهدة كيف تتغير درجة بشرتك أسبوعياً.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div class="faq-question"><span data-en="Which devices are supported?" data-ar="ما الأجهزة المدعومة؟">ما الأجهزة المدعومة؟</span> <span class="faq-toggle">+</span></div>
+                <div class="faq-answer" data-en="GlowFit is available for iPhone and iPad running iOS 16 or later. We support both English and Arabic languages." data-ar="GlowFit متاح للآيفون والآيباد بنظام iOS 16 أو أحدث. ندعم اللغتين العربية والإنجليزية.">GlowFit متاح للآيفون والآيباد بنظام iOS 16 أو أحدث. ندعم اللغتين العربية والإنجليزية.</div>
+            </div>
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div class="faq-question"><span data-en="Is GlowFit a medical app?" data-ar="هل GlowFit تطبيق طبي؟">هل GlowFit تطبيق طبي؟</span> <span class="faq-toggle">+</span></div>
+                <div class="faq-answer" data-en="GlowFit provides general skincare insights for informational purposes only. It is not a substitute for professional dermatological advice. Always consult a dermatologist for medical concerns." data-ar="يوفر GlowFit رؤى عامة للعناية بالبشرة لأغراض معلوماتية فقط. ليس بديلاً عن استشارة طبيب جلدية متخصص. استشر طبيب جلدية دائماً للمخاوف الطبية.">يوفر GlowFit رؤى عامة للعناية بالبشرة لأغراض معلوماتية فقط. ليس بديلاً عن استشارة طبيب جلدية متخصص. استشر طبيب جلدية دائماً للمخاوف الطبية.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<!-- Contact Us -->
+<section class="cta" id="contact" style="padding-top:20px; padding-bottom:20px;">
+    <div class="container">
+        <div class="cta-box fade-up" style="max-width:560px; margin:0 auto;">
+            <h2 data-en="Have a Question? 💬" data-ar="عندك سؤال؟ 💬">عندك سؤال؟ 💬</h2>
+            <p data-en="We'd love to hear from you. Send us a message and we'll get back to you." data-ar="حابين نسمع منك. ابعتلنا رسالة وبنرد عليك بأقرب وقت.">حابين نسمع منك. ابعتلنا رسالة وبنرد عليك بأقرب وقت.</p>
+
+            <form id="contact-form" style="display:flex; flex-direction:column; gap:12px; margin-top:20px; text-align:right;">
+                <input
+                    type="text"
+                    id="contact-name"
+                    placeholder="الاسم"
+                    style="padding:14px 18px; border-radius:14px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-family:inherit; font-size:15px; outline:none;"
+                >
+                <input
+                    type="email"
+                    id="contact-email"
+                    required
+                    placeholder="البريد الإلكتروني"
+                    style="padding:14px 18px; border-radius:14px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-family:inherit; font-size:15px; outline:none;"
+                >
+                <input
+                    type="tel"
+                    id="contact-whatsapp"
+                    placeholder="رقم الواتساب (مثال: 962791234567)"
+                    dir="ltr"
+                    style="padding:14px 18px; border-radius:14px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-family:inherit; font-size:15px; outline:none; text-align:right;"
+                >
+                <textarea
+                    id="contact-message"
+                    required
+                    rows="4"
+                    placeholder="رسالتك..."
+                    style="padding:14px 18px; border-radius:14px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:#fff; font-family:inherit; font-size:15px; outline:none; resize:vertical;"
+                ></textarea>
+                <button
+                    type="submit"
+                    id="contact-submit"
+                    class="btn-download"
+                    style="border:none; cursor:pointer; font-family:inherit; align-self:center;"
+                >
+                    <span data-en="Send Message" data-ar="إرسال الرسالة">إرسال الرسالة</span>
+                </button>
+            </form>
+            <div id="contact-msg" style="margin-top:14px; font-size:13px; font-weight:600; display:none; text-align:center;"></div>
+        </div>
+    </div>
+</section>
+
+<section class="cta" id="download">
+    <div class="container">
+        <div class="cta-box fade-up">
+            <h2 data-en="Ready to Glow? ✨" data-ar="مستعد للتألق؟ ✨">مستعد للتألق؟ ✨</h2>
+            <p data-en="Download GlowFit AI today — free forever, your privacy comes first." data-ar="حمّل GlowFit AI اليوم — مجاني للأبد، وخصوصيتك أولويتنا.">حمّل GlowFit AI اليوم — مجاني للأبد، وخصوصيتك أولويتنا.</p>
+            <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" class="btn-download" target="_blank">
+                <span data-en="🍎 Download on the App Store" data-ar="🍎 تحميل من App Store">🍎 تحميل من App Store</span>
+            </a>
+            <div class="cta-subtitle" data-en="Available for iPhone &amp; iPad · iOS 16+ · 100% Free" data-ar="متاح للآيفون والآيباد · iOS 16+ · مجاني 100%">متاح للآيفون والآيباد · iOS 16+ · مجاني 100%</div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-links">
+            <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" target="_blank" data-en="App Store" data-ar="App Store">App Store</a>
+            <a href="#features" data-en="Features" data-ar="المميزات">المميزات</a>
+            <a href="#faq" data-en="FAQ" data-ar="أسئلة شائعة">أسئلة شائعة</a>
+            <a href="#reviews" data-en="Reviews" data-ar="التقييمات">التقييمات</a>
+            <a href="#contact" data-en="Contact Us" data-ar="اتصل بنا">اتصل بنا</a>
+            <a href="privacy-policy.html" data-en="Privacy Policy" data-ar="سياسة الخصوصية">سياسة الخصوصية</a>
+        </div>
+        <p data-en="© 2025 &lt;a href=&quot;https://apps.apple.com/us/app/glowfit-ai/id6756659293&quot; target=&quot;_blank&quot;&gt;GlowFit AI&lt;/a&gt; by Veltratech LTD. All rights reserved." data-ar="© 2025 &lt;a href=&quot;https://apps.apple.com/us/app/glowfit-ai/id6756659293&quot; target=&quot;_blank&quot;&gt;GlowFit AI&lt;/a&gt; من Veltratech LTD. جميع الحقوق محفوظة.">© 2025 <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" target="_blank">GlowFit AI</a> من Veltratech LTD. جميع الحقوق محفوظة.</p>
+        <p style="margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.2);" data-en="Medical Disclaimer: GlowFit provides general skincare advice for informational purposes only. Always consult a dermatologist." data-ar="تنبيه طبي: GlowFit يقدم نصائح عامة للعناية بالبشرة لأغراض معلوماتية فقط. استشر طبيب جلدية دائماً.">تنبيه طبي: GlowFit يقدم نصائح عامة للعناية بالبشرة لأغراض معلوماتية فقط. استشر طبيب جلدية دائماً.</p>
+    </div>
+</footer>
+
+<!-- Scroll Animations + Language Switcher -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Smooth nav scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Load saved language
+    const savedLang = localStorage.getItem('glowfit-lang') || 'en';
+    if (savedLang === 'ar') setLang('ar');
+});
+
+function setLang(lang) {
+    const html = document.documentElement;
+    const currentLang = html.getAttribute('lang');
+    if (currentLang === lang) return;
+
+    // Fade out
+    const allTextElements = document.querySelectorAll('[data-en], [data-ar]');
+    allTextElements.forEach(el => el.classList.add('lang-text-out'));
+
+    // After fade out, switch content and fade in
+    setTimeout(() => {
+        html.setAttribute('lang', lang);
+        html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+        // Update toggle buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if ((lang === 'en' && btn.textContent.trim() === 'EN') || (lang === 'ar' && btn.textContent.trim() === 'عربي')) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Update all translatable elements
+        allTextElements.forEach(el => {
+            const text = el.getAttribute('data-' + lang);
+            if (text) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = text;
+                } else {
+                    el.innerHTML = text;
+                }
+            }
+            el.classList.remove('lang-text-out');
+            el.classList.add('lang-text-in');
+        });
+
+        // Cleanup
+        setTimeout(() => {
+            allTextElements.forEach(el => el.classList.remove('lang-text-in'));
+        }, 400);
+
+    }, 200);
+
+    localStorage.setItem('glowfit-lang', lang);
+}
+
+// Scroll to top when clicking "الرئيسية" link
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href="#top"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+});
+</script>
+
+<!-- =============================================
+     GlowFit - ربط Supabase (Waitlist + تتبع الزيارات)
+     ملاحظة: الـ ANON KEY مصمم ليكون عام (public) وآمن للاستخدام
+     بالفرونت اند، بشرط تفعيل Row Level Security على الجداول
+     (تم إعداده عبر supabase_setup.sql).
+     ============================================= -->
+<script>
+(function () {
+    const SUPABASE_URL = 'https://ojaxkhkbyfkcwgavxihq.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTIxNjQsImV4cCI6MjA5MzIyODE2NH0.g5fsf1h9nQ1E3XpBCKMIVkVb7lMCp0uUc5SLUEdNZpM';
+
+    // --- تسجيل زيارة الصفحة (بدون تخزين أي بيانات شخصية) ---
+    fetch(`${SUPABASE_URL}/rest/v1/page_views`, {
+        method: 'POST',
+        headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+            page: 'landing',
+            referrer: document.referrer || null,
+            user_agent: navigator.userAgent
+        })
+    }).catch(() => {}); // فشل التتبع ما لازم يأثر على تجربة المستخدم
+
+    // --- فحص البشرة المجاني (Skin Scan Teaser) ---
+    const scanFileInput = document.getElementById('scan-file-input');
+    const scanConsentCheckbox = document.getElementById('scan-consent-checkbox');
+    const scanIdleState = document.getElementById('scan-idle-state');
+    const scanLoadingState = document.getElementById('scan-loading-state');
+    const scanResultState = document.getElementById('scan-result-state');
+    const scanErrorState = document.getElementById('scan-error-state');
+
+    window.resetSkinScan = function () {
+        scanIdleState.style.display = 'block';
+        scanLoadingState.style.display = 'none';
+        scanResultState.style.display = 'none';
+        scanErrorState.style.display = 'none';
+        scanFileInput.value = '';
+    };
+
+    function resizeAndEncodeImage(file, maxDim, quality) {
+        maxDim = maxDim || 800;
+        quality = quality || 0.7;
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            const objectUrl = URL.createObjectURL(file);
+            img.onload = function () {
+                URL.revokeObjectURL(objectUrl);
+                let { width, height } = img;
+                if (width > height && width > maxDim) {
+                    height = Math.round(height * (maxDim / width));
+                    width = maxDim;
+                } else if (height > maxDim) {
+                    width = Math.round(width * (maxDim / height));
+                    height = maxDim;
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                resolve(dataUrl.split(',')[1]);
+            };
+            img.onerror = reject;
+            img.src = objectUrl;
+        });
+    }
+
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    if (scanFileInput) {
+        scanFileInput.addEventListener('change', async function () {
+            const file = scanFileInput.files[0];
+            if (!file) return;
+
+            if (!scanConsentCheckbox.checked) {
+                scanErrorState.innerText = 'لازم توافق على شرط التحليل أول';
+                scanErrorState.style.display = 'block';
+                scanFileInput.value = '';
+                return;
+            }
+
+            if (file.size > 8 * 1024 * 1024) {
+                scanErrorState.innerText = 'حجم الصورة كبير جداً، جرّب صورة أصغر';
+                scanErrorState.style.display = 'block';
+                return;
+            }
+
+            scanErrorState.style.display = 'none';
+            scanIdleState.style.display = 'none';
+            scanLoadingState.style.display = 'block';
+
+            try {
+                const base64 = await resizeAndEncodeImage(file, 800, 0.7);
+                const res = await fetch(`${SUPABASE_URL}/functions/v1/skin-scan`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image_base64: base64 })
+                });
+                const data = await res.json();
+
+                scanLoadingState.style.display = 'none';
+
+                if (!res.ok || data.error) {
+                    scanErrorState.innerText = data.error || 'صار خطأ، حاول مرة ثانية';
+                    scanErrorState.style.display = 'block';
+                    scanIdleState.style.display = 'block';
+                    scanFileInput.value = '';
+                    return;
+                }
+
+                document.getElementById('scan-result-type').innerText = data.type_skin || '—';
+                document.getElementById('scan-result-observation').innerText = data.moisture_level ? ('نسبة الرطوبة: ' + data.moisture_level) : '';
+                document.getElementById('scan-result-tip').innerText = data.tip ? '💡 ' + data.tip : '';
+                scanResultState.style.display = 'block';
+
+            } catch (err) {
+                scanLoadingState.style.display = 'none';
+                scanErrorState.innerText = 'تعذّر الاتصال، تأكد من الإنترنت وحاول ثانية';
+                scanErrorState.style.display = 'block';
+                scanIdleState.style.display = 'block';
+                scanFileInput.value = '';
+            }
+        });
+    }
+
+    // --- نموذج اتصل بنا ---
+    const contactForm = document.getElementById('contact-form');
+    const contactMsgBox = document.getElementById('contact-msg');
+
+    function showContactMsg(text, isError) {
+        contactMsgBox.textContent = text;
+        contactMsgBox.style.display = 'block';
+        contactMsgBox.style.color = isError ? '#ff6b9d' : '#4ade80';
+    }
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const whatsapp = document.getElementById('contact-whatsapp').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+            if (!email || !message) return;
+
+            const btn = document.getElementById('contact-submit');
+            btn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>...</span>';
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ name: name || null, email: email, whatsapp: whatsapp || null, message: message })
+                });
+
+                if (res.ok) {
+                    showContactMsg('تم إرسال رسالتك، رح نتواصل معك قريباً 🎉', false);
+                    contactForm.reset();
+                } else {
+                    showContactMsg('صار في خطأ، حاول مرة ثانية لاحقاً', true);
+                }
+            } catch (err) {
+                showContactMsg('تعذّر الاتصال، تأكد من الإنترنت وحاول ثانية', true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+    }
+})();
+</script>
+
+</body></html>

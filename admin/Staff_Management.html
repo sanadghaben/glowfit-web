@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowFit Admin - Staff Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:flex;min-height:100vh}
+.sidebar{width:260px;background:#1a1a2e;color:#fff;padding:30px 20px;display:flex;flex-direction:column;gap:30px;position:fixed;height:100vh;z-index:100}
+.logo{font-size:24px;font-weight:900;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:20px}
+.nav-menu{display:flex;flex-direction:column;gap:10px}
+.nav-item{padding:12px 15px;border-radius:12px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.3s;display:flex;align-items:center;gap:12px}
+.nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.05);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,#9333ea,#ec4899);box-shadow:0 4px 15px rgba(147,51,234,0.3)}
+.main-content{flex:1;margin-right:260px;padding:0;transition:all 0.3s}
+.top-header{height:80px;background:#fff;padding:0 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:90}
+.page-body{padding:40px}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.page-header h1{font-size:24px;font-weight:800}
+.add-btn{background:linear-gradient(135deg,#9333ea,#ec4899);color:#fff;border:none;padding:12px 24px;border-radius:12px;font-family:'Tajawal';font-weight:700;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:10px}
+.table-card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.02);overflow:hidden}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{text-align:right;padding:18px 24px;font-size:12px;color:rgba(0,0,0,0.4);background:#fcfdfe;border-bottom:1px solid #f1f5f9;text-transform:uppercase}
+.data-table td{padding:20px 24px;font-size:14px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.role-badge{padding:5px 12px;border-radius:10px;font-size:11px;font-weight:800;background:rgba(147,51,234,0.1);color:#9333ea}
+.role-support{background:rgba(59,130,246,0.1);color:#3b82f6}
+.status-pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:6px}
+.status-active{background:#ecfdf5;color:#10b981}
+.actions-cell{display:flex;gap:10px}
+.action-btn{width:34px;height:34px;border-radius:10px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all 0.2s}
+.action-btn:hover{background:#1a1a2e;color:#fff}
+.user-cell{display:flex;align-items:center;gap:12px}
+.user-avatar-circle{width:40px;height:40px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,0.05);}
+.empty-state{padding:60px 20px;text-align:center;color:rgba(0,0,0,0.3)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:24px;padding:30px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto}
+.modal-box h3{font-size:18px;font-weight:800;margin-bottom:20px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+.form-group input,.form-group select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;font-family:'Tajawal';font-size:14px;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:#9333ea;background:#fff}
+.perm-list{display:flex;flex-direction:column;gap:10px;background:#f8fafc;padding:15px;border-radius:14px}
+.perm-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-btn{flex:1;padding:13px;border-radius:12px;border:none;font-family:'Tajawal';font-weight:700;cursor:pointer;font-size:14px}
+.modal-btn.primary{background:linear-gradient(135deg,#9333ea,#ec4899);color:#fff}
+.modal-btn.secondary{background:#f1f5f9;color:#1a1a2e}
+.modal-btn:disabled{opacity:0.6;cursor:not-allowed}
+.form-error{color:#ef4444;font-size:13px;font-weight:600;margin-bottom:12px;display:none}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">GlowFit Admin</div>
+    <nav class="nav-menu">
+        <a href="Main_Overview.html" class="nav-item">📊 لوحة الملخص</a>
+        <a href="User_Management.html" class="nav-item">👥 إدارة المستخدمين</a>
+        <a href="#" class="nav-item active">🛡️ إدارة الصلاحيات</a>
+        <a href="Activity_Logs.html" class="nav-item">📋 سجل النشاطات</a>
+        <a href="Product_Management.html" class="nav-item">🧴 المنتجات والمخزون</a>
+        <a href="AI_Insights.html" class="nav-item">📈 تقارير التحليل</a>
+        <a href="Support.html" class="nav-item">💬 المحادثات والدعم</a>
+        <a href="Contact_Messages.html" class="nav-item">✉️ رسائل التواصل</a>
+        <a href="Settings.html" class="nav-item">⚙️ الإعدادات</a>
+    </nav>
+    <div style="margin-top:auto;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)">
+        <a href="#" class="nav-item" style="color:#ef4444" onclick="event.preventDefault(); window.GlowFitAPI && window.GlowFitAPI.signOut();">🚪 تسجيل الخروج</a>
+    </div>
+</div>
+
+<div class="main-content">
+    <header class="top-header">
+        <div style="font-weight:800;font-size:14px;color:rgba(0,0,0,0.4)">لوحة التحكم / إدارة الصلاحيات</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <div style="text-align:left"><span id="header-admin-name" style="font-size:14px;font-weight:700;display:block">أحمد المدير</span></div>
+            <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#9333ea,#ec4899);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">AD</div>
+        </div>
+    </header>
+
+    <div class="page-body">
+        <div class="page-header">
+            <h1>فريق العمل والصلاحيات</h1>
+            <button class="add-btn" onclick="openAddModal()"><span>+</span> إضافة موظف جديد</button>
+        </div>
+
+        <div class="table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>الموظف</th>
+                        <th>الصلاحية (الدور)</th>
+                        <th>الصلاحيات التفصيلية</th>
+                        <th>تاريخ الانضمام</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="staff-table-body">
+                    <tr><td colspan="5" style="text-align:center; color:rgba(0,0,0,0.3); padding:30px;">جاري التحميل...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Staff Modal -->
+<div class="modal-overlay" id="staff-modal">
+    <div class="modal-box">
+        <h3 id="modal-title">إضافة موظف جديد</h3>
+        <div class="form-error" id="modal-error"></div>
+
+        <div id="new-user-fields">
+            <div class="form-group">
+                <label>الاسم الكامل</label>
+                <input type="text" id="staff-fullname" placeholder="مثال: سالم الدوسري">
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="staff-email" placeholder="employee@glowfit.ai">
+            </div>
+            <div class="form-group">
+                <label>كلمة مرور مؤقتة</label>
+                <input type="text" id="staff-password" placeholder="كلمة مرور قوية (8 أحرف عالأقل)">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>الدور</label>
+            <select id="staff-role" onchange="togglePermissionsVisibility()">
+                <option value="staff">موظف (صلاحيات محددة)</option>
+                <option value="admin">أدمن كامل (كل الصلاحيات)</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="permissions-section">
+            <label>الصلاحيات التفصيلية</label>
+            <div class="perm-list">
+                <label class="perm-item"><input type="checkbox" value="users" class="perm-checkbox"> إدارة المستخدمين</label>
+                <label class="perm-item"><input type="checkbox" value="products" class="perm-checkbox"> المنتجات والمخزون</label>
+                <label class="perm-item"><input type="checkbox" value="orders" class="perm-checkbox"> الطلبات والمبيعات</label>
+                <label class="perm-item"><input type="checkbox" value="support" class="perm-checkbox"> المحادثات والدعم</label>
+                <label class="perm-item"><input type="checkbox" value="contact" class="perm-checkbox"> رسائل التواصل</label>
+                <label class="perm-item"><input type="checkbox" value="reports" class="perm-checkbox"> تقارير التحليل</label>
+                <label class="perm-item"><input type="checkbox" value="settings" class="perm-checkbox"> الإعدادات العامة</label>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="modal-btn secondary" onclick="closeModal()">إلغاء</button>
+            <button class="modal-btn primary" id="modal-save-btn" onclick="saveStaffMember()">حفظ</button>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="./js/api.js"></script>
+<script>
+let editingStaffId = null;
+let staffCache = [];
+
+const PERMISSION_LABELS = {
+    users: 'إدارة المستخدمين',
+    products: 'المنتجات والمخزون',
+    orders: 'الطلبات والمبيعات',
+    support: 'المحادثات والدعم',
+    contact: 'رسائل التواصل',
+    reports: 'تقارير التحليل',
+    settings: 'الإعدادات العامة'
+};
+
+function timeAgo(dateStr) {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function togglePermissionsVisibility() {
+    const role = document.getElementById('staff-role').value;
+    document.getElementById('permissions-section').style.display = role === 'admin' ? 'none' : 'block';
+}
+
+function openAddModal() {
+    editingStaffId = null;
+    document.getElementById('modal-title').innerText = 'إضافة موظف جديد';
+    document.getElementById('new-user-fields').style.display = 'block';
+    document.getElementById('staff-fullname').value = '';
+    document.getElementById('staff-email').value = '';
+    document.getElementById('staff-password').value = '';
+    document.getElementById('staff-role').value = 'staff';
+    document.querySelectorAll('.perm-checkbox').forEach(cb => cb.checked = false);
+    document.getElementById('modal-error').style.display = 'none';
+    togglePermissionsVisibility();
+    document.getElementById('staff-modal').classList.add('show');
+}
+
+function openEditModal(id) {
+    const staff = staffCache.find(s => String(s.id) === String(id));
+    if (!staff) return;
+    editingStaffId = id;
+    document.getElementById('modal-title').innerText = 'تعديل صلاحيات: ' + (staff.full_name || staff.email);
+    document.getElementById('new-user-fields').style.display = 'none';
+    document.getElementById('staff-role').value = staff.role;
+    const perms = staff.permissions || [];
+    document.querySelectorAll('.perm-checkbox').forEach(cb => cb.checked = perms.includes(cb.value));
+    document.getElementById('modal-error').style.display = 'none';
+    togglePermissionsVisibility();
+    document.getElementById('staff-modal').classList.add('show');
+}
+
+function closeModal() {
+    document.getElementById('staff-modal').classList.remove('show');
+}
+
+function showModalError(msg) {
+    const el = document.getElementById('modal-error');
+    el.innerText = msg;
+    el.style.display = 'block';
+}
+
+async function saveStaffMember() {
+    const role = document.getElementById('staff-role').value;
+    const permissions = role === 'admin'
+        ? []
+        : Array.from(document.querySelectorAll('.perm-checkbox:checked')).map(cb => cb.value);
+
+    const btn = document.getElementById('modal-save-btn');
+    btn.disabled = true;
+    btn.innerText = 'جاري الحفظ...';
+
+    try {
+        if (editingStaffId) {
+            await window.GlowFitAPI.updateStaffMember(editingStaffId, { role, permissions });
+        } else {
+            const fullName = document.getElementById('staff-fullname').value.trim();
+            const email = document.getElementById('staff-email').value.trim();
+            const password = document.getElementById('staff-password').value;
+
+            if (!fullName || !email || !password) {
+                showModalError('عبّي كل الحقول (الاسم، الإيميل، كلمة المرور)');
+                btn.disabled = false; btn.innerText = 'حفظ';
+                return;
+            }
+            if (password.length < 8) {
+                showModalError('كلمة المرور لازم تكون 8 أحرف عالأقل');
+                btn.disabled = false; btn.innerText = 'حفظ';
+                return;
+            }
+            await window.GlowFitAPI.createStaffMember(email, password, fullName, role, permissions);
+        }
+        closeModal();
+        loadStaff();
+    } catch (error) {
+        showModalError(error.message || 'صار خطأ، حاول مرة ثانية');
+    } finally {
+        btn.disabled = false;
+        btn.innerText = 'حفظ';
+    }
+}
+
+async function removeStaff(id, name) {
+    if (!confirm(`متأكد إنك بدك تشيل "${name}" من فريق العمل؟ رح يفقد وصوله للوحة التحكم فوراً.`)) return;
+    try {
+        await window.GlowFitAPI.removeStaffMember(id);
+        loadStaff();
+    } catch (error) {
+        alert('صار خطأ أثناء الإزالة: ' + (error.message || ''));
+    }
+}
+
+function renderStaff(rows) {
+    const tbody = document.getElementById('staff-table-body');
+    if (!rows || rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">ما في موظفين مضافين لسا</td></tr>';
+        return;
+    }
+    tbody.innerHTML = rows.map(s => {
+        const initial = (s.full_name || s.email || '؟').trim().charAt(0);
+        const perms = s.permissions || [];
+        const permsText = s.role === 'admin'
+            ? 'كل الصلاحيات'
+            : (perms.length ? perms.map(p => PERMISSION_LABELS[p] || p).join('، ') : '—');
+        const roleBadge = s.role === 'admin'
+            ? '<span class="role-badge">مدير نظام (Admin)</span>'
+            : '<span class="role-badge role-support">موظف (Staff)</span>';
+
+        return `
+            <tr>
+                <td>
+                    <div class="user-cell">
+                        <div class="user-avatar-circle">${initial}</div>
+                        <div>
+                            <span style="font-weight:700;display:block;">${s.full_name || 'بدون اسم'}</span>
+                            <span style="font-size:12px;color:rgba(0,0,0,0.4);">${s.email || ''}</span>
+                        </div>
+                    </div>
+                </td>
+                <td>${roleBadge}</td>
+                <td style="font-size:12px; color:rgba(0,0,0,0.5); max-width:220px;">${permsText}</td>
+                <td>${timeAgo(s.created_at)}</td>
+                <td>
+                    <div class="actions-cell">
+                        <div class="action-btn" title="تعديل الصلاحيات" onclick="openEditModal('${s.id}')">✏️</div>
+                        <div class="action-btn" style="color:#ef4444; border-color:#ef4444;" title="إزالة" onclick="removeStaff('${s.id}', '${(s.full_name || s.email || '').replace(/'/g, '')}')">🗑️</div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+async function loadStaff() {
+    try {
+        const rows = await window.GlowFitAPI.getStaffMembers();
+        staffCache = rows || [];
+        renderStaff(staffCache);
+    } catch (error) {
+        console.error(error);
+        document.getElementById('staff-table-body').innerHTML =
+            '<tr><td colspan="5" class="empty-state" style="color:#ef4444">تعذّر تحميل فريق العمل</td></tr>';
+    }
+}
+
+loadStaff();
+</script>
+</html>

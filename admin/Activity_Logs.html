@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowFit Admin - Activity Logs</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:flex;min-height:100vh}
+.sidebar{width:260px;background:#1a1a2e;color:#fff;padding:30px 20px;display:flex;flex-direction:column;gap:30px;position:fixed;height:100vh;z-index:100}
+.logo{font-size:24px;font-weight:900;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:20px}
+.nav-menu{display:flex;flex-direction:column;gap:10px}
+.nav-item{padding:12px 15px;border-radius:12px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.3s;display:flex;align-items:center;gap:12px}
+.nav-item:hover,.nav-item.active{background:rgba(255,255,255,0.05);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,#9333ea,#ec4899);box-shadow:0 4px 15px rgba(147,51,234,0.3)}
+.main-content{flex:1;margin-right:260px;padding:0;transition:all 0.3s}
+.top-header{height:80px;background:#fff;padding:0 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f1f5f9;position:sticky;top:0;z-index:90}
+.page-body{padding:40px}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.page-header h1{font-size:24px;font-weight:800}
+.table-card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.02);overflow:hidden}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{text-align:right;padding:18px 24px;font-size:12px;color:rgba(0,0,0,0.4);background:#fcfdfe;border-bottom:1px solid #f1f5f9;text-transform:uppercase}
+.data-table td{padding:20px 24px;font-size:14px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.log-action{font-weight:700; color:#1a1a2e;}
+.log-user{color:#9333ea; font-weight:700;}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">GlowFit Admin</div>
+    <nav class="nav-menu">
+        <a href="Main_Overview.html" class="nav-item">📊 لوحة الملخص</a>
+        <a href="User_Management.html" class="nav-item">👥 إدارة المستخدمين</a>
+        <a href="Staff_Management.html" class="nav-item">🛡️ إدارة الصلاحيات</a>
+        <a href="#" class="nav-item active">📋 سجل النشاطات</a>
+        <a href="Product_Management.html" class="nav-item">🧴 المنتجات والمخزون</a>
+        <a href="AI_Insights.html" class="nav-item">📈 تقارير التحليل</a>
+        <a href="Support.html" class="nav-item">💬 المحادثات والدعم</a>
+        <a href="Contact_Messages.html" class="nav-item">✉️ رسائل التواصل</a>
+        <a href="Settings.html" class="nav-item">⚙️ الإعدادات</a>
+    </nav>
+    <div style="margin-top:auto;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)">
+        <a href="#" class="nav-item" style="color:#ef4444" onclick="event.preventDefault(); window.GlowFitAPI && window.GlowFitAPI.signOut();">🚪 تسجيل الخروج</a>
+    </div>
+</div>
+
+<div class="main-content">
+    <header class="top-header">
+        <div style="font-weight:800;font-size:14px;color:rgba(0,0,0,0.4)">لوحة التحكم / سجل النشاطات</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <div style="text-align:left"><span id="header-admin-name" style="font-size:14px;font-weight:700;display:block">أحمد المدير</span></div>
+            <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#9333ea,#ec4899);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">AD</div>
+        </div>
+    </header>
+
+    <div class="page-body">
+        <div class="page-header">
+            <h1>سجل نشاطات النظام</h1>
+        </div>
+
+        <div class="table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>التاريخ والوقت</th>
+                        <th>المستخدم / الموظف</th>
+                        <th>النشاط</th>
+                        <th>عنوان IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color:rgba(0,0,0,0.5)">1 مايو 2026 - 10:45 ص</td>
+                        <td><span class="log-user">أحمد المدير (مدير)</span></td>
+                        <td><span class="log-action">تجميد اشتراك المستخدم (نورة الأحمد)</span></td>
+                        <td style="font-family:monospace; color:rgba(0,0,0,0.5)">192.168.1.1</td>
+                    </tr>
+                    <tr>
+                        <td style="color:rgba(0,0,0,0.5)">1 مايو 2026 - 09:30 ص</td>
+                        <td><span class="log-user">سالم الدوسري (دعم فني)</span></td>
+                        <td><span class="log-action">إرسال إشعار للمستخدمين (عرض جديد)</span></td>
+                        <td style="font-family:monospace; color:rgba(0,0,0,0.5)">192.168.1.15</td>
+                    </tr>
+                    <tr>
+                        <td style="color:rgba(0,0,0,0.5)">30 أبريل 2026 - 11:20 م</td>
+                        <td><span class="log-user">نظام (System)</span></td>
+                        <td><span class="log-action">تحديث تلقائي لقاعدة بيانات المخزون</span></td>
+                        <td style="font-family:monospace; color:rgba(0,0,0,0.5)">localhost</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="./js/api.js"></script>
+</html>
