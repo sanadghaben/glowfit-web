@@ -249,7 +249,7 @@ window.GlowFitAPI = {
     // --- Users ---
     async getUsers(page = 1, limit = 10, search = '', skinFilter = '') {
         const offset = (page - 1) * limit;
-        let endpoint = `/rest/v1/profiles?select=*&order=created_at.desc&limit=${limit}&offset=${offset}`;
+        let endpoint = `/rest/v1/profiles?select=*&is_deleted=eq.false&order=created_at.desc&limit=${limit}&offset=${offset}`;
         if (search) {
             endpoint += `&or=(full_name.ilike.*${search}*,email.ilike.*${search}*)`;
         }
@@ -260,7 +260,7 @@ window.GlowFitAPI = {
     },
 
     async getUsersCount() {
-        const data = await apiRequest('/rest/v1/profiles?select=count()', {
+        const data = await apiRequest('/rest/v1/profiles?select=count()&is_deleted=eq.false', {
             headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
         });
         return data;
