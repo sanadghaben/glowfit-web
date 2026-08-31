@@ -536,6 +536,41 @@ window.GlowFitAPI.adminCreateUser = async function(email, password, profile = {}
 };
 
 // =============================================
+// حذف نهائي للمستخدم (يمسح حساب تسجيل الدخول بالكامل + بيانات البروفايل)
+// ⚠️ عملية لا رجعة فيها — مختلفة عن updateUser({is_deleted:true}) اللي بس بتعطّل الحساب
+// =============================================
+window.GlowFitAPI.permanentlyDeleteUser = async function(userId) {
+    const response = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+            'apikey': SUPABASE_SERVICE_KEY,
+            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+        }
+    });
+
+    if (!response.ok) {
+        let msg = 'فشل الحذف النهائي';
+        try {
+            const err = await response.json();
+            msg = err.message || err.msg || msg;
+        } catch (_) {}
+        throw new Error(msg);
+    }
+
+    // صف الـ profiles بينمسح تلقائياً لو فيه on delete cascade مرتبط بـ auth.users،
+    // بس نتأكد يدوياً كمان احتياطاً
+    await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
+        method: 'DELETE',
+        headers: {
+            'apikey': SUPABASE_SERVICE_KEY,
+            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+        }
+    }).catch(() => {});
+
+    return true;
+};
+
+// =============================================
 // تعبئة اسم الأدمن الحقيقي بأعلى كل صفحة (بدل الاسم الوهمي الثابت)
 // =============================================
 document.addEventListener('DOMContentLoaded', function () {

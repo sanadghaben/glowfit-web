@@ -319,7 +319,8 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                         <div class="actions-cell">
                             <div class="action-btn" title="تعديل" onclick="openEditModal('${user.id}','${user.full_name||''}','${user.skin_type||''}')">✏️</div>
                             <div class="action-btn" title="إرسال إشعار" onclick="openNotificationModal('${user.id}','${user.full_name||''}')">🔔</div>
-                            <div class="action-btn delete" title="حذف" onclick="deleteUser('${user.id}','${user.full_name||'هذا المستخدم'}')">🗑️</div>
+                            <div class="action-btn delete" title="تعطيل (يقدر يرجع لاحقاً)" onclick="deleteUser('${user.id}','${user.full_name||'هذا المستخدم'}')">🚫</div>
+                            <div class="action-btn delete" title="حذف نهائي — بدون رجعة" onclick="permanentDeleteUser('${user.id}','${user.full_name||'هذا المستخدم'}','${user.email||''}')">🗑️</div>
                         </div>
                     </td>
                 </tr>
@@ -408,10 +409,27 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
     });
 
     async function deleteUser(id, name) {
-        if (!confirm(`هل أنت متأكد من حذف ${name}؟`)) return;
+        if (!confirm(`هل أنت متأكد من تعطيل ${name}؟ (تقدرين ترجعيه لاحقاً من قاعدة البيانات لو احتجتي)`)) return;
         try {
             await window.GlowFitAPI.updateUser(id, { is_deleted: true });
-            alert('تم الحذف بنجاح');
+            alert('تم التعطيل بنجاح');
+            loadUsers(currentPage);
+        } catch (err) {
+            alert('خطأ: ' + err.message);
+        }
+    }
+
+    async function permanentDeleteUser(id, name, email) {
+        const confirmText = prompt(
+            `⚠️ تحذير: هاد حذف نهائي بدون رجعة لحساب "${name}" (${email}).\n\nرح ينمسح حساب تسجيل الدخول وكل بياناته تماماً — الإيميل رح يصير متاح للتسجيل من جديد.\n\nاكتبي كلمة "حذف" بالضبط للتأكيد:`
+        );
+        if (confirmText !== 'حذف') {
+            if (confirmText !== null) alert('لم تكتبي الكلمة صح، تم إلغاء العملية');
+            return;
+        }
+        try {
+            await window.GlowFitAPI.permanentlyDeleteUser(id);
+            alert('تم الحذف النهائي بنجاح');
             loadUsers(currentPage);
         } catch (err) {
             alert('خطأ: ' + err.message);
