@@ -389,9 +389,10 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
         btn.disabled = true;
         try {
             const id = document.getElementById('edit-user-id').value;
+            const skinValue = document.getElementById('edit-skin').value;
             await window.GlowFitAPI.updateUser(id, {
                 full_name: document.getElementById('edit-name').value,
-                skin_type: document.getElementById('edit-skin').value
+                skin_type: skinValue === '' ? null : skinValue
             });
             alert('تم التعديل بنجاح!');
             closeEditModal();
