@@ -30,7 +30,8 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
 .filter-group{display:flex;gap:10px}
 .filter-btn{padding:10px 18px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Tajawal';transition:all 0.2s}
 .filter-btn:hover{border-color:#9333ea}
-.table-card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.02);overflow:hidden}
+.table-card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.02);overflow-x:auto}
+.data-table{min-width:700px}
 .data-table{width:100%;border-collapse:collapse}
 .data-table th{text-align:right;padding:18px 24px;font-size:12px;color:rgba(0,0,0,0.4);background:#fcfdfe;border-bottom:1px solid #f1f5f9;text-transform:uppercase}
 .data-table td{padding:20px 24px;font-size:14px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
@@ -67,7 +68,8 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
 .modal-form .form-group{margin-bottom:15px}
 .modal-form label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
 .modal-form input,.modal-form select{width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-family:'Tajawal';outline:none;font-size:14px}
-@media(max-width:1024px){.sidebar{right:-260px}.main-content{margin-right:0}.top-header{padding:0 20px}}
+@media(max-width:1024px){.sidebar{right:-260px}.main-content{margin-right:0}.top-header{padding:0 20px}.page-body{padding:20px}}
+.sidebar.active{right:0 !important}
 .mobile-toggle{display:none;font-size:24px;cursor:pointer}
 @media(max-width:1024px){.mobile-toggle{display:block}}
 </style>
@@ -111,7 +113,7 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
         <div class="page-header">
             <h1>إدارة المستخدمين</h1>
             <div style="display:flex; gap:10px;">
-                <button class="filter-btn" onclick="exportToCSV()" style="display:flex; align-items:center; gap:8px;">
+                <button class="filter-btn" onclick="exportToCSV(event)" style="display:flex; align-items:center; gap:8px;">
                     <span style="font-size:16px;">📥</span> تصدير للـ Excel
                 </button>
                 <button class="add-btn" onclick="openModal()"><span>+</span> إضافة مستخدم جديد</button>
@@ -299,7 +301,7 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                                     : '👤'}
                             </div>
                             <div class="user-meta">
-                                <a href="User_Details.html" class="name" style="color:#1a1a2e;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#9333ea'" onmouseout="this.style.color='#1a1a2e'">${user.full_name || 'بدون اسم'}</a>
+                                <a href="User_Details.html?id=${user.id}" class="name" style="color:#1a1a2e;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#9333ea'" onmouseout="this.style.color='#1a1a2e'">${user.full_name || 'بدون اسم'}</a>
                                 <span class="email">${user.email || ''}</span>
                             </div>
                         </div>
@@ -449,8 +451,49 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
     });
 
     // تصدير البيانات إلى CSV
-    function exportToCSV() {
-        alert('جاري تصدير بيانات المستخدمين إلى ملف Excel/CSV... (محاكاة)');
+    async function exportToCSV(event) {
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span>...</span> جاري التصدير';
+        btn.disabled = true;
+
+        try {
+            // نجيب كل المستخدمين (مش بس صفحة وحدة) — حد أقصى 1000 دفعة وحدة
+            const allUsers = await window.GlowFitAPI.getUsers(1, 1000, '', '');
+
+            if (!allUsers || allUsers.length === 0) {
+                alert('لا يوجد مستخدمين للتصدير');
+                return;
+            }
+
+            const headers = ['الاسم', 'البريد الإلكتروني', 'نوع البشرة', 'تاريخ التسجيل'];
+            const rows = allUsers.map(u => [
+                (u.full_name || '').replace(/"/g, '""'),
+                (u.email || '').replace(/"/g, '""'),
+                u.skin_type || '',
+                u.created_at ? new Date(u.created_at).toLocaleDateString('ar-EG') : ''
+            ]);
+
+            // BOM عشان الأحرف العربية تظهر صح بـ Excel
+            let csvContent = '\uFEFF' + headers.map(h => `"${h}"`).join(',') + '\n';
+            csvContent += rows.map(r => r.map(cell => `"${cell}"`).join(',')).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `glowfit-users-${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+        } catch (err) {
+            alert('تعذّر تصدير البيانات: ' + err.message);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
 
     window.onclick = function(e) {

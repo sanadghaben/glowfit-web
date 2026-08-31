@@ -84,27 +84,27 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
     <div class="page-body">
         <a href="User_Management.html" class="back-link">← العودة لقائمة المستخدمين</a>
 
-        <div class="user-header-card">
+        <div class="user-header-card" id="user-header-card">
             <div class="u-info-main">
-                <div class="u-avatar">ن</div>
+                <div class="u-avatar" id="u-avatar">?</div>
                 <div>
-                    <h1 class="u-name">نورة الأحمد</h1>
-                    <div class="u-email">noura@example.com</div>
-                    <span class="status-pill">حساب نشط</span>
-                    <span class="status-pill" style="background:#f3e8ff; color:#9333ea; margin-right:5px;">بشرة مختلطة</span>
+                    <h1 class="u-name" id="u-name">جاري التحميل...</h1>
+                    <div class="u-email" id="u-email"></div>
+                    <span class="status-pill" id="u-status-pill">—</span>
+                    <span class="status-pill" id="u-skin-pill" style="background:#f3e8ff; color:#9333ea; margin-right:5px; display:none;"></span>
                 </div>
             </div>
             <div class="u-stats-grid">
                 <div class="u-stat-box">
-                    <span class="u-stat-val">12</span>
+                    <span class="u-stat-val" id="u-scans-count">—</span>
                     <span class="u-stat-lbl">إجمالي الفحوصات</span>
                 </div>
                 <div class="u-stat-box">
-                    <span class="u-stat-val">3</span>
+                    <span class="u-stat-val" id="u-orders-count">—</span>
                     <span class="u-stat-lbl">طلبات المتجر</span>
                 </div>
                 <div class="u-stat-box">
-                    <span class="u-stat-val" style="color:#10b981;">Premium</span>
+                    <span class="u-stat-val" id="u-subscription" style="color:#10b981;">—</span>
                     <span class="u-stat-lbl">الاشتراك</span>
                 </div>
             </div>
@@ -121,50 +121,36 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
             <div class="info-grid">
                 <div class="info-group">
                     <label>الاسم بالكامل</label>
-                    <div>نورة الأحمد</div>
+                    <div id="info-name">—</div>
                 </div>
                 <div class="info-group">
                     <label>البريد الإلكتروني</label>
-                    <div>noura@example.com</div>
+                    <div id="info-email">—</div>
                 </div>
                 <div class="info-group">
                     <label>رقم الهاتف</label>
-                    <div>+966 50 123 4567</div>
+                    <div id="info-phone">—</div>
                 </div>
                 <div class="info-group">
                     <label>تاريخ التسجيل</label>
-                    <div>15 أبريل 2026</div>
+                    <div id="info-created">—</div>
                 </div>
                 <div class="info-group">
                     <label>نوع البشرة</label>
-                    <div>مختلطة (استناداً للذكاء الاصطناعي)</div>
+                    <div id="info-skin">—</div>
                 </div>
                 <div class="info-group">
                     <label>حالة الاشتراك</label>
-                    <div style="color:#10b981;">مشترك - ينتهي في 15 أكتوبر 2026</div>
+                    <div id="info-subscription">—</div>
                 </div>
             </div>
         </div>
 
         <!-- Activity Tab -->
         <div class="tab-content" id="tab-activity">
-            <h3 style="font-size:18px; font-weight:800; margin-bottom:20px;">نشاطات المستخدم (آخر 30 يوم)</h3>
-            <div class="timeline">
-                <div class="t-item">
-                    <span class="t-date">اليوم، 10:00 صباحاً</span>
-                    <div class="t-title">تسجيل الدخول</div>
-                    <div class="t-desc">قام المستخدم بتسجيل الدخول من جهاز iPhone 15 Pro.</div>
-                </div>
-                <div class="t-item">
-                    <span class="t-date">أمس، 08:30 مساءً</span>
-                    <div class="t-title">إجراء فحص للبشرة 📸</div>
-                    <div class="t-desc">تم إجراء فحص وحصلت البشرة على تقييم 87/100.</div>
-                </div>
-                <div class="t-item">
-                    <span class="t-date">28 أبريل 2026</span>
-                    <div class="t-title">عملية شراء من المتجر 🛒</div>
-                    <div class="t-desc">شراء (سيروم فيتامين C + غسول مائي). رقم الطلب #GF-8021.</div>
-                </div>
+            <h3 style="font-size:18px; font-weight:800; margin-bottom:20px;">آخر النشاطات (فحوصات وطلبات حقيقية)</h3>
+            <div class="timeline" id="activity-timeline">
+                <p style="color:rgba(0,0,0,0.3)">جاري التحميل...</p>
             </div>
         </div>
 
@@ -176,10 +162,108 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
 function switchUserTab(tabId, element) {
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
-    
+
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.getElementById('tab-' + tabId).classList.add('active');
 }
+
+const SKIN_LABELS = { oily: 'دهنية', dry: 'جافة', combination: 'مختلطة', normal: 'عادية', sensitive: 'حساسة' };
+
+function formatDate(dateStr) {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function timeAgo(dateStr) {
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 60) return `منذ ${mins} دقيقة`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `منذ ${hrs} ساعة`;
+    return `منذ ${Math.floor(hrs / 24)} يوم`;
+}
+
+async function loadUserDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('id');
+
+    if (!userId) {
+        document.getElementById('u-name').innerText = 'لم يتم تحديد مستخدم';
+        return;
+    }
+
+    try {
+        const user = await window.GlowFitAPI.getUserById(userId);
+        if (!user) {
+            document.getElementById('u-name').innerText = 'المستخدم غير موجود';
+            return;
+        }
+
+        const name = user.full_name || 'بدون اسم';
+        document.getElementById('u-avatar').innerText = name.trim().charAt(0) || '?';
+        document.getElementById('u-name').innerText = name;
+        document.getElementById('u-email').innerText = user.email || '—';
+
+        const statusPill = document.getElementById('u-status-pill');
+        if (user.is_deleted) {
+            statusPill.innerText = 'حساب معطّل';
+            statusPill.style.background = '#ef4444';
+        } else {
+            statusPill.innerText = 'حساب نشط';
+            statusPill.style.background = '#10b981';
+        }
+
+        if (user.skin_type) {
+            const skinPill = document.getElementById('u-skin-pill');
+            skinPill.innerText = 'بشرة ' + (SKIN_LABELS[user.skin_type] || user.skin_type);
+            skinPill.style.display = 'inline-block';
+        }
+
+        const subLabel = user.subscription_tier === 'premium' ? 'Premium' : 'مجاني';
+        document.getElementById('u-subscription').innerText = subLabel;
+
+        document.getElementById('info-name').innerText = name;
+        document.getElementById('info-email').innerText = user.email || '—';
+        document.getElementById('info-phone').innerText = user.phone || 'غير مسجّل';
+        document.getElementById('info-created').innerText = formatDate(user.created_at);
+        document.getElementById('info-skin').innerText = user.skin_type
+            ? `${SKIN_LABELS[user.skin_type] || user.skin_type} (استناداً للذكاء الاصطناعي)`
+            : 'لم يتم تحديدها بعد';
+        document.getElementById('info-subscription').innerText = subLabel === 'Premium'
+            ? 'مشترك بالباقة المدفوعة'
+            : 'باقة مجانية';
+
+        // إحصائيات
+        window.GlowFitAPI.getUserStats(userId).then(stats => {
+            document.getElementById('u-scans-count').innerText = stats.scansCount;
+            document.getElementById('u-orders-count').innerText = stats.ordersCount;
+        }).catch(() => {});
+
+        // سجل النشاط الحقيقي
+        window.GlowFitAPI.getUserActivity(userId, 10).then(activity => {
+            const timeline = document.getElementById('activity-timeline');
+            if (!activity || activity.length === 0) {
+                timeline.innerHTML = '<p style="color:rgba(0,0,0,0.3)">ما في أي نشاط مسجّل لهذا المستخدم لسا.</p>';
+                return;
+            }
+            timeline.innerHTML = activity.map(item => `
+                <div class="t-item">
+                    <span class="t-date">${timeAgo(item.date)}</span>
+                    <div class="t-title">${item.title}</div>
+                    <div class="t-desc">${item.desc}</div>
+                </div>
+            `).join('');
+        }).catch(() => {
+            document.getElementById('activity-timeline').innerHTML = '<p style="color:#ef4444">تعذّر تحميل سجل النشاط</p>';
+        });
+
+    } catch (error) {
+        console.error(error);
+        document.getElementById('u-name').innerText = 'تعذّر تحميل بيانات المستخدم';
+    }
+}
+
+loadUserDetails();
 </script>
 </body>
 </html>

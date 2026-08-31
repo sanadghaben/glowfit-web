@@ -247,6 +247,52 @@ window.GlowFitAPI = {
     },
 
     // --- Users ---
+    // --- جلب مستخدم واحد بالتفصيل (لصفحة User_Details) ---
+    async getUserById(userId) {
+        const rows = await apiRequest(`/rest/v1/profiles?select=*&id=eq.${userId}`);
+        return rows && rows[0] ? rows[0] : null;
+    },
+
+    // --- إحصائيات المستخدم: عدد الفحوصات وعدد الطلبات ---
+    async getUserStats(userId) {
+        const [scansRes, ordersRes] = await Promise.all([
+            apiRequest(`/rest/v1/skin_scans?select=count()&user_id=eq.${userId}`, {
+                headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
+            }).catch(() => [{ count: 0 }]),
+            apiRequest(`/rest/v1/orders?select=count()&user_id=eq.${userId}`, {
+                headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
+            }).catch(() => [{ count: 0 }])
+        ]);
+        return {
+            scansCount: scansRes?.[0]?.count ?? 0,
+            ordersCount: ordersRes?.[0]?.count ?? 0
+        };
+    },
+
+    // --- سجل نشاط حقيقي: آخر الفحوصات + آخر الطلبات مدموجين حسب التاريخ ---
+    async getUserActivity(userId, limit = 10) {
+        const [scans, orders] = await Promise.all([
+            apiRequest(`/rest/v1/skin_scans?select=id,created_at,concerns&user_id=eq.${userId}&order=created_at.desc&limit=${limit}`).catch(() => []),
+            apiRequest(`/rest/v1/orders?select=id,created_at,status,total_price&user_id=eq.${userId}&order=created_at.desc&limit=${limit}`).catch(() => [])
+        ]);
+
+        const scanItems = (scans || []).map(s => ({
+            date: s.created_at,
+            title: 'إجراء فحص للبشرة 📸',
+            desc: s.concerns && s.concerns.length ? `ملاحظات: ${s.concerns.join('، ')}` : 'تم إجراء فحص بشرة بالذكاء الاصطناعي.'
+        }));
+
+        const orderItems = (orders || []).map(o => ({
+            date: o.created_at,
+            title: 'عملية شراء من المتجر 🛒',
+            desc: `الحالة: ${o.status || 'قيد المعالجة'} — الإجمالي: ${o.total_price ?? '—'} ر.س (طلب #${String(o.id).slice(0, 8)})`
+        }));
+
+        return [...scanItems, ...orderItems]
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, limit);
+    },
+
     async getUsers(page = 1, limit = 10, search = '', skinFilter = '') {
         const offset = (page - 1) * limit;
         let endpoint = `/rest/v1/profiles?select=*&is_deleted=eq.false&order=created_at.desc&limit=${limit}&offset=${offset}`;
@@ -496,12 +542,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const nameEl = document.getElementById('header-admin-name');
     if (!nameEl) return;
     const cachedUser = window.GlowFitAPI.getAdminUser();
+    // بديل فوري: الإيميل، لحين ما يوصل الاسم الحقيقي (أو لو ما في اسم أصلاً)
+    if (cachedUser && cachedUser.email) {
+        nameEl.innerText = cachedUser.email;
+    }
     if (cachedUser && cachedUser.user_metadata && cachedUser.user_metadata.full_name) {
         nameEl.innerText = cachedUser.user_metadata.full_name;
     }
     window.GlowFitAPI.getMyProfile()
         .then(profile => {
-            if (profile && profile.full_name) nameEl.innerText = profile.full_name;
+            if (profile && profile.full_name) {
+                nameEl.innerText = profile.full_name;
+            } else if (profile && profile.email) {
+                nameEl.innerText = profile.email;
+            }
         })
         .catch(() => {});
 });
