@@ -1778,7 +1778,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         'apikey': SUPABASE_ANON_KEY,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ image_base64: base64 })
+                    body: JSON.stringify({
+                        image_base64: base64,
+                        lang: document.documentElement.lang || 'ar'
+                    })
                 });
                 const data = await res.json();
 
@@ -1792,9 +1795,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
+                const isEnglish = document.documentElement.lang === 'en';
                 document.getElementById('scan-result-type').innerText = data.type_skin || '—';
-                document.getElementById('scan-result-age').innerText = data.estimated_age ? ('العمر التقريبي: ' + data.estimated_age + ' سنة') : '';
-                document.getElementById('scan-result-observation').innerText = data.moisture_level ? ('نسبة الرطوبة: ' + data.moisture_level) : '';
+                document.getElementById('scan-result-age').innerText = data.estimated_age
+                    ? (isEnglish ? `Estimated age: ${data.estimated_age} years` : `العمر التقريبي: ${data.estimated_age} سنة`)
+                    : '';
+                document.getElementById('scan-result-observation').innerText = data.moisture_level
+                    ? (isEnglish ? `Moisture level: ${data.moisture_level}` : `نسبة الرطوبة: ${data.moisture_level}`)
+                    : '';
                 document.getElementById('scan-result-tip').innerText = data.tip ? '💡 ' + data.tip : '';
                 scanResultState.style.display = 'block';
 
