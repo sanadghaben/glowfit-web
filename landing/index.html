@@ -1682,13 +1682,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const SUPABASE_URL = 'https://ojaxkhkbyfkcwgavxihq.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTIxNjQsImV4cCI6MjA5MzIyODE2NH0.g5fsf1h9nQ1E3XpBCKMIVkVb7lMCp0uUc5SLUEdNZpM';
 
-    // ترجمة نوع البشرة (5 قيم ثابتة بس، فممكن نترجمها فوراً بدون إعادة الفحص)
-    const SKIN_TYPE_MAP = {
-        'دهنية': 'Oily', 'جافة': 'Dry', 'مختلطة': 'Combination', 'عادية': 'Normal', 'حساسة': 'Sensitive',
-        'oily': 'دهنية', 'dry': 'جافة', 'combination': 'مختلطة', 'normal': 'عادية', 'sensitive': 'حساسة'
-    };
-
     // يعيد صياغة نصوص نتيجة الفحص حسب اللغة الحالية للصفحة (يُستدعى وقت الفحص وأيضاً وقت تبديل اللغة)
+    // النتيجة هلق بترجع باللغتين دفعة وحدة من الذكاء الاصطناعي، فالتبديل فوري ومجاني بدون أي استدعاء إضافي
     window.renderScanResultLabels = function () {
         const data = window.lastScanResult;
         if (!data) return;
@@ -1698,17 +1693,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const moistEl = document.getElementById('scan-result-observation');
         const tipEl = document.getElementById('scan-result-tip');
 
-        if (typeEl && data.type_skin) {
-            const rawType = data.type_skin.trim();
-            const rawIsEnglish = /^[a-zA-Z]+$/.test(rawType);
-            // لو اللغة المطلوبة مختلفة عن لغة القيمة الأصلية، ترجمها من القاموس الثابت
-            if (isEnglish && !rawIsEnglish) {
-                typeEl.innerText = SKIN_TYPE_MAP[rawType.toLowerCase()] || rawType;
-            } else if (!isEnglish && rawIsEnglish) {
-                typeEl.innerText = SKIN_TYPE_MAP[rawType.toLowerCase()] || rawType;
-            } else {
-                typeEl.innerText = rawType;
-            }
+        if (typeEl) {
+            typeEl.innerText = (isEnglish ? data.type_skin_en : data.type_skin_ar) || '—';
         }
         if (ageEl) {
             ageEl.innerText = data.estimated_age
@@ -1721,7 +1707,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 : '';
         }
         if (tipEl) {
-            tipEl.innerText = data.tip ? '💡 ' + data.tip : '';
+            const tipText = isEnglish ? data.tip_en : data.tip_ar;
+            tipEl.innerText = tipText ? '💡 ' + tipText : '';
         }
     };
 
@@ -1824,17 +1811,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         'apikey': SUPABASE_ANON_KEY,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        image_base64: base64,
-                        lang: document.documentElement.lang || 'ar'
-                    })
+                    body: JSON.stringify({ image_base64: base64 })
                 });
                 const data = await res.json();
 
                 scanLoadingState.style.display = 'none';
 
-                if (!res.ok || data.error) {
-                    scanErrorState.innerText = data.error || 'صار خطأ، حاول مرة ثانية';
+                if (!res.ok || data.error_ar || data.error_en) {
+                    const isEnglish = document.documentElement.lang === 'en';
+                    const errMsg = isEnglish
+                        ? (data.error_en || 'Something went wrong, please try again')
+                        : (data.error_ar || 'صار خطأ، حاول مرة ثانية');
+                    scanErrorState.innerText = errMsg;
                     scanErrorState.style.display = 'block';
                     scanIdleState.style.display = 'block';
                     scanFileInput.value = '';
