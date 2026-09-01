@@ -1252,6 +1252,7 @@
             <div id="scan-result-state" style="display:none; margin-top:25px; text-align:right; background:rgba(255,255,255,0.06); border-radius:18px; padding:25px;">
                 <div style="font-size:13px; color:rgba(255,255,255,0.5); font-weight:700; margin-bottom:8px;" data-en="Skin Type" data-ar="نوع البشرة">نوع البشرة</div>
                 <div id="scan-result-type" style="font-size:20px; font-weight:800; color:#ec4899; margin-bottom:18px;"></div>
+                <div id="scan-result-age" style="font-size:13px; color:rgba(255,255,255,0.5); font-weight:700; margin-bottom:8px;"></div>
                 <div id="scan-result-observation" style="font-size:14px; color:rgba(255,255,255,0.85); margin-bottom:12px; line-height:1.7;"></div>
                 <div id="scan-result-tip" style="font-size:14px; color:rgba(255,255,255,0.7); line-height:1.7;"></div>
 
@@ -1792,6 +1793,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 document.getElementById('scan-result-type').innerText = data.type_skin || '—';
+                document.getElementById('scan-result-age').innerText = data.estimated_age ? ('العمر التقريبي: ' + data.estimated_age + ' سنة') : '';
                 document.getElementById('scan-result-observation').innerText = data.moisture_level ? ('نسبة الرطوبة: ' + data.moisture_level) : '';
                 document.getElementById('scan-result-tip').innerText = data.tip ? '💡 ' + data.tip : '';
                 scanResultState.style.display = 'block';
