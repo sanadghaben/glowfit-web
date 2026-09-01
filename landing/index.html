@@ -1649,12 +1649,12 @@ function setLang(lang) {
             allTextElements.forEach(el => el.classList.remove('lang-text-in'));
         }, 400);
 
+        // نحدّث نصوص نتيجة فحص البشرة هون تحديداً (بعد ما تتحدث html.lang فعلياً)
+        if (window.renderScanResultLabels) window.renderScanResultLabels();
+
     }, 200);
 
     localStorage.setItem('glowfit-lang', lang);
-
-    // نحدّث نصوص نتيجة فحص البشرة (لو فيه نتيجة معروضة أصلاً) لتنسجم مع اللغة الجديدة
-    if (window.renderScanResultLabels) window.renderScanResultLabels();
 }
 
 // Scroll to top when clicking "الرئيسية" link
