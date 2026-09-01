@@ -1652,6 +1652,9 @@ function setLang(lang) {
     }, 200);
 
     localStorage.setItem('glowfit-lang', lang);
+
+    // نحدّث نصوص نتيجة فحص البشرة (لو فيه نتيجة معروضة أصلاً) لتنسجم مع اللغة الجديدة
+    if (window.renderScanResultLabels) window.renderScanResultLabels();
 }
 
 // Scroll to top when clicking "الرئيسية" link
@@ -1678,6 +1681,49 @@ document.addEventListener('DOMContentLoaded', function() {
 (function () {
     const SUPABASE_URL = 'https://ojaxkhkbyfkcwgavxihq.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTIxNjQsImV4cCI6MjA5MzIyODE2NH0.g5fsf1h9nQ1E3XpBCKMIVkVb7lMCp0uUc5SLUEdNZpM';
+
+    // ترجمة نوع البشرة (5 قيم ثابتة بس، فممكن نترجمها فوراً بدون إعادة الفحص)
+    const SKIN_TYPE_MAP = {
+        'دهنية': 'Oily', 'جافة': 'Dry', 'مختلطة': 'Combination', 'عادية': 'Normal', 'حساسة': 'Sensitive',
+        'oily': 'دهنية', 'dry': 'جافة', 'combination': 'مختلطة', 'normal': 'عادية', 'sensitive': 'حساسة'
+    };
+
+    // يعيد صياغة نصوص نتيجة الفحص حسب اللغة الحالية للصفحة (يُستدعى وقت الفحص وأيضاً وقت تبديل اللغة)
+    window.renderScanResultLabels = function () {
+        const data = window.lastScanResult;
+        if (!data) return;
+        const isEnglish = document.documentElement.lang === 'en';
+        const typeEl = document.getElementById('scan-result-type');
+        const ageEl = document.getElementById('scan-result-age');
+        const moistEl = document.getElementById('scan-result-observation');
+        const tipEl = document.getElementById('scan-result-tip');
+
+        if (typeEl && data.type_skin) {
+            const rawType = data.type_skin.trim();
+            const rawIsEnglish = /^[a-zA-Z]+$/.test(rawType);
+            // لو اللغة المطلوبة مختلفة عن لغة القيمة الأصلية، ترجمها من القاموس الثابت
+            if (isEnglish && !rawIsEnglish) {
+                typeEl.innerText = SKIN_TYPE_MAP[rawType.toLowerCase()] || rawType;
+            } else if (!isEnglish && rawIsEnglish) {
+                typeEl.innerText = SKIN_TYPE_MAP[rawType.toLowerCase()] || rawType;
+            } else {
+                typeEl.innerText = rawType;
+            }
+        }
+        if (ageEl) {
+            ageEl.innerText = data.estimated_age
+                ? (isEnglish ? `Estimated age: ${data.estimated_age} years` : `العمر التقريبي: ${data.estimated_age} سنة`)
+                : '';
+        }
+        if (moistEl) {
+            moistEl.innerText = data.moisture_level
+                ? (isEnglish ? `Moisture level: ${data.moisture_level}` : `نسبة الرطوبة: ${data.moisture_level}`)
+                : '';
+        }
+        if (tipEl) {
+            tipEl.innerText = data.tip ? '💡 ' + data.tip : '';
+        }
+    };
 
     // --- تسجيل زيارة الصفحة (بدون تخزين أي بيانات شخصية) ---
     fetch(`${SUPABASE_URL}/rest/v1/page_views`, {
@@ -1795,15 +1841,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                const isEnglish = document.documentElement.lang === 'en';
-                document.getElementById('scan-result-type').innerText = data.type_skin || '—';
-                document.getElementById('scan-result-age').innerText = data.estimated_age
-                    ? (isEnglish ? `Estimated age: ${data.estimated_age} years` : `العمر التقريبي: ${data.estimated_age} سنة`)
-                    : '';
-                document.getElementById('scan-result-observation').innerText = data.moisture_level
-                    ? (isEnglish ? `Moisture level: ${data.moisture_level}` : `نسبة الرطوبة: ${data.moisture_level}`)
-                    : '';
-                document.getElementById('scan-result-tip').innerText = data.tip ? '💡 ' + data.tip : '';
+                window.lastScanResult = data; // نحفظها عشان نقدر نعيد صياغة النصوص لو تبدّلت اللغة بعدين
+                window.renderScanResultLabels();
                 scanResultState.style.display = 'block';
 
             } catch (err) {
