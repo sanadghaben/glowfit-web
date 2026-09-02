@@ -140,8 +140,8 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
 
     <div class="page-body">
         <div class="page-welcome">
-            <h1>أهلاً بك مجدداً، أحمد 👋</h1>
-            <p>إليك ملخص سريع لأداء GlowFit اليوم، 1 مايو 2026</p>
+            <h1 id="welcome-heading">أهلاً بك مجدداً 👋</h1>
+            <p id="welcome-date">إليك ملخص سريع لأداء GlowFit اليوم</p>
         </div>
 
         <!-- Stats Grid -->
@@ -149,7 +149,6 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon" style="background:#f3e8ff; color:#9333ea">👥</div>
-                    <div class="stat-change change-up">+12.5%</div>
                 </div>
                 <div class="stat-body">
                     <span class="value" id="total-users-count">...</span>
@@ -159,7 +158,6 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon" style="background:#dcfce7; color:#16a34a">📸</div>
-                    <div class="stat-change change-up">+8.2%</div>
                 </div>
                 <div class="stat-body">
                     <span class="value" id="total-products-count">...</span>
@@ -169,21 +167,19 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon" style="background:#fef9c3; color:#ca8a04">🛒</div>
-                    <div class="stat-change change-down">-3.1%</div>
                 </div>
                 <div class="stat-body">
-                    <span class="value">850</span>
-                    <span class="label">طلبات المتجر (شهر)</span>
+                    <span class="value" id="orders-count">...</span>
+                    <span class="label">طلبات المتجر (هذا الشهر)</span>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
                     <div class="stat-icon" style="background:#fee2e2; color:#dc2626">💰</div>
-                    <div class="stat-change change-up">+24%</div>
                 </div>
                 <div class="stat-body">
-                    <span class="value">42.5k</span>
-                    <span class="label">الأرباح (ر.س)</span>
+                    <span class="value" id="revenue-value">...</span>
+                    <span class="label">الأرباح (ر.س) هذا الشهر</span>
                 </div>
             </div>
             <div class="stat-card">
@@ -224,40 +220,8 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                             <th>الحالة</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="user-info">
-                                    <div class="user-avatar-small">👩</div>
-                                    <span style="font-weight:700">سارة محمد</span>
-                                </div>
-                            </td>
-                            <td><span style="color:#9333ea; font-weight:700">مختلطة</span></td>
-                            <td style="color:rgba(0,0,0,0.4)">منذ ساعة</td>
-                            <td><span class="status-pill status-active">نشط</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="user-info">
-                                    <div class="user-avatar-small">👱‍♀️</div>
-                                    <span style="font-weight:700">ليلى الأحمد</span>
-                                </div>
-                            </td>
-                            <td><span style="color:#3b82f6; font-weight:700">جافة</span></td>
-                            <td style="color:rgba(0,0,0,0.4)">منذ 3 ساعات</td>
-                            <td><span class="status-pill status-active">نشط</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="user-info">
-                                    <div class="user-avatar-small">👩🏻</div>
-                                    <span style="font-weight:700">نورة السبيعي</span>
-                                </div>
-                            </td>
-                            <td><span style="color:#ec4899; font-weight:700">دهنية</span></td>
-                            <td style="color:rgba(0,0,0,0.4)">منذ 5 ساعات</td>
-                            <td><span class="status-pill status-active">نشط</span></td>
-                        </tr>
+                    <tbody id="recent-users-body">
+                        <tr><td colspan="4" style="text-align:center; color:rgba(0,0,0,0.3)">جاري التحميل...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -268,24 +232,10 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                     <h3 class="panel-title">توزيع أنواع البشرة 🧠</h3>
                     <div style="width:10px; height:10px; background:#10b981; border-radius:50%; box-shadow:0 0 10px rgba(16,185,129,0.5)"></div>
                 </div>
-                <div class="ai-list">
-                    <div class="ai-item">
-                        <div class="ai-item-label"><span>مختلطة</span><span>45%</span></div>
-                        <div class="progress-bg"><div class="progress-fill" style="width:45%; background:linear-gradient(90deg, #9333ea, #ec4899)"></div></div>
-                    </div>
-                    <div class="ai-item">
-                        <div class="ai-item-label"><span>دهنية</span><span>30%</span></div>
-                        <div class="progress-bg"><div class="progress-fill" style="width:30%; background:#ec4899"></div></div>
-                    </div>
-                    <div class="ai-item">
-                        <div class="ai-item-label"><span>جافة</span><span>25%</span></div>
-                        <div class="progress-bg"><div class="progress-fill" style="width:25%; background:#3b82f6"></div></div>
-                    </div>
+                <div class="ai-list" id="skin-distribution-list">
+                    <p style="color:rgba(0,0,0,0.3); font-size:13px;">جاري التحميل...</p>
                 </div>
-                <div style="margin-top:35px; padding:20px; background:rgba(147,51,234,0.03); border-radius:18px; border:1px dashed rgba(147,51,234,0.2)">
-                    <p style="font-size:12px; color:rgba(0,0,0,0.6); line-height:1.7">
-                        <strong style="color:#9333ea">ملاحظة ذكية:</strong> لوحظ زيادة في طلبات منتجات "البشرة الدهنية" بنسبة 7% خلال الفترة المسائية. ننصح بتفعيل إشعارات مخصصة لهؤلاء المستخدمين.
-                    </p>
+            </div>
                 </div>
             </div>
         </div>
@@ -325,37 +275,22 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                 
                 <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
                     <div style="padding:20px; border:1px solid #f1f5f9; border-radius:16px;">
-                        <span style="font-size:13px; color:rgba(0,0,0,0.5); font-weight:700;">الاشتراكات النشطة</span>
-                        <div style="font-size:28px; font-weight:900; color:#10b981; margin-top:5px;">8,420 <span style="font-size:12px; background:#ecfdf5; padding:2px 6px; border-radius:6px; color:#10b981;">+5%</span></div>
+                        <span style="font-size:13px; color:rgba(0,0,0,0.5); font-weight:700;">اشتراكات Premium</span>
+                        <div style="font-size:28px; font-weight:900; color:#10b981; margin-top:5px;" id="premium-count">...</div>
                     </div>
                     <div style="padding:20px; border:1px solid #f1f5f9; border-radius:16px;">
-                        <span style="font-size:13px; color:rgba(0,0,0,0.5); font-weight:700;">الاشتراكات المنتهية / المجمدة</span>
-                        <div style="font-size:28px; font-weight:900; color:#ef4444; margin-top:5px;">1,150 <span style="font-size:12px; background:#fef2f2; padding:2px 6px; border-radius:6px; color:#ef4444;">-2%</span></div>
+                        <span style="font-size:13px; color:rgba(0,0,0,0.5); font-weight:700;">مستخدمين الباقة المجانية</span>
+                        <div style="font-size:28px; font-weight:900; color:rgba(0,0,0,0.6); margin-top:5px;" id="free-count">...</div>
                     </div>
                     <div style="padding:20px; border:1px solid #f1f5f9; border-radius:16px; background: linear-gradient(135deg, #9333ea, #ec4899); color:white;">
-                        <span style="font-size:13px; font-weight:700; opacity:0.8;">إجمالي الإيرادات (هذا الشهر)</span>
-                        <div style="font-size:28px; font-weight:900; margin-top:5px;">125,400 ر.س</div>
+                        <span style="font-size:13px; font-weight:700; opacity:0.8;">إجمالي إيرادات هذا الشهر</span>
+                        <div style="font-size:28px; font-weight:900; margin-top:5px;" id="month-revenue">...</div>
                     </div>
                 </div>
 
-                <!-- Mock Bar Chart -->
-                <div style="margin-top:30px; height:200px; display:flex; align-items:flex-end; gap:15px; padding-top:20px; border-top:1px solid #f1f5f9;">
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
-                        <div style="width:100%; height:80px; background:#f3e8ff; border-radius:8px 8px 0 0; position:relative;"><div style="position:absolute; bottom:0; width:100%; height:100%; background:#9333ea; border-radius:8px 8px 0 0; opacity:0.8;"></div></div>
-                        <span style="font-size:11px; font-weight:700; color:rgba(0,0,0,0.4)">يناير</span>
-                    </div>
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
-                        <div style="width:100%; height:120px; background:#f3e8ff; border-radius:8px 8px 0 0; position:relative;"><div style="position:absolute; bottom:0; width:100%; height:100%; background:#9333ea; border-radius:8px 8px 0 0; opacity:0.8;"></div></div>
-                        <span style="font-size:11px; font-weight:700; color:rgba(0,0,0,0.4)">فبراير</span>
-                    </div>
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
-                        <div style="width:100%; height:90px; background:#f3e8ff; border-radius:8px 8px 0 0; position:relative;"><div style="position:absolute; bottom:0; width:100%; height:100%; background:#9333ea; border-radius:8px 8px 0 0; opacity:0.8;"></div></div>
-                        <span style="font-size:11px; font-weight:700; color:rgba(0,0,0,0.4)">مارس</span>
-                    </div>
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
-                        <div style="width:100%; height:160px; background:#f3e8ff; border-radius:8px 8px 0 0; position:relative;"><div style="position:absolute; bottom:0; width:100%; height:100%; background:#ec4899; border-radius:8px 8px 0 0;"></div></div>
-                        <span style="font-size:11px; font-weight:700; color:#ec4899">أبريل (الحالي)</span>
-                    </div>
+                <!-- Monthly Revenue Chart -->
+                <div id="revenue-chart" style="margin-top:30px; height:200px; display:flex; align-items:flex-end; gap:15px; padding-top:20px; border-top:1px solid #f1f5f9;">
+                    <p style="color:rgba(0,0,0,0.3); font-size:13px; margin:auto;">جاري تحميل بيانات الإيرادات...</p>
                 </div>
             </div>
         </div>
@@ -376,13 +311,27 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
         return `منذ ${Math.floor(hrs / 24)} يوم`;
     }
 
+    const SKIN_LABELS = { oily: 'دهنية', dry: 'جافة', combination: 'مختلطة', normal: 'عادية', sensitive: 'حساسة' };
+    const SKIN_COLORS = { oily: '#ec4899', dry: '#3b82f6', combination: '#9333ea', normal: '#10b981', sensitive: '#f59e0b' };
+
+    async function loadWelcomeHeader() {
+        try {
+            const profile = await GlowFitAPI.getMyProfile();
+            const name = (profile && profile.full_name) ? profile.full_name.split(' ')[0] : '';
+            document.getElementById('welcome-heading').innerText = name ? `أهلاً بك مجدداً، ${name} 👋` : 'أهلاً بك مجدداً 👋';
+        } catch (e) {}
+        const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('welcome-date').innerText = `إليك ملخص سريع لأداء GlowFit اليوم، ${today}`;
+    }
+
     async function loadDashboardStats() {
         try {
-            const [usersCount, productsCount, waitlistCount, pageViews] = await Promise.all([
+            const [usersCount, productsCount, waitlistCount, pageViews, ordersStats] = await Promise.all([
                 GlowFitAPI.getUsersCount().catch(() => null),
                 GlowFitAPI.getProducts().catch(() => []),
                 GlowFitAPI.getWaitlistCount().catch(() => null),
                 GlowFitAPI.getPageViewsCount(30).catch(() => null),
+                GlowFitAPI.getOrdersStats().catch(() => ({ ordersCount: 0, revenue: 0 })),
             ]);
 
             document.getElementById('total-users-count').innerText =
@@ -393,8 +342,94 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                 waitlistCount?.[0]?.count?.toLocaleString('ar') ?? '—';
             document.getElementById('page-views-count').innerText =
                 pageViews?.[0]?.count?.toLocaleString('ar') ?? '—';
+            document.getElementById('orders-count').innerText =
+                ordersStats.ordersCount.toLocaleString('ar');
+            document.getElementById('revenue-value').innerText =
+                ordersStats.revenue.toLocaleString('ar');
         } catch (error) {
             console.error('Error loading stats:', error);
+        }
+    }
+
+    async function loadRecentUsers() {
+        const tbody = document.getElementById('recent-users-body');
+        try {
+            const users = await GlowFitAPI.getUsers(1, 5);
+            if (!users || users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:rgba(0,0,0,0.3)">لا يوجد مستخدمين بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar-small">👤</div>
+                            <span style="font-weight:700">${u.full_name || 'بدون اسم'}</span>
+                        </div>
+                    </td>
+                    <td><span style="color:${SKIN_COLORS[u.skin_type] || '#94a3b8'}; font-weight:700">${SKIN_LABELS[u.skin_type] || 'غير محدد'}</span></td>
+                    <td style="color:rgba(0,0,0,0.4)">${timeAgo(u.created_at)}</td>
+                    <td><span class="status-pill status-active">نشط</span></td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading recent users:', error);
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#ef4444">تعذّر تحميل البيانات</td></tr>';
+        }
+    }
+
+    async function loadSkinDistribution() {
+        const container = document.getElementById('skin-distribution-list');
+        try {
+            const distribution = await GlowFitAPI.getSkinTypeDistribution();
+            if (!distribution || distribution.length === 0) {
+                container.innerHTML = '<p style="color:rgba(0,0,0,0.3); font-size:13px;">ما في بيانات كافية بعد</p>';
+                return;
+            }
+            container.innerHTML = distribution.map(d => `
+                <div class="ai-item">
+                    <div class="ai-item-label"><span>${SKIN_LABELS[d.type] || d.type}</span><span>${d.percent}%</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:${d.percent}%; background:${SKIN_COLORS[d.type] || '#9333ea'}"></div></div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading skin distribution:', error);
+            container.innerHTML = '<p style="color:#ef4444; font-size:13px;">تعذّر تحميل البيانات</p>';
+        }
+    }
+
+    async function loadFinancialOverview() {
+        try {
+            const [subs, revenue] = await Promise.all([
+                GlowFitAPI.getSubscriptionStats().catch(() => ({ premium: 0, free: 0 })),
+                GlowFitAPI.getOrdersStats().catch(() => ({ revenue: 0 })),
+            ]);
+            document.getElementById('premium-count').innerText = subs.premium.toLocaleString('ar');
+            document.getElementById('free-count').innerText = subs.free.toLocaleString('ar');
+            document.getElementById('month-revenue').innerText = revenue.revenue.toLocaleString('ar') + ' ر.س';
+        } catch (error) {
+            console.error('Error loading financial overview:', error);
+        }
+    }
+
+    async function loadRevenueChart() {
+        const chartEl = document.getElementById('revenue-chart');
+        try {
+            const months = await GlowFitAPI.getRevenueByMonth(4);
+            const maxTotal = Math.max(...months.map(m => m.total), 1);
+            chartEl.innerHTML = months.map((m, i) => {
+                const heightPx = Math.max(10, Math.round((m.total / maxTotal) * 160));
+                const isCurrent = i === months.length - 1;
+                return `
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:10px;">
+                        <div style="width:100%; height:${heightPx}px; background:${isCurrent ? '#ec4899' : '#9333ea'}; opacity:${isCurrent ? '1' : '0.8'}; border-radius:8px 8px 0 0;"></div>
+                        <span style="font-size:11px; font-weight:700; color:${isCurrent ? '#ec4899' : 'rgba(0,0,0,0.4)'}">${m.label}${isCurrent ? ' (الحالي)' : ''}</span>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error loading revenue chart:', error);
+            chartEl.innerHTML = '<p style="color:#ef4444; font-size:13px; margin:auto;">تعذّر تحميل بيانات الإيرادات</p>';
         }
     }
 
@@ -422,7 +457,12 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
 
     window.toggleSidebar = () => document.querySelector('.sidebar').classList.toggle('active');
 
+    loadWelcomeHeader();
     loadDashboardStats();
+    loadRecentUsers();
+    loadSkinDistribution();
+    loadFinancialOverview();
+    loadRevenueChart();
     loadWaitlistTable();
 </script>
 </html>

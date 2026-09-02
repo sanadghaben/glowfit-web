@@ -293,6 +293,63 @@ window.GlowFitAPI = {
             .slice(0, limit);
     },
 
+    // --- توزيع أنواع البشرة (لوحة الملخص) ---
+    async getSkinTypeDistribution() {
+        const rows = await apiRequest(`/rest/v1/profiles?select=skin_type&is_deleted=eq.false&skin_type=not.is.null`);
+        const counts = {};
+        (rows || []).forEach(r => {
+            const t = r.skin_type || 'غير محدد';
+            counts[t] = (counts[t] || 0) + 1;
+        });
+        const total = Object.values(counts).reduce((a, b) => a + b, 0);
+        return Object.entries(counts)
+            .map(([type, count]) => ({ type, count, percent: total ? Math.round((count / total) * 100) : 0 }))
+            .sort((a, b) => b.count - a.count);
+    },
+
+    // --- إحصائيات الطلبات والإيرادات (لوحة الملخص) ---
+    async getOrdersStats() {
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+        const orders = await apiRequest(`/rest/v1/orders?select=total_price,status,created_at&created_at=gte.${monthStart}`).catch(() => []);
+        const ordersCount = orders.length;
+        const revenue = orders.reduce((sum, o) => sum + (Number(o.total_price) || 0), 0);
+        return { ordersCount, revenue };
+    },
+
+    // --- إيرادات آخر 4 أشهر (للرسم البياني) ---
+    async getRevenueByMonth(monthsBack = 4) {
+        const now = new Date();
+        const since = new Date(now.getFullYear(), now.getMonth() - (monthsBack - 1), 1).toISOString();
+        const orders = await apiRequest(`/rest/v1/orders?select=total_price,created_at&created_at=gte.${since}`).catch(() => []);
+
+        const buckets = [];
+        for (let i = monthsBack - 1; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            buckets.push({ year: d.getFullYear(), month: d.getMonth(), label: d.toLocaleDateString('ar-EG', { month: 'long' }), total: 0 });
+        }
+        orders.forEach(o => {
+            const d = new Date(o.created_at);
+            const bucket = buckets.find(b => b.year === d.getFullYear() && b.month === d.getMonth());
+            if (bucket) bucket.total += Number(o.total_price) || 0;
+        });
+        return buckets;
+    },
+
+    // --- عدد الاشتراكات المدفوعة مقابل المجانية ---
+    async getSubscriptionStats() {
+        const [premium, free] = await Promise.all([
+            apiRequest(`/rest/v1/profiles?select=count()&subscription_tier=eq.premium&is_deleted=eq.false`, {
+                headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
+            }).catch(() => [{ count: 0 }]),
+            apiRequest(`/rest/v1/profiles?select=count()&subscription_tier=eq.free&is_deleted=eq.false`, {
+                headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
+            }).catch(() => [{ count: 0 }])
+        ]);
+        return { premium: premium?.[0]?.count ?? 0, free: free?.[0]?.count ?? 0 };
+    },
+
     async getUsers(page = 1, limit = 10, search = '', skinFilter = '') {
         const offset = (page - 1) * limit;
         let endpoint = `/rest/v1/profiles?select=*&is_deleted=eq.false&order=created_at.desc&limit=${limit}&offset=${offset}`;
