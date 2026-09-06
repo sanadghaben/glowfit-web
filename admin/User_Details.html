@@ -200,7 +200,12 @@ async function loadUserDetails() {
         }
 
         const name = user.full_name || 'بدون اسم';
-        document.getElementById('u-avatar').innerText = name.trim().charAt(0) || '?';
+        const avatarEl = document.getElementById('u-avatar');
+        if (user.avatar_url) {
+            avatarEl.innerHTML = `<img src="${user.avatar_url}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+        } else {
+            avatarEl.innerText = name.trim().charAt(0) || '?';
+        }
         document.getElementById('u-name').innerText = name;
         document.getElementById('u-email').innerText = user.email || '—';
 
