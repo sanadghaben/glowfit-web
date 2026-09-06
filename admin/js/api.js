@@ -170,6 +170,31 @@ window.GlowFitAPI = {
         });
     },
 
+    // --- رفع صورة البروفايل الحقيقية (نفس الـ bucket المستخدم بالتطبيق) ---
+    async uploadMyAvatar(file) {
+        const user = this.getAdminUser();
+        if (!user) throw new Error('لا يوجد مستخدم مسجل دخول');
+        await ensureFreshToken();
+        const token = localStorage.getItem('admin_token');
+        const path = `${user.id}/avatar.jpg`;
+
+        const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/${path}`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': file.type || 'image/jpeg',
+                'x-upsert': 'true'
+            },
+            body: file
+        });
+        if (!uploadRes.ok) throw new Error('تعذّر رفع الصورة');
+
+        const publicURL = `${SUPABASE_URL}/storage/v1/object/public/avatars/${path}?t=${Date.now()}`;
+        await this.updateMyProfile({ avatar_url: publicURL });
+        return publicURL;
+    },
+
     // يتأكد من كلمة المرور الحالية (بمحاولة تسجيل دخول صامتة)، وبعدين يغيّرها
     async changeMyPassword(currentPassword, newPassword) {
         const user = this.getAdminUser();
