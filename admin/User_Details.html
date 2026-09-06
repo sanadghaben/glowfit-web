@@ -246,13 +246,31 @@ async function loadUserDetails() {
                 timeline.innerHTML = '<p style="color:rgba(0,0,0,0.3)">ما في أي نشاط مسجّل لهذا المستخدم لسا.</p>';
                 return;
             }
-            timeline.innerHTML = activity.map(item => `
-                <div class="t-item">
-                    <span class="t-date">${timeAgo(item.date)}</span>
-                    <div class="t-title">${item.title}</div>
-                    <div class="t-desc">${item.desc}</div>
-                </div>
-            `).join('');
+            timeline.innerHTML = activity.map(item => {
+                const detailsRows = Object.entries(item.details || {})
+                    .filter(([_, v]) => v !== null && v !== undefined && v !== '')
+                    .map(([k, v]) => `
+                        <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed rgba(0,0,0,0.06); font-size:12px;">
+                            <span style="color:rgba(0,0,0,0.45); font-weight:700;">${k}</span>
+                            <span style="color:rgba(0,0,0,0.75); font-weight:700; max-width:60%; text-align:left;">${v}</span>
+                        </div>
+                    `).join('');
+
+                const imageHtml = item.imageUrl
+                    ? `<img src="${item.imageUrl}" alt="صورة الفحص" style="width:100%; max-width:220px; border-radius:14px; margin-top:10px; border:1px solid #f1f5f9;" />`
+                    : '';
+
+                return `
+                    <div class="t-item">
+                        <span class="t-date">${timeAgo(item.date)}</span>
+                        <div class="t-title">${item.title}</div>
+                        <div style="margin-top:8px; background:#f8fafc; border-radius:14px; padding:14px 16px;">
+                            ${detailsRows || '<span style="font-size:12px; color:rgba(0,0,0,0.3)">لا توجد تفاصيل إضافية</span>'}
+                        </div>
+                        ${imageHtml}
+                    </div>
+                `;
+            }).join('');
         }).catch(() => {
             document.getElementById('activity-timeline').innerHTML = '<p style="color:#ef4444">تعذّر تحميل سجل النشاط</p>';
         });

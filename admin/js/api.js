@@ -272,25 +272,64 @@ window.GlowFitAPI = {
     // --- سجل نشاط حقيقي: آخر الفحوصات + آخر الطلبات مدموجين حسب التاريخ ---
     async getUserActivity(userId, limit = 10) {
         const [scans, orders] = await Promise.all([
-            apiRequest(`/rest/v1/skin_scans?select=id,created_at,concerns&user_id=eq.${userId}&order=created_at.desc&limit=${limit}`).catch(() => []),
+            apiRequest(`/rest/v1/skin_scans?select=id,created_at,image_url,skin_health_score,summary_text,moisture_level,acne_percentage,dark_circles_percentage,fine_lines_percentage,pores_condition,pigmentation,sensitivity,estimated_age,concerns,recommendations&user_id=eq.${userId}&order=created_at.desc&limit=${limit}`).catch(() => []),
             apiRequest(`/rest/v1/orders?select=id,created_at,status,total_price&user_id=eq.${userId}&order=created_at.desc&limit=${limit}`).catch(() => [])
         ]);
 
-        const scanItems = (scans || []).map(s => ({
-            date: s.created_at,
-            title: 'إجراء فحص للبشرة 📸',
-            desc: s.concerns && s.concerns.length ? `ملاحظات: ${s.concerns.join('، ')}` : 'تم إجراء فحص بشرة بالذكاء الاصطناعي.'
+        const scanItems = await Promise.all((scans || []).map(async s => {
+            let signedImageUrl = null;
+            if (s.image_url) {
+                signedImageUrl = await window.GlowFitAPI.getSignedImageUrl(s.image_url).catch(() => null);
+            }
+            return {
+                date: s.created_at,
+                type: 'scan',
+                title: 'إجراء فحص للبشرة 📸',
+                imageUrl: signedImageUrl,
+                details: {
+                    'درجة صحة البشرة': s.skin_health_score != null ? `${s.skin_health_score}/100` : null,
+                    'العمر التقريبي': s.estimated_age != null ? `${s.estimated_age} سنة` : null,
+                    'الترطيب': s.moisture_level != null ? `${s.moisture_level}%` : null,
+                    'الحبوب': s.acne_percentage != null ? `${s.acne_percentage}%` : null,
+                    'الهالات السوداء': s.dark_circles_percentage != null ? `${s.dark_circles_percentage}%` : null,
+                    'الخطوط الدقيقة': s.fine_lines_percentage != null ? `${s.fine_lines_percentage}%` : null,
+                    'حالة المسام': s.pores_condition,
+                    'التصبغات': s.pigmentation,
+                    'الحساسية': s.sensitivity,
+                    'الملاحظات': (s.concerns && s.concerns.length) ? s.concerns.join('، ') : null,
+                    'التوصيات': (s.recommendations && s.recommendations.length) ? s.recommendations.join('، ') : null,
+                    'الملخص': s.summary_text
+                }
+            };
         }));
 
         const orderItems = (orders || []).map(o => ({
             date: o.created_at,
+            type: 'order',
             title: 'عملية شراء من المتجر 🛒',
-            desc: `الحالة: ${o.status || 'قيد المعالجة'} — الإجمالي: ${o.total_price ?? '—'} ر.س (طلب #${String(o.id).slice(0, 8)})`
+            imageUrl: null,
+            details: {
+                'الحالة': o.status || 'قيد المعالجة',
+                'الإجمالي': `${o.total_price ?? '—'} ر.س`,
+                'رقم الطلب': `#${String(o.id).slice(0, 8)}`
+            }
         }));
 
         return [...scanItems, ...orderItems]
             .sort((a, b) => new Date(b.date) - new Date(a.date))
             .slice(0, limit);
+    },
+
+    // --- رابط موقّت وآمن لعرض صورة فحص خاصة (البَكِت غير عام) ---
+    async getSignedImageUrl(storagePath, expiresIn = 3600) {
+        const result = await apiRequest(`/storage/v1/object/sign/skin-scan-photos/${storagePath}`, {
+            method: 'POST',
+            body: JSON.stringify({ expiresIn })
+        });
+        if (result && result.signedURL) {
+            return `${SUPABASE_URL}/storage/v1${result.signedURL}`;
+        }
+        return null;
     },
 
     // --- توزيع أنواع البشرة (لوحة الملخص) ---
