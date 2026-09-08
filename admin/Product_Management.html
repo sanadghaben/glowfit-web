@@ -142,123 +142,106 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
             <div class="p-stat-card">
                 <div class="p-stat-icon">📦</div>
                 <div class="p-stat-info">
-                    <h4>152</h4>
+                    <h4 id="stat-total">...</h4>
                     <p>إجمالي المنتجات</p>
                 </div>
             </div>
             <div class="p-stat-card">
                 <div class="p-stat-icon" style="color:#f97316">⚠️</div>
                 <div class="p-stat-info">
-                    <h4>12</h4>
+                    <h4 id="stat-low-stock">...</h4>
                     <p>منتجات منخفضة المخزون</p>
                 </div>
             </div>
             <div class="p-stat-card">
                 <div class="p-stat-icon" style="color:#10b981">✨</div>
                 <div class="p-stat-info">
-                    <h4>8</h4>
+                    <h4 id="stat-new">...</h4>
                     <p>منتجات جديدة (شهر)</p>
                 </div>
             </div>
         </div>
 
-        <div class="tabs-bar">
+        <div class="tabs-bar" id="tabs-bar">
             <button class="tab-link active">جميع المنتجات</button>
-            <button class="tab-link">غسول الوجه</button>
-            <button class="tab-link">سيرومات نضارة</button>
-            <button class="tab-link">مرطبات</button>
-            <button class="tab-link">واقيات الشمس</button>
-            <button class="tab-link">أدوات العناية</button>
         </div>
 
-        <div class="product-grid">
-            <div class="product-card">
-                <div class="product-tag tag-in-stock">متوفر</div>
-                <div class="product-image-box">🧴</div>
-                <span class="p-brand">CeraVe</span>
-                <h4 class="p-name">Foaming Facial Cleanser For Oily Skin</h4>
-                <div class="p-footer">
-                    <span class="p-price">85 ر.س</span>
-                    <div class="p-actions">
-                        <div class="p-action-btn">✏️</div>
-                        <div class="p-action-btn" style="color:#ef4444">🗑️</div>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-tag tag-low-stock">مخزون منخفض (3)</div>
-                <div class="product-image-box">🍊</div>
-                <span class="p-brand">The Ordinary</span>
-                <h4 class="p-name">Vitamin C Suspension 23% + HA Spheres</h4>
-                <div class="p-footer">
-                    <span class="p-price">55 ر.س</span>
-                    <div class="p-actions">
-                        <div class="p-action-btn">✏️</div>
-                        <div class="p-action-btn" style="color:#ef4444">🗑️</div>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-tag tag-in-stock">متوفر</div>
-                <div class="product-image-box">☀️</div>
-                <span class="p-brand">La Roche-Posay</span>
-                <h4 class="p-name">Anthelios UVMune 400 Invisible Fluid</h4>
-                <div class="p-footer">
-                    <span class="p-price">130 ر.س</span>
-                    <div class="p-actions">
-                        <div class="p-action-btn">✏️</div>
-                        <div class="p-action-btn" style="color:#ef4444">🗑️</div>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-tag tag-in-stock">متوفر</div>
-                <div class="product-image-box">💧</div>
-                <span class="p-brand">Neutrogena</span>
-                <h4 class="p-name">Hydro Boost Water Gel Moisturizer</h4>
-                <div class="p-footer">
-                    <span class="p-price">72 ر.س</span>
-                    <div class="p-actions">
-                        <div class="p-action-btn">✏️</div>
-                        <div class="p-action-btn" style="color:#ef4444">🗑️</div>
-                    </div>
-                </div>
-            </div>
+        <div class="product-grid" id="product-grid">
+            <p style="grid-column:1/-1; text-align:center; color:rgba(0,0,0,0.3); padding:40px;">جاري التحميل...</p>
         </div>
     </div>
 </div>
 
-<!-- Add Product Modal -->
+<!-- Add/Edit Product Modal -->
 <div class="modal-overlay" id="addProductModal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-height:85vh; overflow-y:auto;">
         <div class="modal-header">
-            <h3 class="modal-title">إضافة منتج جديد</h3>
+            <h3 class="modal-title" id="modal-title-text">إضافة منتج جديد</h3>
             <span class="close-modal" onclick="closeModal()">×</span>
         </div>
-        <form class="modal-form">
+        <form class="modal-form" id="product-form" onsubmit="submitProduct(event)">
+            <input type="hidden" id="p-id">
             <div class="form-group">
-                <label>اسم المنتج</label>
-                <input type="text" placeholder="مثلاً: غسول الوجه المطور">
+                <label>اسم المنتج *</label>
+                <input type="text" id="p-name" placeholder="مثلاً: غسول الوجه المطور" required>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
                 <div class="form-group">
                     <label>الماركة</label>
-                    <input type="text" placeholder="CeraVe">
+                    <input type="text" id="p-brand" placeholder="GlowFit Essentials">
                 </div>
                 <div class="form-group">
-                    <label>السعر (ر.س)</label>
-                    <input type="number" placeholder="0.00">
+                    <label>السعر (ر.س) *</label>
+                    <input type="number" step="0.01" id="p-price" placeholder="0.00" required>
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
+                <div class="form-group">
+                    <label>التصنيف</label>
+                    <select id="p-category">
+                        <option value="غسول">غسول</option>
+                        <option value="سيروم">سيروم</option>
+                        <option value="مرطب">مرطب</option>
+                        <option value="واقي شمس">واقي شمس</option>
+                        <option value="قناع">قناع</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>نوع البشرة المناسب</label>
+                    <select id="p-skin-type">
+                        <option value="">أي نوع بشرة</option>
+                        <option value="oily">دهنية</option>
+                        <option value="dry">جافة</option>
+                        <option value="combination">مختلطة</option>
+                        <option value="normal">عادية</option>
+                        <option value="sensitive">حساسة</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
+                <div class="form-group">
+                    <label>الكمية المتوفرة (المخزون)</label>
+                    <input type="number" id="p-stock" placeholder="10">
+                </div>
+                <div class="form-group">
+                    <label>المكوّن الرئيسي</label>
+                    <input type="text" id="p-ingredient" placeholder="حمض الساليسيليك">
                 </div>
             </div>
             <div class="form-group">
-                <label>الكمية المتوفرة</label>
-                <input type="number" placeholder="10">
+                <label>الحجم</label>
+                <input type="text" id="p-size" placeholder="مثلاً: 150مل">
             </div>
             <div class="form-group">
                 <label>الوصف</label>
-                <textarea rows="3" placeholder="اكتب وصفاً مختصراً للمنتج..."></textarea>
+                <textarea rows="3" id="p-description" placeholder="اكتب وصفاً مختصراً للمنتج..."></textarea>
             </div>
-            <button type="button" class="add-product-btn" style="width:100%; justify-content:center; margin-top:10px" onclick="closeModal()">إضافة للمخزون</button>
+            <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+                <input type="checkbox" id="p-fragrance-free" style="width:auto;">
+                <label style="margin:0;">خالٍ من العطور</label>
+            </div>
+            <div id="product-form-error" style="color:#ef4444; font-size:13px; display:none; margin-bottom:10px;"></div>
+            <button type="submit" class="add-product-btn" id="submit-product-btn" style="width:100%; justify-content:center; margin-top:10px">إضافة للمخزون</button>
         </form>
     </div>
 </div>
@@ -266,10 +249,39 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
 </body>
 <script src="./js/api.js"></script>
 <script>
+let allProducts = [];
+let editingProductId = null;
+let currentCategoryFilter = '';
+
 function toggleSidebar() {
     document.querySelector('.sidebar').classList.toggle('active');
 }
-function openModal() {
+
+function openModal(productId = null) {
+    editingProductId = productId;
+    document.getElementById('product-form-error').style.display = 'none';
+    if (productId) {
+        const p = allProducts.find(x => x.id === productId);
+        if (!p) return;
+        document.getElementById('modal-title-text').innerText = 'تعديل المنتج';
+        document.getElementById('submit-product-btn').innerText = 'حفظ التعديلات';
+        document.getElementById('p-id').value = p.id;
+        document.getElementById('p-name').value = p.name || '';
+        document.getElementById('p-brand').value = p.brand || '';
+        document.getElementById('p-price').value = p.price || '';
+        document.getElementById('p-category').value = p.category || 'غسول';
+        document.getElementById('p-skin-type').value = p.skin_type_match || '';
+        document.getElementById('p-stock').value = p.stock ?? '';
+        document.getElementById('p-ingredient').value = p.key_ingredient || '';
+        document.getElementById('p-size').value = p.size || '';
+        document.getElementById('p-description').value = p.description || '';
+        document.getElementById('p-fragrance-free').checked = !!p.fragrance_free;
+    } else {
+        document.getElementById('modal-title-text').innerText = 'إضافة منتج جديد';
+        document.getElementById('submit-product-btn').innerText = 'إضافة للمخزون';
+        document.getElementById('product-form').reset();
+        document.getElementById('p-id').value = '';
+    }
     document.getElementById('addProductModal').style.display = 'flex';
 }
 function closeModal() {
@@ -279,5 +291,127 @@ window.onclick = function(event) {
     let modal = document.getElementById('addProductModal');
     if (event.target == modal) closeModal();
 }
+
+async function submitProduct(event) {
+    event.preventDefault();
+    const btn = document.getElementById('submit-product-btn');
+    const errorEl = document.getElementById('product-form-error');
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.innerText = 'جاري الحفظ...';
+
+    const payload = {
+        name: document.getElementById('p-name').value.trim(),
+        brand: document.getElementById('p-brand').value.trim() || null,
+        price: parseFloat(document.getElementById('p-price').value) || 0,
+        category: document.getElementById('p-category').value,
+        skin_type_match: document.getElementById('p-skin-type').value || null,
+        stock: parseInt(document.getElementById('p-stock').value) || 0,
+        key_ingredient: document.getElementById('p-ingredient').value.trim() || null,
+        size: document.getElementById('p-size').value.trim() || null,
+        description: document.getElementById('p-description').value.trim() || null,
+        fragrance_free: document.getElementById('p-fragrance-free').checked,
+        is_active: true
+    };
+
+    try {
+        if (editingProductId) {
+            await window.GlowFitAPI.updateProduct(editingProductId, payload);
+        } else {
+            await window.GlowFitAPI.addProduct(payload);
+        }
+        closeModal();
+        await loadProducts();
+    } catch (error) {
+        errorEl.innerText = 'خطأ: ' + error.message;
+        errorEl.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.innerText = editingProductId ? 'حفظ التعديلات' : 'إضافة للمخزون';
+    }
+}
+
+async function toggleProductActive(productId, currentlyActive) {
+    const confirmMsg = currentlyActive ? 'تعطيل هذا المنتج؟ (بيختفي من المتجر بس بيضل محفوظ)' : 'إعادة تفعيل هذا المنتج؟';
+    if (!confirm(confirmMsg)) return;
+    try {
+        await window.GlowFitAPI.updateProduct(productId, { is_active: !currentlyActive });
+        await loadProducts();
+    } catch (error) {
+        alert('خطأ: ' + error.message);
+    }
+}
+
+function filterByCategory(category, btnEl) {
+    currentCategoryFilter = category;
+    document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+    renderProducts();
+}
+
+const CATEGORY_ICONS = { 'غسول': '🧼', 'سيروم': '✨', 'مرطب': '🧴', 'واقي شمس': '☀️', 'قناع': '🍯' };
+
+function renderProducts() {
+    const grid = document.getElementById('product-grid');
+    const filtered = currentCategoryFilter ? allProducts.filter(p => p.category === currentCategoryFilter) : allProducts;
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:rgba(0,0,0,0.3); padding:40px;">ما في منتجات بهذا التصنيف</p>';
+        return;
+    }
+
+    grid.innerHTML = filtered.map(p => {
+        const stock = p.stock ?? 0;
+        const tagClass = !p.is_active ? 'tag-low-stock' : (stock <= 5 ? 'tag-low-stock' : 'tag-in-stock');
+        const tagText = !p.is_active ? 'معطّل' : (stock <= 5 ? `مخزون منخفض (${stock})` : 'متوفر');
+        const icon = CATEGORY_ICONS[p.category] || '🧴';
+        return `
+            <div class="product-card" style="${!p.is_active ? 'opacity:0.5' : ''}">
+                <div class="product-tag ${tagClass}">${tagText}</div>
+                <div class="product-image-box">${icon}</div>
+                <span class="p-brand">${p.brand || ''}</span>
+                <h4 class="p-name">${p.name}</h4>
+                <div class="p-footer">
+                    <span class="p-price">${p.price} ر.س</span>
+                    <div class="p-actions">
+                        <div class="p-action-btn" onclick="openModal('${p.id}')">✏️</div>
+                        <div class="p-action-btn" style="color:${p.is_active ? '#ef4444' : '#10b981'}" onclick="toggleProductActive('${p.id}', ${p.is_active})">${p.is_active ? '🗑️' : '♻️'}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderStats() {
+    const total = allProducts.length;
+    const lowStock = allProducts.filter(p => (p.stock ?? 0) <= 5 && p.is_active).length;
+    const monthAgo = new Date(); monthAgo.setDate(monthAgo.getDate() - 30);
+    const newThisMonth = allProducts.filter(p => new Date(p.created_at) >= monthAgo).length;
+    document.getElementById('stat-total').innerText = total;
+    document.getElementById('stat-low-stock').innerText = lowStock;
+    document.getElementById('stat-new').innerText = newThisMonth;
+}
+
+function renderCategoryTabs() {
+    const categories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+    const bar = document.getElementById('tabs-bar');
+    bar.innerHTML = `<button class="tab-link active" onclick="filterByCategory('', this)">جميع المنتجات</button>` +
+        categories.map(c => `<button class="tab-link" onclick="filterByCategory('${c}', this)">${c}</button>`).join('');
+}
+
+async function loadProducts() {
+    try {
+        allProducts = await window.GlowFitAPI.getProducts(1, 200);
+        renderStats();
+        renderCategoryTabs();
+        renderProducts();
+    } catch (error) {
+        console.error('تعذّر تحميل المنتجات:', error);
+        document.getElementById('product-grid').innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#ef4444;">تعذّر تحميل المنتجات</p>';
+    }
+}
+
+loadProducts();
 </script>
 </html>
