@@ -476,11 +476,18 @@ window.GlowFitAPI = {
     // --- Orders ---
     async getOrders(page = 1, limit = 10, status = '') {
         const offset = (page - 1) * limit;
-        let endpoint = `/rest/v1/orders?select=*,profiles(full_name,email)&order=created_at.desc&limit=${limit}&offset=${offset}`;
+        let endpoint = `/rest/v1/orders?select=*,profiles(full_name,email),order_items(quantity,unit_price,products(name,category,image_url))&order=created_at.desc&limit=${limit}&offset=${offset}`;
         if (status) {
             endpoint += `&status=eq.${status}`;
         }
         return await apiRequest(endpoint);
+    },
+
+    async getOrdersCount(status = '') {
+        let endpoint = `/rest/v1/orders?select=count()`;
+        if (status) endpoint += `&status=eq.${status}`;
+        const data = await apiRequest(endpoint, { headers: { 'Prefer': 'count=exact', 'Range': '0-0' } });
+        return data?.[0]?.count ?? 0;
     },
 
     async updateOrderStatus(orderId, status) {
