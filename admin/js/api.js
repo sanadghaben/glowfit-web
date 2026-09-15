@@ -582,6 +582,21 @@ window.GlowFitAPI = {
         });
     },
 
+    // --- الإشعارات (إرسال من لوحة التحكم لمستخدمي التطبيق) ---
+    async sendNotification({ title, body, userId, route }) {
+        const payload = { title, body, type: 'admin' };
+        if (userId) payload.user_id = userId;
+        if (route) payload.route = route;
+        return await apiRequest('/rest/v1/notifications', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+    },
+
+    async getSentNotifications(limit = 30) {
+        return await apiRequest(`/rest/v1/notifications?select=*,profiles(full_name,email)&order=created_at.desc&limit=${limit}`);
+    },
+
     async uploadAvatar(userId, file) {
         await ensureFreshToken();
         const token = localStorage.getItem('admin_token');
