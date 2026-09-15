@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowFit Admin - الإشعارات</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:flex;min-height:100vh}
+
+.sidebar{width:260px;background:#1a1a2e;color:#fff;padding:30px 20px;display:flex;flex-direction:column;gap:30px;position:fixed;height:100vh;transition:all 0.3s;z-index:100}
+.sidebar.active{right:0 !important}
+.logo{font-size:24px;font-weight:900;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:20px}
+.nav-menu{display:flex;flex-direction:column;gap:10px}
+.nav-item{padding:12px 15px;border-radius:12px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.3s;display:flex;align-items:center;gap:12px}
+.nav-item:hover, .nav-item.active{background:rgba(255,255,255,0.05);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,#9333ea,#ec4899);box-shadow:0 4px 15px rgba(147,51,234,0.3)}
+
+.main-content{flex:1;margin-right:260px;padding:40px;background:#f8fafc}
+.page-header{margin-bottom:30px}
+.page-header h1{font-size:24px;font-weight:800}
+.page-header p{font-size:13px;color:rgba(0,0,0,0.4);margin-top:5px}
+.mobile-toggle{display:none;font-size:24px;cursor:pointer;margin-bottom:10px}
+@media (max-width: 1024px) {
+    .sidebar{right:-260px}
+    .main-content{margin-right:0}
+    .mobile-toggle{display:block}
+}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:25px}
+@media (max-width: 900px){.grid-2{grid-template-columns:1fr}}
+
+.card{background:#fff;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.02);padding:28px}
+.card h3{font-size:16px;font-weight:800;margin-bottom:18px}
+
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:rgba(0,0,0,0.6)}
+.form-group input, .form-group textarea, .form-group select{width:100%;padding:12px 15px;border-radius:12px;border:1px solid #e2e8f0;font-family:'Tajawal';font-size:14px}
+.form-group textarea{resize:vertical}
+
+.target-tabs{display:flex;gap:10px;margin-bottom:16px}
+.target-tab{flex:1;padding:10px;text-align:center;border-radius:12px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;font-weight:700;color:rgba(0,0,0,0.4)}
+.target-tab.active{background:#1a1a2e;color:#fff;border-color:#1a1a2e}
+
+.user-result{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid #f1f5f9;border-radius:10px;margin-top:6px;font-size:13px;cursor:pointer}
+.user-result:hover{background:#f8fafc}
+.user-result.selected{border-color:#9333ea;background:#f3e8ff}
+
+.send-btn{background:linear-gradient(135deg,#9333ea,#ec4899);color:#fff;border:none;padding:14px 30px;border-radius:14px;font-family:'Tajawal';font-weight:800;font-size:14px;cursor:pointer;width:100%}
+.send-btn:disabled{opacity:0.5;cursor:not-allowed}
+.status-msg{font-size:13px;font-weight:700;margin-top:12px;text-align:center}
+
+.sent-row{padding:14px 0;border-bottom:1px solid #f1f5f9;font-size:13px}
+.sent-row:last-child{border-bottom:none}
+.sent-row .t{font-weight:800;margin-bottom:3px}
+.sent-row .b{color:rgba(0,0,0,0.5);margin-bottom:4px}
+.sent-row .m{font-size:11px;color:rgba(0,0,0,0.35)}
+.badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#f3e8ff;color:#9333ea;margin-right:6px}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">GlowFit Admin</div>
+    <nav class="nav-menu">
+        <a href="Main_Overview.html" class="nav-item">📊 لوحة الملخص</a>
+        <a href="User_Management.html" class="nav-item">👥 إدارة المستخدمين</a>
+        <a href="Product_Management.html" class="nav-item">🧴 المنتجات والمخزون</a>
+        <a href="Orders.html" class="nav-item">🛒 الطلبات</a>
+        <a href="#" class="nav-item active">🔔 الإشعارات</a>
+        <a href="AI_Insights.html" class="nav-item">📈 تقارير التحليل</a>
+        <a href="Support.html" class="nav-item">💬 المحادثات والدعم</a>
+        <a href="Contact_Messages.html" class="nav-item">✉️ رسائل التواصل</a>
+        <a href="Settings.html" class="nav-item">⚙️ الإعدادات</a>
+    </nav>
+    <div style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1)">
+        <a href="#" class="nav-item" style="color:#ef4444" onclick="event.preventDefault(); window.GlowFitAPI && window.GlowFitAPI.signOut();">🚪 تسجيل الخروج</a>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div class="mobile-toggle" onclick="toggleSidebar()">☰</div>
+        <h1>الإشعارات 🔔</h1>
+        <p>ابعتي إشعار حقيقي يوصل مباشرة لتطبيق المستخدمين</p>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <h3>إرسال إشعار جديد</h3>
+
+            <div class="target-tabs">
+                <div class="target-tab active" id="tab-all" onclick="selectTarget('all')">لكل المستخدمين</div>
+                <div class="target-tab" id="tab-one" onclick="selectTarget('one')">مستخدمة محددة</div>
+            </div>
+
+            <div class="form-group" id="user-search-group" style="display:none;">
+                <label>ابحثي بالاسم أو الإيميل</label>
+                <input type="text" id="user-search" placeholder="مثلاً: نورة أو الإيميل" oninput="searchUsers(this.value)">
+                <div id="user-results"></div>
+                <div id="selected-user-display" style="display:none; margin-top:8px; padding:10px 14px; background:#f3e8ff; border-radius:10px; font-size:13px; font-weight:700; color:#9333ea;"></div>
+            </div>
+
+            <div class="form-group">
+                <label>عنوان الإشعار</label>
+                <input type="text" id="notif-title" placeholder="مثلاً: عرض خاص لكِ 🎁" maxlength="60">
+            </div>
+            <div class="form-group">
+                <label>نص الإشعار</label>
+                <textarea id="notif-body" rows="4" placeholder="اكتبي محتوى الإشعار هون..." maxlength="200"></textarea>
+            </div>
+            <div class="form-group">
+                <label>وجّهيها (اختياري)</label>
+                <select id="notif-route">
+                    <option value="">بدون توجيه — بس يفتح الإشعارات</option>
+                    <option value="home">الصفحة الرئيسية</option>
+                    <option value="reports">التقارير</option>
+                    <option value="routine">الروتين</option>
+                    <option value="store">المتجر</option>
+                </select>
+            </div>
+
+            <button class="send-btn" id="send-btn" onclick="sendNotif()">إرسال الإشعار</button>
+            <div class="status-msg" id="status-msg"></div>
+        </div>
+
+        <div class="card">
+            <h3>آخر الإشعارات المُرسلة</h3>
+            <div id="sent-list"><p style="color:rgba(0,0,0,0.3); font-size:13px;">جاري التحميل...</p></div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="./js/api.js"></script>
+<script>
+let targetMode = 'all';
+let selectedUserId = null;
+let selectedUserLabel = '';
+let searchTimeout = null;
+
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('active');
+}
+
+function selectTarget(mode) {
+    targetMode = mode;
+    document.getElementById('tab-all').classList.toggle('active', mode === 'all');
+    document.getElementById('tab-one').classList.toggle('active', mode === 'one');
+    document.getElementById('user-search-group').style.display = mode === 'one' ? 'block' : 'none';
+    if (mode === 'all') { selectedUserId = null; }
+}
+
+function searchUsers(query) {
+    clearTimeout(searchTimeout);
+    const resultsEl = document.getElementById('user-results');
+    if (!query || query.trim().length < 2) { resultsEl.innerHTML = ''; return; }
+    searchTimeout = setTimeout(async () => {
+        try {
+            const users = await window.GlowFitAPI.getUsers(1, 8, query.trim());
+            resultsEl.innerHTML = users.map(u => `
+                <div class="user-result" onclick='pickUser("${u.id}", "${(u.full_name || u.email || "بدون اسم").replace(/"/g, "")}")'>
+                    <span>${u.full_name || 'بدون اسم'}</span>
+                    <span style="color:rgba(0,0,0,0.4)">${u.email || ''}</span>
+                </div>
+            `).join('') || '<p style="font-size:12px; color:rgba(0,0,0,0.3); margin-top:6px;">ما في نتائج</p>';
+        } catch (error) {
+            console.error(error);
+        }
+    }, 350);
+}
+
+function pickUser(id, label) {
+    selectedUserId = id;
+    selectedUserLabel = label;
+    document.getElementById('user-results').innerHTML = '';
+    document.getElementById('user-search').value = '';
+    const display = document.getElementById('selected-user-display');
+    display.style.display = 'block';
+    display.innerText = `✓ محددة: ${label}`;
+}
+
+async function sendNotif() {
+    const title = document.getElementById('notif-title').value.trim();
+    const body = document.getElementById('notif-body').value.trim();
+    const route = document.getElementById('notif-route').value || null;
+    const statusEl = document.getElementById('status-msg');
+    const btn = document.getElementById('send-btn');
+
+    if (!title || !body) {
+        statusEl.style.color = '#ef4444';
+        statusEl.innerText = 'لازم تعبّي العنوان والنص';
+        return;
+    }
+    if (targetMode === 'one' && !selectedUserId) {
+        statusEl.style.color = '#ef4444';
+        statusEl.innerText = 'لازم تختاري مستخدمة أول';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = 'جاري الإرسال...';
+    statusEl.innerText = '';
+    try {
+        await window.GlowFitAPI.sendNotification({
+            title, body, route,
+            userId: targetMode === 'one' ? selectedUserId : null
+        });
+        statusEl.style.color = '#10b981';
+        statusEl.innerText = targetMode === 'all' ? 'تم الإرسال لكل المستخدمين ✓' : `تم الإرسال لـ ${selectedUserLabel} ✓`;
+        document.getElementById('notif-title').value = '';
+        document.getElementById('notif-body').value = '';
+        document.getElementById('notif-route').value = '';
+        loadSentList();
+    } catch (error) {
+        statusEl.style.color = '#ef4444';
+        statusEl.innerText = 'صار خطأ أثناء الإرسال، حاولي مرة ثانية';
+    } finally {
+        btn.disabled = false;
+        btn.innerText = 'إرسال الإشعار';
+    }
+}
+
+function timeAgo(dateStr) {
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 60) return `منذ ${mins} دقيقة`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `منذ ${hrs} ساعة`;
+    return `منذ ${Math.floor(hrs / 24)} يوم`;
+}
+
+async function loadSentList() {
+    const listEl = document.getElementById('sent-list');
+    try {
+        const notifs = await window.GlowFitAPI.getSentNotifications(20);
+        if (!notifs || notifs.length === 0) {
+            listEl.innerHTML = '<p style="color:rgba(0,0,0,0.3); font-size:13px;">لسا ما بعتّي أي إشعار</p>';
+            return;
+        }
+        listEl.innerHTML = notifs.map(n => {
+            const target = n.profiles ? (n.profiles.full_name || n.profiles.email) : 'كل المستخدمين';
+            return `
+                <div class="sent-row">
+                    <div class="t">${n.title}</div>
+                    <div class="b">${n.body}</div>
+                    <div class="m"><span class="badge">${target}</span>${timeAgo(n.created_at)}</div>
+                </div>
+            `;
+        }).join('');
+    } catch (error) {
+        listEl.innerHTML = '<p style="color:#ef4444; font-size:13px;">تعذّر تحميل السجل</p>';
+    }
+}
+
+loadSentList();
+</script>
+</html>
