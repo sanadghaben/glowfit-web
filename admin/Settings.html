@@ -211,13 +211,25 @@ input:checked + .slider:before{transform:translateX(-20px)}
             <div class="settings-card tab-pane" id="tab-legal" style="display:none;">
                 <h3 class="section-title">سياسة الخصوصية</h3>
                 <p style="font-size:13px; color:rgba(0,0,0,0.5); margin-bottom:15px;">
-                    أي تعديل هون بينحفظ مباشرة بقاعدة البيانات، وبيظهر تلقائياً بصفحة "سياسة الخصوصية" على صفحة الهبوط — بدون الحاجة لإعادة نشر الموقع.
+                    أي تعديل هون بينحفظ مباشرة بقاعدة البيانات، وبيظهر تلقائياً بصفحة "سياسة الخصوصية" على صفحة الهبوط وداخل التطبيق — بدون الحاجة لإعادة نشر الموقع أو تحديث التطبيق.
                 </p>
                 <div class="form-group">
                     <textarea id="privacy-policy-text" rows="16" style="width:100%; padding:15px; border-radius:12px; border:1px solid #e2e8f0; font-family:'Tajawal'; font-size:13px; line-height:1.8; resize:vertical;" placeholder="جاري تحميل المحتوى الحالي..."></textarea>
                 </div>
                 <button class="save-btn" id="privacy-save-btn" onclick="savePrivacyPolicy()">حفظ سياسة الخصوصية</button>
                 <span id="privacy-save-status" style="margin-right:15px; font-size:13px; font-weight:700;"></span>
+
+                <hr style="margin:30px 0; border:none; border-top:1px solid #f1f5f9;">
+
+                <h3 class="section-title">الشروط والأحكام</h3>
+                <p style="font-size:13px; color:rgba(0,0,0,0.5); margin-bottom:15px;">
+                    نفس الفكرة — أي تعديل هون بيظهر تلقائياً بالتطبيق مباشرة.
+                </p>
+                <div class="form-group">
+                    <textarea id="terms-text" rows="16" style="width:100%; padding:15px; border-radius:12px; border:1px solid #e2e8f0; font-family:'Tajawal'; font-size:13px; line-height:1.8; resize:vertical;" placeholder="جاري تحميل المحتوى الحالي..."></textarea>
+                </div>
+                <button class="save-btn" id="terms-save-btn" onclick="saveTerms()">حفظ الشروط والأحكام</button>
+                <span id="terms-save-status" style="margin-right:15px; font-size:13px; font-weight:700;"></span>
             </div>
         </div>
     </div>
@@ -271,6 +283,38 @@ async function savePrivacyPolicy() {
     } finally {
         btn.disabled = false;
         btn.innerText = 'حفظ سياسة الخصوصية';
+    }
+}
+
+// --- تحميل / حفظ الشروط والأحكام ---
+async function loadTerms() {
+    const textarea = document.getElementById('terms-text');
+    const statusEl = document.getElementById('terms-save-status');
+    try {
+        const row = await window.GlowFitAPI.getSiteContent('terms_conditions');
+        textarea.value = row ? row.content : '';
+    } catch (error) {
+        statusEl.innerText = 'تعذّر تحميل المحتوى الحالي';
+        statusEl.style.color = '#ef4444';
+    }
+}
+
+async function saveTerms() {
+    const textarea = document.getElementById('terms-text');
+    const statusEl = document.getElementById('terms-save-status');
+    const btn = document.getElementById('terms-save-btn');
+    btn.disabled = true;
+    btn.innerText = 'جاري الحفظ...';
+    try {
+        await window.GlowFitAPI.updateSiteContent('terms_conditions', textarea.value);
+        statusEl.innerText = 'تم الحفظ ✓ — التحديث سيظهر بالتطبيق فوراً';
+        statusEl.style.color = '#10b981';
+    } catch (error) {
+        statusEl.innerText = 'صار خطأ أثناء الحفظ، حاول مرة ثانية';
+        statusEl.style.color = '#ef4444';
+    } finally {
+        btn.disabled = false;
+        btn.innerText = 'حفظ الشروط والأحكام';
     }
 }
 
@@ -380,6 +424,7 @@ async function changePassword() {
 document.addEventListener('DOMContentLoaded', () => {
     loadAccountInfo();
     loadPrivacyPolicy();
+    loadTerms();
 });
 </script>
 </html>
