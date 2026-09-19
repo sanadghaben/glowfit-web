@@ -596,6 +596,11 @@ window.GlowFitAPI = {
         });
     },
 
+    async getUnreadContactCount() {
+        const data = await getCount('/rest/v1/contact_messages?is_read=eq.false').catch(() => [{ count: 0 }]);
+        return data?.[0]?.count ?? 0;
+    },
+
     // --- Site Content (محتوى قابل للتعديل مثل سياسة الخصوصية) ---
     async getSiteContent(key) {
         const rows = await apiRequest(`/rest/v1/site_content?select=*&key=eq.${key}`);
@@ -761,6 +766,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 nameEl.innerText = profile.full_name;
             } else if (profile && profile.email) {
                 nameEl.innerText = profile.email;
+            }
+        })
+        .catch(() => {});
+});
+
+// --- شارة تنبيه رسائل التواصل غير المقروءة — بتظهر تلقائياً بكل صفحات لوحة التحكم ---
+document.addEventListener('DOMContentLoaded', () => {
+    const navLink = Array.from(document.querySelectorAll('.nav-item')).find(a => a.textContent.includes('رسائل التواصل'));
+    if (!navLink) return;
+    window.GlowFitAPI.getUnreadContactCount()
+        .then(count => {
+            if (count > 0) {
+                const badge = document.createElement('span');
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.style.cssText = 'background:#ef4444; color:#fff; font-size:11px; font-weight:800; padding:2px 7px; border-radius:10px; margin-right:auto;';
+                navLink.appendChild(badge);
+                navLink.style.display = 'flex';
+                navLink.style.justifyContent = 'space-between';
+                navLink.style.alignItems = 'center';
             }
         })
         .catch(() => {});
