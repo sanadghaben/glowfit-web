@@ -56,6 +56,36 @@ async function apiRequest(endpoint, options = {}) {
     return text ? JSON.parse(text) : null;
 }
 
+// --- الطريقة الصحيحة الحديثة لجلب عدد الصفوف فقط (Supabase غيّروا صيغة count() القديمة) ---
+// بترسل طلب HEAD خفيف (بدون تحميل أي بيانات فعلية) وتقرأ العدد من ترويسة Content-Range
+async function getCount(endpoint) {
+    await ensureFreshToken();
+    const token = localStorage.getItem('admin_token');
+    const headers = {
+        'apikey': SUPABASE_ANON_KEY,
+        'Prefer': 'count=exact',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
+    let response = await fetch(`${SUPABASE_URL}${endpoint}`, { method: 'HEAD', headers });
+
+    if (response.status === 401 && localStorage.getItem('admin_refresh_token')) {
+        const refreshed = await refreshAccessToken().catch(() => false);
+        if (refreshed) {
+            const newToken = localStorage.getItem('admin_token');
+            response = await fetch(`${SUPABASE_URL}${endpoint}`, {
+                method: 'HEAD',
+                headers: { ...headers, 'Authorization': `Bearer ${newToken}` }
+            });
+        }
+    }
+
+    if (!response.ok) throw new Error('تعذّر جلب العدد');
+    const range = response.headers.get('content-range'); // شكلها مثلاً "0-0/37"
+    const total = range ? range.split('/')[1] : '0';
+    const count = total === '*' ? 0 : parseInt(total, 10);
+    return [{ count }]; // نفس شكل الاستجابة القديمة عشان ما نعدّل كل مكان استخدمها
+}
+
 // --- تجديد الـ token قبل ما ينتهي، أو إذا كان منتهي أصلاً ---
 async function ensureFreshToken() {
     const expiresAt = Number(localStorage.getItem('admin_token_expires_at') || 0);
@@ -281,12 +311,8 @@ window.GlowFitAPI = {
     // --- إحصائيات المستخدم: عدد الفحوصات وعدد الطلبات ---
     async getUserStats(userId) {
         const [scansRes, ordersRes] = await Promise.all([
-            apiRequest(`/rest/v1/skin_scans?select=count()&user_id=eq.${userId}`, {
-                headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
-            }).catch(() => [{ count: 0 }]),
-            apiRequest(`/rest/v1/orders?select=count()&user_id=eq.${userId}`, {
-                headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
-            }).catch(() => [{ count: 0 }])
+            getCount(`/rest/v1/skin_scans?user_id=eq.${userId}`).catch(() => [{ count: 0 }]),
+            getCount(`/rest/v1/orders?user_id=eq.${userId}`).catch(() => [{ count: 0 }])
         ]);
         return {
             scansCount: scansRes?.[0]?.count ?? 0,
@@ -404,12 +430,8 @@ window.GlowFitAPI = {
     // --- عدد الاشتراكات المدفوعة مقابل المجانية ---
     async getSubscriptionStats() {
         const [premium, free] = await Promise.all([
-            apiRequest(`/rest/v1/profiles?select=count()&subscription_tier=eq.premium&is_deleted=eq.false`, {
-                headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
-            }).catch(() => [{ count: 0 }]),
-            apiRequest(`/rest/v1/profiles?select=count()&subscription_tier=eq.free&is_deleted=eq.false`, {
-                headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
-            }).catch(() => [{ count: 0 }])
+            getCount(`/rest/v1/profiles?subscription_tier=eq.premium&is_deleted=eq.false`).catch(() => [{ count: 0 }]),
+            getCount(`/rest/v1/profiles?subscription_tier=eq.free&is_deleted=eq.false`).catch(() => [{ count: 0 }])
         ]);
         return { premium: premium?.[0]?.count ?? 0, free: free?.[0]?.count ?? 0 };
     },
@@ -427,10 +449,7 @@ window.GlowFitAPI = {
     },
 
     async getUsersCount() {
-        const data = await apiRequest('/rest/v1/profiles?select=count()&is_deleted=eq.false', {
-            headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
-        });
-        return data;
+        return await getCount('/rest/v1/profiles?is_deleted=eq.false');
     },
 
     async updateUser(userId, updates) {
@@ -484,9 +503,9 @@ window.GlowFitAPI = {
     },
 
     async getOrdersCount(status = '') {
-        let endpoint = `/rest/v1/orders?select=count()`;
+        let endpoint = `/rest/v1/orders?select=id`;
         if (status) endpoint += `&status=eq.${status}`;
-        const data = await apiRequest(endpoint, { headers: { 'Prefer': 'count=exact', 'Range': '0-0' } });
+        const data = await getCount(endpoint);
         return data?.[0]?.count ?? 0;
     },
 
@@ -501,10 +520,10 @@ window.GlowFitAPI = {
     // --- Stats للـ Dashboard ---
     async getDashboardStats() {
         const [users, products, orders, scans] = await Promise.all([
-            apiRequest('/rest/v1/profiles?select=count()', { headers: { 'Prefer': 'count=exact', 'Range': '0-0' } }),
-            apiRequest('/rest/v1/products?select=count()', { headers: { 'Prefer': 'count=exact', 'Range': '0-0' } }),
-            apiRequest('/rest/v1/orders?select=count()', { headers: { 'Prefer': 'count=exact', 'Range': '0-0' } }),
-            apiRequest('/rest/v1/skin_scans?select=count()', { headers: { 'Prefer': 'count=exact', 'Range': '0-0' } }),
+            getCount('/rest/v1/profiles'),
+            getCount('/rest/v1/products'),
+            getCount('/rest/v1/orders'),
+            getCount('/rest/v1/skin_scans'),
         ]);
         return { users, products, orders, scans };
     },
@@ -534,18 +553,13 @@ window.GlowFitAPI = {
     },
 
     async getWaitlistCount() {
-        return await apiRequest('/rest/v1/waitlist?select=count()', {
-            headers: { 'Prefer': 'count=exact', 'Range': '0-0' }
-        });
+        return await getCount('/rest/v1/waitlist');
     },
 
     // --- Page Views (تتبع زيارات صفحة الهبوط) ---
     async getPageViewsCount(sinceDays = 30) {
         const since = new Date(Date.now() - sinceDays * 24 * 60 * 60 * 1000).toISOString();
-        return await apiRequest(
-            `/rest/v1/page_views?select=count()&created_at=gte.${since}`,
-            { headers: { 'Prefer': 'count=exact', 'Range': '0-0' } }
-        );
+        return await getCount(`/rest/v1/page_views?created_at=gte.${since}`);
     },
 
     async getPageViewsDaily() {
