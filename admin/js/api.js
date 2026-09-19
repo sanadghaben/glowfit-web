@@ -448,6 +448,20 @@ window.GlowFitAPI = {
         return await apiRequest(endpoint);
     },
 
+    // --- آخر تاريخ فحص لكل مستخدمة بدفعة وحدة (بدل استعلام لكل مستخدمة لحالها) ---
+    async getLatestScanDates(userIds) {
+        if (!userIds || userIds.length === 0) return {};
+        const idsFilter = userIds.join(',');
+        const rows = await apiRequest(
+            `/rest/v1/skin_scans?select=user_id,created_at&user_id=in.(${idsFilter})&order=created_at.desc`
+        ).catch(() => []);
+        const latestByUser = {};
+        for (const row of (rows || [])) {
+            if (!latestByUser[row.user_id]) latestByUser[row.user_id] = row.created_at;
+        }
+        return latestByUser;
+    },
+
     async getUsersCount() {
         return await getCount('/rest/v1/profiles?is_deleted=eq.false');
     },

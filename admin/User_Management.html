@@ -293,6 +293,8 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                 return;
             }
 
+            const latestScans = await window.GlowFitAPI.getLatestScanDates(users.map(u => u.id));
+
             tableBody.innerHTML = users.map(user => `
                 <tr>
                     <td>
@@ -310,7 +312,7 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                     </td>
                     <td><span class="skin-badge skin-combo">${user.skin_type || 'غير محدد'}</span></td>
                     <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('ar-SA') : '-'}</td>
-                    <td>-</td>
+                    <td>${latestScans[user.id] ? new Date(latestScans[user.id]).toLocaleDateString('ar-SA') : 'لسا ما فحصت'}</td>
                     <td><span class="status-pill status-active">نشط</span></td>
                     <td>
                         <span class="status-pill ${user.is_subscribed ? 'status-active' : ''}" style="${user.is_subscribed ? '' : 'background:#fee2e2;color:#ef4444;'}">
