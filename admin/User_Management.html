@@ -311,8 +311,8 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                         </div>
                     </td>
                     <td><span class="skin-badge skin-combo">${user.skin_type || 'غير محدد'}</span></td>
-                    <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('ar-SA') : '-'}</td>
-                    <td>${latestScans[user.id] ? new Date(latestScans[user.id]).toLocaleString('ar-SA', { dateStyle: 'medium', timeStyle: 'short' }) : 'لسا ما فحصت'}</td>
+                    <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('ar-SA-u-nu-latn') : '-'}</td>
+                    <td>${latestScans[user.id] ? new Date(latestScans[user.id]).toLocaleString('ar-SA-u-nu-latn', { dateStyle: 'medium', timeStyle: 'short' }) : 'لسا ما فحصت'}</td>
                     <td><span class="status-pill status-active">نشط</span></td>
                     <td>
                         <span class="status-pill ${user.is_subscribed ? 'status-active' : ''}" style="${user.is_subscribed ? '' : 'background:#fee2e2;color:#ef4444;'}">
@@ -493,7 +493,7 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                 (u.full_name || '').replace(/"/g, '""'),
                 (u.email || '').replace(/"/g, '""'),
                 u.skin_type || '',
-                u.created_at ? new Date(u.created_at).toLocaleDateString('ar-EG') : ''
+                u.created_at ? new Date(u.created_at).toLocaleDateString('ar-EG-u-nu-latn') : ''
             ]);
 
             // BOM عشان الأحرف العربية تظهر صح بـ Excel

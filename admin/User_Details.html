@@ -173,7 +173,7 @@ const SKIN_LABELS = { oily: 'دهنية', dry: 'جافة', combination: 'مخت�
 
 function formatDate(dateStr) {
     if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 function timeAgo(dateStr) {

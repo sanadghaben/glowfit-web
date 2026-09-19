@@ -320,7 +320,7 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
             const name = (profile && profile.full_name) ? profile.full_name.split(' ')[0] : '';
             document.getElementById('welcome-heading').innerText = name ? `أهلاً بك مجدداً، ${name} 👋` : 'أهلاً بك مجدداً 👋';
         } catch (e) {}
-        const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+        const today = new Date().toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
         document.getElementById('welcome-date').innerText = `إليك ملخص سريع لأداء GlowFit اليوم، ${today}`;
     }
 
@@ -335,17 +335,17 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
             ]);
 
             document.getElementById('total-users-count').innerText =
-                usersCount?.[0]?.count?.toLocaleString('ar') ?? '—';
+                usersCount?.[0]?.count?.toLocaleString('ar-u-nu-latn') ?? '—';
             document.getElementById('total-products-count').innerText =
-                productsCount.length.toLocaleString('ar');
+                productsCount.length.toLocaleString('ar-u-nu-latn');
             document.getElementById('waitlist-count').innerText =
-                waitlistCount?.[0]?.count?.toLocaleString('ar') ?? '—';
+                waitlistCount?.[0]?.count?.toLocaleString('ar-u-nu-latn') ?? '—';
             document.getElementById('page-views-count').innerText =
-                pageViews?.[0]?.count?.toLocaleString('ar') ?? '—';
+                pageViews?.[0]?.count?.toLocaleString('ar-u-nu-latn') ?? '—';
             document.getElementById('orders-count').innerText =
-                ordersStats.ordersCount.toLocaleString('ar');
+                ordersStats.ordersCount.toLocaleString('ar-u-nu-latn');
             document.getElementById('revenue-value').innerText =
-                ordersStats.revenue.toLocaleString('ar');
+                ordersStats.revenue.toLocaleString('ar-u-nu-latn');
         } catch (error) {
             console.error('Error loading stats:', error);
         }
@@ -404,9 +404,9 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                 GlowFitAPI.getSubscriptionStats().catch(() => ({ premium: 0, free: 0 })),
                 GlowFitAPI.getOrdersStats().catch(() => ({ revenue: 0 })),
             ]);
-            document.getElementById('premium-count').innerText = subs.premium.toLocaleString('ar');
-            document.getElementById('free-count').innerText = subs.free.toLocaleString('ar');
-            document.getElementById('month-revenue').innerText = revenue.revenue.toLocaleString('ar') + ' ر.س';
+            document.getElementById('premium-count').innerText = subs.premium.toLocaleString('ar-u-nu-latn');
+            document.getElementById('free-count').innerText = subs.free.toLocaleString('ar-u-nu-latn');
+            document.getElementById('month-revenue').innerText = revenue.revenue.toLocaleString('ar-u-nu-latn') + ' ر.س';
         } catch (error) {
             console.error('Error loading financial overview:', error);
         }

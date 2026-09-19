@@ -417,7 +417,7 @@ window.GlowFitAPI = {
         const buckets = [];
         for (let i = monthsBack - 1; i >= 0; i--) {
             const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            buckets.push({ year: d.getFullYear(), month: d.getMonth(), label: d.toLocaleDateString('ar-EG', { month: 'long' }), total: 0 });
+            buckets.push({ year: d.getFullYear(), month: d.getMonth(), label: d.toLocaleDateString('ar-EG-u-nu-latn', { month: 'long' }), total: 0 });
         }
         orders.forEach(o => {
             const d = new Date(o.created_at);

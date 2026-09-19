@@ -221,7 +221,7 @@ async function loadStats() {
         document.getElementById('stat-total').innerText = total;
         document.getElementById('stat-pending').innerText = pending;
         document.getElementById('stat-shipped').innerText = shipped;
-        document.getElementById('stat-revenue').innerText = statsData.revenue.toLocaleString('ar');
+        document.getElementById('stat-revenue').innerText = statsData.revenue.toLocaleString('ar-u-nu-latn');
     } catch (error) {
         console.error('تعذّر تحميل الإحصائيات:', error);
     }

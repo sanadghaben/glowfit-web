@@ -178,7 +178,7 @@ const PERMISSION_LABELS = {
 function timeAgo(dateStr) {
     if (!dateStr) return '—';
     const d = new Date(dateStr);
-    return d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+    return d.toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 function togglePermissionsVisibility() {
