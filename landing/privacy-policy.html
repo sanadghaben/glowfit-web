@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سياسة الخصوصية | GlowFit AI</title>
-<meta name="description" content="سياسة الخصوصية الخاصة بتطبيق GlowFit AI">
+<title>سياسة الخصوصية | Privacy Policy | GlowFit AI</title>
+<meta name="description" content="سياسة الخصوصية لتطبيق GlowFit AI | GlowFit AI Privacy Policy">
 <meta name="robots" content="noindex">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -43,11 +43,13 @@
         -webkit-text-fill-color: transparent;
         margin-bottom: 30px;
     }
-    #policy-content {
+    .legal-block {
         white-space: pre-wrap;
         font-size: 15px;
         color: rgba(255,255,255,0.75);
     }
+    .legal-block[lang="en"] { font-family: 'Inter', sans-serif; line-height: 1.8; }
+    .lang-sep { border: 0; border-top: 1px solid rgba(255,255,255,0.12); margin: 48px 0; }
     .loading {
         color: rgba(255,255,255,0.3);
         font-size: 14px;
@@ -63,36 +65,48 @@
 <body>
 
 <div class="container">
-    <a href="index.html" class="back-link">→ الرجوع للرئيسية</a>
-    <h1>سياسة الخصوصية</h1>
-    <div id="policy-content" class="loading">جاري تحميل المحتوى...</div>
+    <a href="index.html" class="back-link">→ الرجوع للرئيسية / Back to home</a>
+    <h1>سياسة الخصوصية / Privacy Policy</h1>
+    <div id="legal-content"><div class="loading">جاري تحميل المحتوى... / Loading...</div></div>
+    <noscript>يلزم تفعيل JavaScript لعرض هذه الصفحة. / JavaScript is required to display this page.</noscript>
 </div>
 
-<footer>© 2025 GlowFit AI by Veltratech LTD. جميع الحقوق محفوظة.</footer>
+<footer>© 2026 GlowFit AI by Veltratech LTD. جميع الحقوق محفوظة / All rights reserved.</footer>
 
 <script>
 (function () {
-    // نفس بيانات الربط المستخدمة بصفحة الهبوط الرئيسية
     const SUPABASE_URL = 'https://ojaxkhkbyfkcwgavxihq.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTIxNjQsImV4cCI6MjA5MzIyODE2NH0.g5fsf1h9nQ1E3XpBCKMIVkVb7lMCp0uUc5SLUEdNZpM';
+    const container = document.getElementById('legal-content');
 
-    const contentEl = document.getElementById('policy-content');
-
-    fetch(`${SUPABASE_URL}/rest/v1/site_content?select=content&key=eq.privacy_policy`, {
-        headers: { 'apikey': SUPABASE_ANON_KEY }
-    })
-        .then(res => res.json())
-        .then(rows => {
-            if (rows && rows[0] && rows[0].content) {
-                contentEl.textContent = rows[0].content;
-                contentEl.classList.remove('loading');
-            } else {
-                contentEl.textContent = 'سياسة الخصوصية غير متوفرة حالياً. للاستفسار تواصل معنا.';
-            }
+    function load(key) {
+        return fetch(`${SUPABASE_URL}/rest/v1/site_content?select=content&key=eq.${key}`, {
+            headers: { 'apikey': SUPABASE_ANON_KEY }
         })
-        .catch(() => {
-            contentEl.textContent = 'تعذّر تحميل سياسة الخصوصية حالياً. حاول تحديث الصفحة لاحقاً.';
+            .then(res => res.json())
+            .then(rows => (rows && rows[0] && rows[0].content) || null)
+            .catch(() => null);
+    }
+
+    Promise.all([load('privacy_policy'), load('privacy_policy_en')]).then(([ar, en]) => {
+        container.textContent = '';
+        const blocks = [];
+        if (ar) blocks.push({ text: ar, lang: 'ar', dir: 'rtl' });
+        if (en) blocks.push({ text: en, lang: 'en', dir: 'ltr' });
+        if (blocks.length === 0) {
+            container.textContent = 'المحتوى غير متوفر حالياً، حاولي لاحقاً. / Content is currently unavailable, please try again later.';
+            return;
+        }
+        blocks.forEach((b, i) => {
+            if (i > 0) container.appendChild(document.createElement('hr')).className = 'lang-sep';
+            const el = document.createElement('div');
+            el.className = 'legal-block';
+            el.lang = b.lang;
+            el.dir = b.dir;
+            el.textContent = b.text;
+            container.appendChild(el);
         });
+    });
 })();
 </script>
 

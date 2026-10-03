@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شروط الاستخدام | Terms of Use | GlowFit AI</title>
+<meta name="description" content="شروط استخدام تطبيق GlowFit AI | GlowFit AI Terms of Use">
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --pink: #FF6B9D;
+        --purple: #C44FE2;
+        --dark: #0A0A1A;
+        --darker: #060612;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+        background: var(--darker);
+        color: rgba(255,255,255,0.85);
+        line-height: 1.9;
+        min-height: 100vh;
+    }
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 24px 100px; }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255,255,255,0.5);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 40px;
+        transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--pink); }
+    h1 {
+        font-size: 32px;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--pink), var(--purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 30px;
+    }
+    .legal-block {
+        white-space: pre-wrap;
+        font-size: 15px;
+        color: rgba(255,255,255,0.75);
+    }
+    .legal-block[lang="en"] { font-family: 'Inter', sans-serif; line-height: 1.8; }
+    .lang-sep { border: 0; border-top: 1px solid rgba(255,255,255,0.12); margin: 48px 0; }
+    .loading {
+        color: rgba(255,255,255,0.3);
+        font-size: 14px;
+    }
+    footer {
+        text-align: center;
+        padding: 30px;
+        color: rgba(255,255,255,0.2);
+        font-size: 12px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-link">→ الرجوع للرئيسية / Back to home</a>
+    <h1>شروط الاستخدام / Terms of Use</h1>
+    <div id="legal-content"><div class="loading">جاري تحميل المحتوى... / Loading...</div></div>
+    <noscript>يلزم تفعيل JavaScript لعرض هذه الصفحة. / JavaScript is required to display this page.</noscript>
+</div>
+
+<footer>© 2026 GlowFit AI by Veltratech LTD. جميع الحقوق محفوظة / All rights reserved.</footer>
+
+<script>
+(function () {
+    const SUPABASE_URL = 'https://ojaxkhkbyfkcwgavxihq.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTIxNjQsImV4cCI6MjA5MzIyODE2NH0.g5fsf1h9nQ1E3XpBCKMIVkVb7lMCp0uUc5SLUEdNZpM';
+    const container = document.getElementById('legal-content');
+
+    function load(key) {
+        return fetch(`${SUPABASE_URL}/rest/v1/site_content?select=content&key=eq.${key}`, {
+            headers: { 'apikey': SUPABASE_ANON_KEY }
+        })
+            .then(res => res.json())
+            .then(rows => (rows && rows[0] && rows[0].content) || null)
+            .catch(() => null);
+    }
+
+    Promise.all([load('terms_conditions'), load('terms_conditions_en')]).then(([ar, en]) => {
+        container.textContent = '';
+        const blocks = [];
+        if (ar) blocks.push({ text: ar, lang: 'ar', dir: 'rtl' });
+        if (en) blocks.push({ text: en, lang: 'en', dir: 'ltr' });
+        if (blocks.length === 0) {
+            container.textContent = 'المحتوى غير متوفر حالياً، حاولي لاحقاً. / Content is currently unavailable, please try again later.';
+            return;
+        }
+        blocks.forEach((b, i) => {
+            if (i > 0) container.appendChild(document.createElement('hr')).className = 'lang-sep';
+            const el = document.createElement('div');
+            el.className = 'legal-block';
+            el.lang = b.lang;
+            el.dir = b.dir;
+            el.textContent = b.text;
+            container.appendChild(el);
+        });
+    });
+})();
+</script>
+
+</body>
+</html>
