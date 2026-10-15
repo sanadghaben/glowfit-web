@@ -2,9 +2,25 @@
 // GlowFit Admin - API Configuration
 // =============================================
 
-const SUPABASE_URL = 'https://ojaxkhkbyfkcwgavxihq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTIxNjQsImV4cCI6MjA5MzIyODE2NH0.g5fsf1h9nQ1E3XpBCKMIVkVb7lMCp0uUc5SLUEdNZpM';
-const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzY1MjE2NCwiZXhwIjoyMDkzMjI4MTY0fQ.9du_AdtPCbyHp3-SLE3Aa9ecq0BAj9W_5vsM68AffDA';
+// البيئة: أي رابط معاينة لفرع develop (أو localhost) = تجريبي (Staging). غير هيك = الحقيقي (Production)
+const IS_STAGING = /-git-develop-/.test(location.hostname) || ['localhost', '127.0.0.1'].includes(location.hostname);
+const SUPABASE_URL = IS_STAGING ? 'https://glxpbdgpxxlvnklcrkai.supabase.co' : 'https://ojaxkhkbyfkcwgavxihq.supabase.co';
+const SUPABASE_ANON_KEY = IS_STAGING
+    ? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdseHBiZGdweHhsdm5rbGNya2FpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNDQ0MTcsImV4cCI6MjEwNzYyMDQxN30.BTXYXa7k2eI7DcOlpK2WWBNn-1UbI3v3QOAr5K3expc'
+    : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTIxNjQsImV4cCI6MjA5MzIyODE2NH0.g5fsf1h9nQ1E3XpBCKMIVkVb7lMCp0uUc5SLUEdNZpM';
+// ⚠️ على Staging مفتاح service_role غير مضاف عن قصد: عمليات الأدمن (إنشاء/حذف مستخدمين) لن تعمل هناك حتى ننقلها لـ Edge Function.
+const SUPABASE_SERVICE_KEY = IS_STAGING ? '' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzY1MjE2NCwiZXhwIjoyMDkzMjI4MTY0fQ.9du_AdtPCbyHp3-SLE3Aa9ecq0BAj9W_5vsM68AffDA';
+
+// شريط أحمر ظاهر بكل صفحات لوحة التحكم على Staging عشان ما نخلط بينها وبين الحقيقية
+if (IS_STAGING) {
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.createElement('div');
+        bar.textContent = '⚠ STAGING — بيئة تجريبية (بيانات غير حقيقية)';
+        bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#d32f2f;color:#fff;text-align:center;font:600 12px/22px sans-serif;pointer-events:none';
+        document.body.appendChild(bar);
+        document.body.style.paddingTop = '22px';
+    });
+}
 
 // =============================================
 // Helper - طلب API
