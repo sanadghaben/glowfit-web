@@ -524,6 +524,11 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
         if (e.target == document.getElementById('notificationModal')) closeNotificationModal();
     }
 
+    // لو جاي من مربع البحث بالصفحة الرئيسية (?q=...) نعبّي البحث تلقائياً
+    try {
+        const initialQ = new URLSearchParams(window.location.search).get('q');
+        if (initialQ) document.getElementById('search-input').value = initialQ;
+    } catch (e) {}
     loadUsers(1);
 </script>
 </body>

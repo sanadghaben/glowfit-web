@@ -125,7 +125,7 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
             <div class="mobile-toggle" onclick="toggleSidebar()">☰</div>
             <div class="header-search">
                 <span class="search-icon">🔍</span>
-                <input type="text" placeholder="البحث عن مستخدمين، منتجات، أو تقارير...">
+                <input type="text" id="header-search-input" placeholder="ابحث عن مستخدم بالاسم أو البريد ثم اضغط Enter..." onkeydown="if(event.key==='Enter'){const q=this.value.trim();if(q){window.location.href='User_Management.html?q='+encodeURIComponent(q);}}">
             </div>
         </div>
         <div class="header-actions">

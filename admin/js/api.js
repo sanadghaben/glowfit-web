@@ -453,8 +453,11 @@ window.GlowFitAPI = {
     async getUsers(page = 1, limit = 10, search = '', skinFilter = '') {
         const offset = (page - 1) * limit;
         let endpoint = `/rest/v1/profiles?select=*&is_deleted=eq.false&order=created_at.desc&limit=${limit}&offset=${offset}`;
-        if (search) {
-            endpoint += `&or=(full_name.ilike.*${search}*,email.ilike.*${search}*)`;
+        // تنظيف نص البحث: حذف الرموز اللي بتكسر صيغة الفلتر، وترميز الباقي (عربي، +، & ...)
+        const cleanSearch = String(search || '').replace(/[,()*]/g, ' ').trim();
+        if (cleanSearch) {
+            const s = encodeURIComponent(cleanSearch);
+            endpoint += `&or=(full_name.ilike.*${s}*,email.ilike.*${s}*)`;
         }
         if (skinFilter) {
             endpoint += `&skin_type=eq.${skinFilter}`;
