@@ -8,8 +8,6 @@ const SUPABASE_URL = IS_STAGING ? 'https://glxpbdgpxxlvnklcrkai.supabase.co' : '
 const SUPABASE_ANON_KEY = IS_STAGING
     ? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdseHBiZGdweHhsdm5rbGNya2FpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNDQ0MTcsImV4cCI6MjEwNzYyMDQxN30.BTXYXa7k2eI7DcOlpK2WWBNn-1UbI3v3QOAr5K3expc'
     : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NTIxNjQsImV4cCI6MjA5MzIyODE2NH0.g5fsf1h9nQ1E3XpBCKMIVkVb7lMCp0uUc5SLUEdNZpM';
-// ⚠️ على Staging مفتاح service_role غير مضاف عن قصد: عمليات الأدمن (إنشاء/حذف مستخدمين) لن تعمل هناك حتى ننقلها لـ Edge Function.
-const SUPABASE_SERVICE_KEY = IS_STAGING ? '' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYXhraGtieWZrY3dnYXZ4aWhxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzY1MjE2NCwiZXhwIjoyMDkzMjI4MTY0fQ.9du_AdtPCbyHp3-SLE3Aa9ecq0BAj9W_5vsM68AffDA';
 
 // شريط أحمر ظاهر بكل صفحات لوحة التحكم على Staging عشان ما نخلط بينها وبين الحقيقية
 if (IS_STAGING) {
@@ -679,88 +677,46 @@ window.GlowFitAPI = {
 })();
 
 // =============================================
-// Admin Functions - تستخدم service_role key
-// ⚠️ تحذير: هاد الكود لازم ينتقل لـ Supabase Edge Function
-// قبل الإطلاق الرسمي. الـ service_role key ما إلها مكان
-// بكود client-side لأنها بتتخطى كل حماية RLS.
+// عمليات الأدمن الحساسة (إنشاء مستخدم / حذف نهائي)
+// بتتم عبر Supabase Edge Function باسم admin-users، اللي بتتحقق إن المستدعي أدمن حقيقي.
+// المفتاح السري (service_role) صار موجود بالخادم فقط، وممنوع نحطه بكود المتصفح.
 // =============================================
-window.GlowFitAPI.adminCreateUser = async function(email, password, profile = {}) {
-    const response = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
+async function callAdminUsers(body, fallbackMessage) {
+    await ensureFreshToken();
+    const token = localStorage.getItem('admin_token');
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/admin-users`, {
         method: 'POST',
         headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            email,
-            password,
-            email_confirm: true,
-            user_metadata: profile
-        })
+        body: JSON.stringify(body)
     });
-
+    const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.message || 'فشل إنشاء المستخدم');
+        throw new Error(data.error || data.message || fallbackMessage);
     }
-
-    const data = await response.json();
-
-    // نحدث الـ profile بالبيانات الإضافية
-    if (data.id) {
-        await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${data.id}`, {
-            method: 'PATCH',
-            headers: {
-                'apikey': SUPABASE_SERVICE_KEY,
-                'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                full_name: profile.full_name,
-                skin_type: profile.skin_type,
-                email: email
-            })
-        });
-    }
-
     return data;
+}
+
+window.GlowFitAPI.adminCreateUser = async function(email, password, profile = {}) {
+    return await callAdminUsers(
+        { action: 'create_user', email, password, profile },
+        'فشل إنشاء المستخدم'
+    );
 };
 
-// =============================================
 // حذف نهائي للمستخدم (يمسح حساب تسجيل الدخول بالكامل + بيانات البروفايل)
 // ⚠️ عملية لا رجعة فيها — مختلفة عن updateUser({is_deleted:true}) اللي بس بتعطّل الحساب
-// =============================================
 window.GlowFitAPI.permanentlyDeleteUser = async function(userId) {
-    const response = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${userId}`, {
-        method: 'DELETE',
-        headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
-        }
-    });
-
-    if (!response.ok) {
-        let msg = 'فشل الحذف النهائي';
-        try {
-            const err = await response.json();
-            msg = err.message || err.msg || msg;
-        } catch (_) {}
-        throw new Error(msg);
-    }
-
-    // صف الـ profiles بينمسح تلقائياً لو فيه on delete cascade مرتبط بـ auth.users،
-    // بس نتأكد يدوياً كمان احتياطاً
-    await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
-        method: 'DELETE',
-        headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
-        }
-    }).catch(() => {});
-
+    await callAdminUsers(
+        { action: 'delete_user', user_id: userId },
+        'فشل الحذف النهائي'
+    );
     return true;
 };
+
 
 // =============================================
 // تعبئة اسم الأدمن الحقيقي بأعلى كل صفحة (بدل الاسم الوهمي الثابت)
