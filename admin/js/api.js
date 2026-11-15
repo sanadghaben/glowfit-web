@@ -643,6 +643,13 @@ window.GlowFitAPI = {
         });
     },
 
+    // كم جهاز مسجّل عنده رمز Push (FCM). userId اختياري: لمستخدمة وحدة
+    async getPushDeviceCount(userId) {
+        const filter = userId ? `&id=eq.${encodeURIComponent(userId)}` : '&is_deleted=eq.false';
+        const data = await getCount(`/rest/v1/profiles?fcm_token=not.is.null${filter}`).catch(() => [{ count: 0 }]);
+        return data?.[0]?.count ?? 0;
+    },
+
     async getSentNotifications(limit = 30) {
         return await apiRequest(`/rest/v1/notifications?select=*,profiles(full_name,email)&order=created_at.desc&limit=${limit}`);
     },

@@ -56,6 +56,11 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
 .sent-row .t{font-weight:800;margin-bottom:3px}
 .sent-row .b{color:rgba(0,0,0,0.5);margin-bottom:4px}
 .sent-row .m{font-size:11px;color:rgba(0,0,0,0.35)}
+.push-info{margin:4px 0 14px;padding:10px 14px;border-radius:10px;background:#f0fdf4;color:#166534;font-size:12px;font-weight:700}
+.push-info.warn{background:#fff7ed;color:#9a3412}
+.badge.ok{background:#dcfce7;color:#166534}
+.badge.wait{background:#fef9c3;color:#854d0e}
+.badge.off{background:#f1f5f9;color:rgba(0,0,0,0.45)}
 .badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#f3e8ff;color:#9333ea;margin-right:6px}
 </style>
 </head>
@@ -94,6 +99,8 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                 <div class="target-tab active" id="tab-all" onclick="selectTarget('all')">لكل المستخدمين</div>
                 <div class="target-tab" id="tab-one" onclick="selectTarget('one')">مستخدمة محددة</div>
             </div>
+
+            <div class="push-info" id="push-info">جاري حساب الأجهزة...</div>
 
             <div class="form-group" id="user-search-group" style="display:none;">
                 <label>ابحثي بالاسم أو الإيميل</label>
@@ -135,6 +142,32 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
 </body>
 <script src="./js/api.js"></script>
 <script>
+function esc(v) {
+    return String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// بيحكيلك كم جهاز رح يوصله إشعار على الشاشة (Push). الباقي بيشوفوه بس جوّا شاشة الإشعارات
+async function updatePushInfo() {
+    const el = document.getElementById('push-info');
+    if (targetMode === 'one' && !selectedUserId) {
+        el.className = 'push-info';
+        el.innerText = 'اختاري مستخدمة عشان نشوف إذا عندها Push مفعّل';
+        return;
+    }
+    const n = await window.GlowFitAPI.getPushDeviceCount(targetMode === 'one' ? selectedUserId : null);
+    if (targetMode === 'one') {
+        el.className = n ? 'push-info' : 'push-info warn';
+        el.innerText = n
+            ? '📲 هاي المستخدمة عندها Push مفعّل: رح يوصلها على شاشة الموبايل كمان'
+            : '⚠ هاي المستخدمة ما عندها Push مفعّل: رح تشوف الإشعار بس لما تفتح شاشة الإشعارات بالتطبيق';
+    } else {
+        el.className = n ? 'push-info' : 'push-info warn';
+        el.innerText = n
+            ? `📲 ${n} جهاز رح يوصلهم الإشعار على الشاشة (Push). الباقي بيشوفوه جوّا التطبيق`
+            : '⚠ ولا جهاز مسجّل للـ Push لسا: الإشعار رح ينحفظ وينشاف بس جوّا التطبيق';
+    }
+}
+
 let targetMode = 'all';
 let selectedUserId = null;
 let selectedUserLabel = '';
@@ -149,7 +182,8 @@ function selectTarget(mode) {
     document.getElementById('tab-all').classList.toggle('active', mode === 'all');
     document.getElementById('tab-one').classList.toggle('active', mode === 'one');
     document.getElementById('user-search-group').style.display = mode === 'one' ? 'block' : 'none';
-    if (mode === 'all') { selectedUserId = null; }
+    if (mode === 'all') { selectedUserId = null; document.getElementById('selected-user-display').style.display = 'none'; }
+    updatePushInfo();
 }
 
 function searchUsers(query) {
@@ -160,9 +194,9 @@ function searchUsers(query) {
         try {
             const users = await window.GlowFitAPI.getUsers(1, 8, query.trim());
             resultsEl.innerHTML = users.map(u => `
-                <div class="user-result" onclick='pickUser("${u.id}", "${(u.full_name || u.email || "بدون اسم").replace(/"/g, "")}")'>
-                    <span>${u.full_name || 'بدون اسم'}</span>
-                    <span style="color:rgba(0,0,0,0.4)">${u.email || ''}</span>
+                <div class="user-result" data-id="${esc(u.id)}" data-label="${esc(u.full_name || u.email || 'بدون اسم')}" onclick="pickUser(this.dataset.id, this.dataset.label)">
+                    <span>${esc(u.full_name || 'بدون اسم')}</span>
+                    <span style="color:rgba(0,0,0,0.4)">${esc(u.email || '')}</span>
                 </div>
             `).join('') || '<p style="font-size:12px; color:rgba(0,0,0,0.3); margin-top:6px;">ما في نتائج</p>';
         } catch (error) {
@@ -179,6 +213,7 @@ function pickUser(id, label) {
     const display = document.getElementById('selected-user-display');
     display.style.display = 'block';
     display.innerText = `✓ محددة: ${label}`;
+    updatePushInfo();
 }
 
 async function sendNotif() {
@@ -213,6 +248,7 @@ async function sendNotif() {
         document.getElementById('notif-body').value = '';
         document.getElementById('notif-route').value = '';
         loadSentList();
+        setTimeout(loadSentList, 8000); // نرجع نحدّث عشان تبين حالة الـ Push
     } catch (error) {
         statusEl.style.color = '#ef4444';
         statusEl.innerText = 'صار خطأ أثناء الإرسال، حاولي مرة ثانية';
@@ -231,6 +267,14 @@ function timeAgo(dateStr) {
     return `منذ ${Math.floor(hrs / 24)} يوم`;
 }
 
+// حالة الـ Push لكل إشعار (بتبين بس لما يكون عمود pushed_at موجود بالجدول)
+function pushBadge(n) {
+    if (!('pushed_at' in n)) return '';
+    if (n.pushed_at) return '<span class="badge ok">📲 تم طلب Push</span>';
+    const mins = (Date.now() - new Date(n.created_at).getTime()) / 60000;
+    return mins < 5 ? '<span class="badge wait">⏳ عم ينبعت</span>' : '<span class="badge off">جوّا التطبيق بس</span>';
+}
+
 async function loadSentList() {
     const listEl = document.getElementById('sent-list');
     try {
@@ -243,9 +287,9 @@ async function loadSentList() {
             const target = n.profiles ? (n.profiles.full_name || n.profiles.email) : 'كل المستخدمين';
             return `
                 <div class="sent-row">
-                    <div class="t">${n.title}</div>
-                    <div class="b">${n.body}</div>
-                    <div class="m"><span class="badge">${target}</span>${timeAgo(n.created_at)}</div>
+                    <div class="t">${esc(n.title)}</div>
+                    <div class="b">${esc(n.body)}</div>
+                    <div class="m"><span class="badge">${esc(target)}</span>${pushBadge(n)}${timeAgo(n.created_at)}</div>
                 </div>
             `;
         }).join('');
@@ -255,5 +299,6 @@ async function loadSentList() {
 }
 
 loadSentList();
+updatePushInfo();
 </script>
 </html>

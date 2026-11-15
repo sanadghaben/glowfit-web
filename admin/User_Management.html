@@ -322,7 +322,7 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
                     <td>
                         <div class="actions-cell">
                             <div class="action-btn" title="تعديل" onclick="openEditModal('${user.id}','${user.full_name||''}','${user.skin_type||''}')">✏️</div>
-                            <div class="action-btn" title="إرسال إشعار" onclick="openNotificationModal('${user.id}','${user.full_name||''}')">🔔</div>
+                            <div class="action-btn" title="إرسال إشعار" data-id="${user.id}" data-name="${(user.full_name||'').replace(/[&<>"']/g,'')}" onclick="openNotificationModal(this.dataset.id, this.dataset.name)">🔔</div>
                             <div class="action-btn delete" title="تعطيل (يقدر يرجع لاحقاً)" onclick="deleteUser('${user.id}','${user.full_name||'هذا المستخدم'}')">🚫</div>
                             <div class="action-btn delete" title="حذف نهائي — بدون رجعة" onclick="permanentDeleteUser('${user.id}','${user.full_name||'هذا المستخدم'}','${user.email||''}')">🗑️</div>
                         </div>
@@ -466,10 +466,27 @@ body{font-family:'Tajawal',sans-serif;background:#f8fafc;color:#1a1a2e;display:f
     }
     function closeNotificationModal() { document.getElementById('notificationModal').style.display = 'none'; document.getElementById('notificationForm').reset(); }
 
-    document.getElementById('notificationForm').addEventListener('submit', (e) => {
+    // إرسال إشعار حقيقي لمستخدمة وحدة (بينحفظ بجدول notifications، ومنه بينطلق Push لحالو)
+    document.getElementById('notificationForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        alert('تم إرسال الإشعار بنجاح! (محاكاة)');
-        closeNotificationModal();
+        const btn = document.getElementById('notif-submit-btn');
+        const userId = document.getElementById('notif-user-id').value;
+        const title = document.getElementById('notif-title').value.trim();
+        const body = document.getElementById('notif-message').value.trim();
+        if (!userId || !title || !body) return;
+        btn.disabled = true;
+        btn.innerText = 'جاري الإرسال...';
+        try {
+            await window.GlowFitAPI.sendNotification({ title, body, userId });
+            closeNotificationModal();
+            alert('تم إرسال الإشعار ✓');
+        } catch (error) {
+            console.error(error);
+            alert('صار خطأ أثناء الإرسال، حاول مرة ثانية');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = 'إرسال الإشعار الآن';
+        }
     });
 
     // تصدير البيانات إلى CSV
