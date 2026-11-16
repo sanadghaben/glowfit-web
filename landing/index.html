@@ -177,6 +177,9 @@
             cursor: pointer;
         }
 
+        .btn-play { background: #1a1a2e; border: 1px solid rgba(255,255,255,0.18); }
+        .store-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+
         .btn-download:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 40px rgba(255,107,157,0.3);
@@ -1142,8 +1145,8 @@
                 <button class="lang-btn" onclick="setLang('en')">EN</button>
                 <button class="lang-btn active" onclick="setLang('ar')">عربي</button>
             </div>
-            <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" class="btn-download" target="_blank">
-                <span data-en="🍎 Download Free" data-ar="🍎 تحميل مجاني">🍎 تحميل مجاني</span>
+            <a href="#download" class="btn-download" id="nav-download">
+                <span data-en="📲 Download Free" data-ar="📲 تحميل مجاني">📲 تحميل مجاني</span>
             </a>
         </div>
     </div>
@@ -1163,6 +1166,9 @@
                 <div class="hero-buttons">
                     <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" class="btn-download" target="_blank">
                         <span data-en="🍎 Download for iPhone" data-ar="🍎 تحميل للآيفون">🍎 تحميل للآيفون</span>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.sanadtech.glowfit" class="btn-download btn-play" target="_blank">
+                        <span data-en="▶ Download for Android" data-ar="▶ تحميل للأندرويد">▶ تحميل للأندرويد</span>
                     </a>
                     <a href="#how" class="btn-secondary">
                         <span data-en="▶ See How it Works" data-ar="▶ شاهد كيف يعمل">▶ شاهد كيف يعمل</span>
@@ -1217,7 +1223,7 @@
             <span data-en="🤖 AI Powered" data-ar="🤖 مدعوم بالذكاء">🤖 مدعوم بالذكاء</span>
             <span data-en="🌍 Arab &amp; English" data-ar="🌍 عربي وإنجليزي">🌍 عربي وإنجليزي</span>
             <span data-en="⭐ 5-Star Reviews" data-ar="⭐ تقييم 5 نجوم">⭐ تقييم 5 نجوم</span>
-            <span data-en="📱 iPhone &amp; iPad" data-ar="📱 آيفون وآيباد">📱 آيفون وآيباد</span>
+            <span data-en="📱 iPhone &amp; Android" data-ar="📱 آيفون وأندرويد">📱 آيفون وأندرويد</span>
         </div>
     </div>
 </section>
@@ -1489,7 +1495,7 @@
             </div>
             <div class="faq-item" onclick="this.classList.toggle('open')">
                 <div class="faq-question"><span data-en="Which devices are supported?" data-ar="ما الأجهزة المدعومة؟">ما الأجهزة المدعومة؟</span> <span class="faq-toggle">+</span></div>
-                <div class="faq-answer" data-en="GlowFit is available for iPhone and iPad running iOS 16 or later. We support both English and Arabic languages." data-ar="GlowFit متاح للآيفون والآيباد بنظام iOS 16 أو أحدث. ندعم اللغتين العربية والإنجليزية.">GlowFit متاح للآيفون والآيباد بنظام iOS 16 أو أحدث. ندعم اللغتين العربية والإنجليزية.</div>
+                <div class="faq-answer" data-en="GlowFit is available on the App Store for iPhone and iPad (iOS 16 or later) and on Google Play for Android. We support both English and Arabic languages." data-ar="GlowFit متاح على App Store للآيفون والآيباد (iOS 16 أو أحدث)، وعلى Google Play للأندرويد. ندعم اللغتين العربية والإنجليزية.">GlowFit متاح على App Store للآيفون والآيباد (iOS 16 أو أحدث)، وعلى Google Play للأندرويد. ندعم اللغتين العربية والإنجليزية.</div>
             </div>
             <div class="faq-item" onclick="this.classList.toggle('open')">
                 <div class="faq-question"><span data-en="Is GlowFit a medical app?" data-ar="هل GlowFit تطبيق طبي؟">هل GlowFit تطبيق طبي؟</span> <span class="faq-toggle">+</span></div>
@@ -1554,10 +1560,15 @@
         <div class="cta-box fade-up">
             <h2 data-en="Ready to Glow? ✨" data-ar="مستعد للتألق؟ ✨">مستعد للتألق؟ ✨</h2>
             <p data-en="Download GlowFit AI today — free forever, your privacy comes first." data-ar="حمّل GlowFit AI اليوم — مجاني للأبد، وخصوصيتك أولويتنا.">حمّل GlowFit AI اليوم — مجاني للأبد، وخصوصيتك أولويتنا.</p>
-            <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" class="btn-download" target="_blank">
-                <span data-en="🍎 Download on the App Store" data-ar="🍎 تحميل من App Store">🍎 تحميل من App Store</span>
-            </a>
-            <div class="cta-subtitle" data-en="Available for iPhone &amp; iPad · iOS 16+ · 100% Free" data-ar="متاح للآيفون والآيباد · iOS 16+ · مجاني 100%">متاح للآيفون والآيباد · iOS 16+ · مجاني 100%</div>
+            <div class="store-buttons">
+                <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" class="btn-download" target="_blank">
+                    <span data-en="🍎 Download on the App Store" data-ar="🍎 تحميل من App Store">🍎 تحميل من App Store</span>
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=com.sanadtech.glowfit" class="btn-download btn-play" target="_blank">
+                    <span data-en="▶ Get it on Google Play" data-ar="▶ تحميل من Google Play">▶ تحميل من Google Play</span>
+                </a>
+            </div>
+            <div class="cta-subtitle" data-en="Available for iPhone &amp; Android · 100% Free" data-ar="متاح للآيفون والأندرويد · مجاني 100%">متاح للآيفون والأندرويد · مجاني 100%</div>
         </div>
     </div>
 </section>
@@ -1567,6 +1578,7 @@
     <div class="container">
         <div class="footer-links">
             <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" target="_blank" data-en="App Store" data-ar="App Store">App Store</a>
+            <a href="https://play.google.com/store/apps/details?id=com.sanadtech.glowfit" target="_blank" data-en="Google Play" data-ar="Google Play">Google Play</a>
             <a href="#features" data-en="Features" data-ar="المميزات">المميزات</a>
             <a href="#faq" data-en="FAQ" data-ar="أسئلة شائعة">أسئلة شائعة</a>
             <a href="#reviews" data-en="Reviews" data-ar="التقييمات">التقييمات</a>
@@ -1897,4 +1909,14 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
+<script>
+// زر التحميل بالقائمة: الأندرويد بيروح لـ Google Play، والآيفون لـ App Store، والكمبيوتر بينزل لقسم التحميل
+(function () {
+    var a = document.getElementById('nav-download');
+    if (!a) return;
+    var ua = navigator.userAgent || '';
+    if (/android/i.test(ua)) { a.href = 'https://play.google.com/store/apps/details?id=com.sanadtech.glowfit'; a.target = '_blank'; }
+    else if (/iphone|ipad|ipod/i.test(ua)) { a.href = 'https://apps.apple.com/us/app/glowfit-ai/id6756659293'; a.target = '_blank'; }
+})();
+</script>
 </body></html>
