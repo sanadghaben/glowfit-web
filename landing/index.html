@@ -28,6 +28,7 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         html { scroll-behavior: smooth; scroll-padding-top: 40px; }
 
+        html { overflow-x: hidden; }
         body {
             font-family: 'Inter', sans-serif;
             background: var(--dark);
@@ -1032,6 +1033,7 @@
             justify-content: center;
             gap: 24px;
             margin-bottom: 16px;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
@@ -1222,7 +1224,7 @@
             <span data-en="🔒 Privacy First" data-ar="🔒 الخصوصية أولاً">🔒 الخصوصية أولاً</span>
             <span data-en="🤖 AI Powered" data-ar="🤖 مدعوم بالذكاء">🤖 مدعوم بالذكاء</span>
             <span data-en="🌍 Arab &amp; English" data-ar="🌍 عربي وإنجليزي">🌍 عربي وإنجليزي</span>
-            <span data-en="⭐ 5-Star Reviews" data-ar="⭐ تقييم 5 نجوم">⭐ تقييم 5 نجوم</span>
+            <span data-en="🆓 100% Free" data-ar="🆓 مجاني 100%">🆓 مجاني 100%</span>
             <span data-en="📱 iPhone &amp; Android" data-ar="📱 آيفون وأندرويد">📱 آيفون وأندرويد</span>
         </div>
     </div>
@@ -1399,7 +1401,7 @@
     <div class="container">
         <div class="section-badge fade-up" data-en="⚡ Why GlowFit" data-ar="⚡ لماذا GlowFit">⚡ لماذا GlowFit</div>
         <h2 class="section-title fade-up" data-en="GlowFit vs Others" data-ar="GlowFit مقابل غيرها">GlowFit مقابل غيرها</h2>
-        <p class="section-desc fade-up" data-en="See why thousands choose GlowFit AI for their skincare journey." data-ar="اكتشف لماذا الآلاف يختارون GlowFit AI لرحلة العناية ببشرتهم.">اكتشف لماذا الآلاف يختارون GlowFit AI لرحلة العناية ببشرتهم.</p>
+        <p class="section-desc fade-up" data-en="Everything you need to understand your skin, in one free app." data-ar="كل ما تحتاجينه لفهم بشرتك، في تطبيق واحد مجاني.">كل ما تحتاجينه لفهم بشرتك، في تطبيق واحد مجاني.</p>
         <div class="comparison-grid fade-up">
             <div class="compare-card other">
                 <h3 data-en="😐 Other Apps" data-ar="😐 تطبيقات أخرى">😐 تطبيقات أخرى</h3>
@@ -1427,46 +1429,14 @@
     </div>
 </section>
 
-<!-- Social Proof -->
+<!-- Early users (honest, replaces placeholder testimonials) -->
 <section class="social-proof" id="reviews">
     <div class="container">
-        <div class="section-badge fade-up" data-en="💬 Reviews" data-ar="💬 التقييمات">💬 التقييمات</div>
-        <h2 class="section-title fade-up" data-en="Loved by Users" data-ar="محبوب من المستخدمين">محبوب من المستخدمين</h2>
-        <p class="section-desc fade-up" data-en="See what people are saying about GlowFit AI." data-ar="شاهد ماذا يقول الناس عن GlowFit AI.">شاهد ماذا يقول الناس عن GlowFit AI.</p>
-        <div class="proof-grid">
-            <div class="proof-card fade-up">
-                <div class="proof-stars">⭐⭐⭐⭐⭐</div>
-                <p class="proof-text" data-en="&quot;The Skin Score feature is a game-changer! I can finally see exactly how my skin is improving. The Before &amp; After comparison is so motivating.&quot;" data-ar="&quot;ميزة درجة البشرة غيّرت كل شيء! أخيراً أستطيع رؤية تحسن بشرتي بالضبط. مقارنة قبل وبعد محفزة جداً.&quot;">"ميزة درجة البشرة غيّرت كل شيء! أخيراً أستطيع رؤية تحسن بشرتي بالضبط. مقارنة قبل وبعد محفزة جداً."</p>
-                <div class="proof-author">
-                    <div class="proof-avatar">👩</div>
-                    <div>
-                        <div class="proof-name">Sarah M.</div>
-                        <div class="proof-role" data-en="iPhone User" data-ar="مستخدمة آيفون">مستخدمة آيفون</div>
-                    </div>
-                </div>
-            </div>
-            <div class="proof-card fade-up">
-                <div class="proof-stars">⭐⭐⭐⭐⭐</div>
-                <p class="proof-text" data-en="&quot;Finally an app that respects my privacy! The analysis is incredibly accurate. The Skin Diary keeps me consistent with my routine.&quot;" data-ar="&quot;أخيراً تطبيق يحترم خصوصيتي! التحليل دقيق بشكل مذهل. يوميات البشرة تحافظ على التزامي بالروتين.&quot;">"أخيراً تطبيق يحترم خصوصيتي! التحليل دقيق بشكل مذهل. يوميات البشرة تحافظ على التزامي بالروتين."</p>
-                <div class="proof-author">
-                    <div class="proof-avatar">👨</div>
-                    <div>
-                        <div class="proof-name">Ahmed K.</div>
-                        <div class="proof-role" data-en="iPad User" data-ar="مستخدم آيباد">مستخدم آيباد</div>
-                    </div>
-                </div>
-            </div>
-            <div class="proof-card fade-up">
-                <div class="proof-stars">⭐⭐⭐⭐⭐</div>
-                <p class="proof-text" data-en="&quot;I love the daily tracking! Seeing my skin score go from 68 to 85 in just a month made me so happy. The tips are actually helpful too.&quot;" data-ar="&quot;أحب التتبع اليومي! رؤية درجة بشرتي ترتفع من 68 إلى 85 في شهر واحد فقط جعلتني سعيدة جداً. النصائح مفيدة فعلاً.&quot;">"أحب التتبع اليومي! رؤية درجة بشرتي ترتفع من 68 إلى 85 في شهر واحد فقط جعلتني سعيدة جداً. النصائح مفيدة فعلاً."</p>
-                <div class="proof-author">
-                    <div class="proof-avatar">👩‍🦰</div>
-                    <div>
-                        <div class="proof-name">Nora A.</div>
-                        <div class="proof-role" data-en="iPhone User" data-ar="مستخدمة آيفون">مستخدمة آيفون</div>
-                    </div>
-                </div>
-            </div>
+        <div class="section-badge fade-up" data-en="🌱 New app" data-ar="🌱 تطبيق جديد">🌱 تطبيق جديد</div>
+        <h2 class="section-title fade-up" data-en="Be one of our first users" data-ar="كوني من أوائل المستخدمات">كوني من أوائل المستخدمات</h2>
+        <p class="section-desc fade-up" data-en="GlowFit AI just launched. Try it free, then leave an honest review on the App Store — your feedback shapes what we build next." data-ar="GlowFit AI تطبيق جديد. جربيه مجاناً، وبعدين اكتبي رأيك بصراحة على App Store، رأيك يحدد شو نضيف بعدين.">GlowFit AI تطبيق جديد. جربيه مجاناً، وبعدين اكتبي رأيك بصراحة على App Store، رأيك يحدد شو نضيف بعدين.</p>
+        <div style="text-align:center;margin-top:28px" class="fade-up">
+            <a href="https://apps.apple.com/us/app/glowfit-ai/id6756659293" class="btn-download" target="_blank" rel="noopener"><span data-en="🍎 Try it &amp; review" data-ar="🍎 جربيه وقيّميه">🍎 جربيه وقيّميه</span></a>
         </div>
     </div>
 </section>
